@@ -1,0 +1,386 @@
+﻿Java笔记03（Day19-Day27）
+
+目录
+	1.异常
+	2.throw关键字
+	3.Throwable类重要方法
+	4.finally关键字
+	5.自定义异常
+	6.异常中涉及到继承的注意事项
+	7.File类
+
+1.异常
+	概述：
+		程序出现了不正常的情况。
+	Java异常体系概述：
+		类Throwable：程序的异常
+			类Error：严重问题。不做处理，因为一般是难以/无法处理的问题，比如内存溢出。
+			类Exception：异常。
+				类RuntimeException：运行时异常。不做处理，因为此种异常问题在于代码不够严谨，需要修正代码。
+				除RuntimeException以外Exception：编译期异常。必须进行处理，否则代码不能通过编译。
+	异常的处理：
+		1）默认处理：
+				如果程序出现问题，并没有做任何处理，Jvm最终会做出默认处理。
+				默认处理方式：
+					把异常的名称、原因，及出现异常的位置输出在控制台，并结束程序。
+		2）手动处理方式一：																可简化为：												可以出现多个catch：
+				try {																				try {															try {
+					...(可能会出现问题的代码)												...																...
+				} catch (异常类名 变量名) {												} catch (异常类名 变量名) {							} catch (异常类名 变量名) {
+					...(出现异常后的处理)														...																...
+				} finally {																		}																} catch (异常类名 变量名) {
+					...																																					...
+				}																																					}
+				原理：
+					在try里面发现问题后，jvm会生成一个异常对象，然后把这个对象抛出，和catch中的类进行匹配。
+					如果该对象是某个类型的，就会执行该catch里的处理信息。
+				注意事项：
+					A.能明确的尽量明确，不要用大的异常类名来处理；
+					B.一旦try中出现了匹配的异常，就会执行对应的处理，并结束try...catch执行后面的代码;
+					C.平级关系的异常谁先catch无所谓，如果出现了父子关系的异常，父异常必须在后面。
+			手动处理方式二（JDK7新的处理方式）：
+				try {
+					...(可能出现问题的代码)
+				} catch (异常名1 | 异常名2 | ... 变量) {
+					...(处理)
+				}
+				注意事项：
+					A.该方法不管是哪种异常，处理方式都是一致的；
+					B.多个异常间必须是同级关系。
+		3）抛出：
+				有些时候我们没有权限处理/处理不了/不想处理，就不处理了。为了解决此时的出错问题，提供了抛出解决方案。
+				格式：
+					修饰符 返回值类型 方法名(参数) throws 异常类名1,异常类名2,... { }
+					注意throws跟在括号后面。
+					throws后面可跟多个异常类名，用逗号隔开。
+				说明：
+					方法抛出了异常，将交给调用者处理。
+					编译期异常抛出，调用者必须处理（否则报错）；运行期异常抛出，调用者可以不处理。
+					尽量不要在main方法上抛出异常。
+	异常处理方式的选择：
+		1）如果该功能内部可以将问题处理，用try；如果处理不了，就交给调用者处理，用throws；
+		2）后续程序如果需要继续运行就用try；不用继续运行就用throws。
+
+2.throw关键字
+	概述：
+		如果出现了异常情况，我们可以手动把异常抛出（生成一个异常对象）。
+		此关键字后面应该跟一个异常对象（throw new Exception()）。
+	throw和throws的区别：
+		throws																									throw
+			1）用在方法声明后面，后跟异常类名；													1）用在方法体内，后跟异常对象；
+			2）可以跟多个异常类名，用逗号隔开；													2）只能抛出一个异常对象；
+			3）表示抛出异常，由该方法的调用者来处理；											3）表示抛出异常，由方法体内的语句处理；
+			4）throws表示可能出现异常，可能不会出现。											4）throw表示抛出了异常，执行throw一定抛出了某种异常。
+
+3.Throwable类重要方法：
+	public String getMessage()																		//e.getMessage()，返回异常消息的字符串
+	public String toString()																				//e.toString()，返回异常信息的简单描述，按照如下的格式：
+		此对象的全路径完整类名	+ ": "(冒号+空格) + 调用此对象getLocalizedMessage()方法的结果（默认返回的是getMessage()的结果）
+	void printStackTrace()																				//e.printStackTrace()，获取异常类名和异常信息，以及异常在程序中的位置，把结果输出在控制台
+
+4.finally关键字
+	概述：
+		位于try {...} catch (...) {...} finally {...}之中。
+		被finally控制的语句体一定会执行。
+		存在例外：在执行finally之前jvm推出了，将不会执行finally中的语句。比如System.exit(0)。
+	作用：
+		用于释放资源，在io流操作和数据库操作中会见到。
+	相关重要问题：
+		1）final、finally、finalize的区别？
+			final：是用于修饰类名、成员变量、成员方法的修饰符。
+				final修饰类，该类不能被继承；
+				final修饰成员变量，该变量为常量不能重新赋值；
+				final修饰成员方法，该方法不能被重写。
+			finally：是异常处理的一部分，用于释放资源。
+				一般来说finally中的语句一定会执行，不过如果在finally之前退出了虚拟机，就不会执行。
+			finalize：是Object中的一个方法，用于垃圾回收。
+		2）如果catch里面有return语句，finally中的语句还会执行吗？
+			会，并且会在return之前执行。
+			准确来说，走到return语句时会生成一个返回路径，然后接着走finally中的代码，finally走完后再回到返回路径。
+			举例：
+				catch (Exception e) {
+					a = 30;
+					return a;
+				} finally {
+					a = 40;
+				}									//将返回30
+				
+5.自定义异常
+	概述：
+		Java不可能所有异常都考虑到（比如需要分数在0-100之间），所以在实际开发中，可能需要自己定义异常。
+		若要让一个类成为异常类，必须继承自Exception类或者RuntimeException类。
+	注意事项：
+		1）自定义的异常类不用写任何成员方法；
+		2）可以通过写一个构造方法传一个字符串参数覆盖Exception类的构造方法，实现错误信息的输出，举例如下：
+			class MyException extends Exception {
+				public MyException () {}
+				public MyException (String message) {
+					super(message);
+				}
+			}										//只需要throw new MyException("错误信息")即可
+		3）如果自定义的异常继承自Exception，则为编译期异常；继承自RuntimeException，则为运行期异常。
+		
+6.异常中涉及到继承的注意事项：
+	1）子类重写父类方法时，子方法不能抛出比父方法级别更大的异常；
+	2）如果父方法抛出了多个异常，子方法不能抛出比父方法更多的异常，也不能抛出父方法没有抛出的异常；
+	3）如果父方法没有抛出异常，子方法不能抛出异常，只能try...catch，不能throws。
+	
+7.File类
+	概述：
+		要想实现IO的操作，就需要知道硬盘上文件的表现形式，Java提供了一个File类供我们使用。
+		File类是文件和目录的抽象表现形式。
+	重要构造方法：
+		File(String pathname)																			//根据一个路径得到File对象<目录/文件>
+		File(String parent, String child)																//根据parent<目录>和child<目录/文件>得到File对象
+		File(File parent, String child)																	//根据一个父File对象<目录>和一个子文件/目录得到File对象
+	重要方法：
+		创建功能：
+			public boolean createNewFile()															//file1.createNewFile()，创建文件。如果存在这样的文件就不创建了，并返回false。
+			public boolean mkdir()																		//file1.mkdir()，创建文件夹。如果存在这样的文件夹就不创建了，并返回false。
+			public boolean mkdirs()																	//file1.mkdirs()，创建文件夹。如果父文件夹不存在，会自动创建。
+		删除功能：
+			public boolean delete()																		//file1.delete()，删除文件或文件夹，如果没有删除返回false。
+		重命名功能：
+			public boolean renameTo(File dest)													//file1.renameTo(file2)，如果路径名相同就是改名，如果路径名不同则为改名+剪切粘贴。
+		判断功能：
+			public boolean isDirectory()																//file1.isDirectory()，判断是否为目录
+			public boolean isFile()																		//file1.isDirectory()，判断是否为文件
+			public boolean exists()																		//file1.exists()，判断是否存在
+			public boolean canRead()																	//file1.canRead()，判断是否可读
+			public boolean canWrite()																	//file1.canWrite()，判断是否可写
+			public boolean isHidden()																	//file1.isHidden()，判断是否隐藏
+		获取功能：
+			public String getAbsolutePath()														//file1.getAbsolutePath()，获取绝对路径
+			public String getPath()																		//file1.getPath()，获取路径
+			public String getName()																	//file1.getName()，获取名称
+			public long length()																			//file1.length()，获取长度（字节数）
+			public long lastModified()																	//file1.lastModified()，获取最后一次修改时间（毫秒值）
+			public String[] list()																			//file1.list()，获取指定目录下所有文件/文件夹的名称数组
+			public String[] list(FilenameFilter filter)												//file1.list(filter)，根据一个文件名称过滤器的实现类对象，获取指定目录下满足要求的所有文件/文件夹的名称数组
+			public File[] listFiles()																			//file1.listFiles()，获取指定目录下所有文件/文件夹的File数组
+			public File[] listFiles(FilenameFilter filter)											//file1.listFiles(filter)，根据一个文件名称过滤器的实现类对象，获取指定目录下满足要求的所有文件/文件夹的File数组
+	接口FilenameFilter概述：
+		文件名称过滤器，包含一个方法boolean accept(File dir, String name)。
+		dir为被找到的文件所在目录，name为文件的名称。
+		文件满足要求时返回true，否则返回false。
+		通常以匿名内部类的方式实现。
+	注意事项：
+		1）创建文件或者文件夹时，如果没有写盘符路径，会创建在默认路径下；
+		2）删除功能中，如果要删除一个文件夹 ，该文件夹内不能包含文件或文件夹；
+		3）Windows系统下，Java的删除不会走系统回收站；
+		4）如果File的路径以盘符开始，则为绝对路径，否则为相对路径
+		
+8.递归
+	概述：
+		方法定义中调用方法本身的现象。
+		举例：public void method () {
+					method();
+				}
+		递归方法需要：规律和出口条件。
+	注意事项：
+		1）递归一定要有出口，否则就是死递归；
+		2）递归次数不能太多，否则会不断加载方法到栈内存导致内存溢出；
+		3）构造方法不能递归使用。
+		
+9.IO流
+	概述：
+		IO流用来处理设备间的数据传输（上传文件和下载文件）。
+		Java对数据的操作是通过流的方式，用于操作流的对象都在IO包中。
+	分类：
+		按流向分：
+			输入流（读取数据）
+			输出流（写出数据）
+		按数据类型分：
+			字节流：
+				用记事本打开文件，如果不能读懂，就用字节流。
+				如果什么都不知道，就用字节流。
+			字符流
+				用记事本打开文件，如果可以读懂，就用字符流。
+		所有分类：
+			字节输入流：InputStream
+			字节输出流：OutputStream
+			字符输入流：Reader
+			字符输出流：Writer
+			以上基类都是抽象类，需要具体实现。
+			每种基类的子类都以父类名结尾，如：
+			
+10.FileOutputStream文件字节输出流
+	概述：
+		用于将数据写入File的文件字节输出流。
+	构造方法：
+		FileOutputStream(File file)																	//创建一个向给定File所表示的文件中写入数据的文件字节输出流，从内容开头写入（如果文件存在会先删除所有原有内容）
+		FileOutputStream(File file, boolean append)											//创建一个向给定File所表示的文件中写入数据的文件字节输出流，如果第二参数为true，从内容末尾写入
+		FileOutputStream(String name)																//会根据给定String造一个File，并创建指向该File的fos对象，从内容开头写入（如果文件存在会先删除所有原有内容）
+		FileOutputStream(String name, boolean append)									//会根据给定String造一个File，并创建指向该File的fos对象，如果第二参数为true，从内容末尾写入
+	重要方法：
+		public void write(int b)																			//fos.write(int)，输入一个ASCII数字表示的字节
+		public void write(byte[] b)																		//fos.write(byte[])，输入一个字节数组的所有字节
+		public void write(byte[] b, int off, int len)												//fos.write(byte[],起始索引,长度)，从一个字节数组的off开始，输入len个字节
+	重要问题：
+		创建字节输出流到底做了哪些事情？
+			a.调用系统功能创建文件；
+			b.创建fos对象；
+			c.把fos对象指向这个文件。
+		数据写成功后，为何要close()？
+			a.把fos对象变成垃圾，这样就可以被系统回收了；
+			b.通知系统回收跟该文件相关的资源。
+		如何实现数据的换行？
+			写入换行符号即可。
+			一般来说，换行符号是"\n"，然而不同操作系统对换行符号的识别不同，Windows自带记事本可以识别的换行符号为"\r\n"。
+			一些常见的高级记事本，是可以识别任意换行符号的。
+		如何实现数据的追加写入？
+			使用带有第二参数boolean append的构造方法即可，append为true。
+			
+11.FileInputStream文件字节输入流
+	概述：
+		从文件系统的某个文件中获得输入字节。
+	构造方法：
+		FileInputStream(File file)																		//从File表示的文件创建文件字节输入流
+		FileInputStream(String name)																//从String表示的文件创建文件字节输入流
+	重要方法：
+		int read()																								//fis.read()，读取下一个字节，返回该字节的int表示。读完后指针会移动到已读字节后方，读完了还read()则会返回-1。
+		int read(byte[] bys)																				//fis.read(byte[])，一次读取一个字节数组，返回实际读取到的字节个数
+		
+12.缓冲区类
+	概述：
+		测试发现一次读取一个数组的方式比一次读取一个字节的方式要快上很多，所以Java提供了带缓冲区的字节类（为了高效）。
+		构造方法需要传一个基本的输入/输出流对象。
+	构造方法：
+		BufferedInputStream(InputStream in)													//创建具有默认缓冲区大小的缓冲区输入流
+		BufferedOutputStream(OutputStream out)											//创建具有默认缓冲区大小的缓冲区输出流
+		BufferedInputStream(InputStream in, int size)										//创建具有指定缓冲区大小的缓冲区输入流
+		BufferedOutputStream(OutputStream out, int size)								//创建具有指定缓冲区大小的缓冲区输出流
+		//一般不用指定缓冲区大小，默认就够用了
+		
+13.编码表
+	概述：
+		由现实世界的字符和对应的数值组成的一张表。
+	常见编码表：
+		ASCII码表：最高位为符号位，其余位为数值位。
+		ISO-8859-1：拉丁码表，八位表示一个数据。
+		GB2312：中国的中文码表。
+		GBK：中国的中文码表升级，融合了更多的中文文字符号。
+		GB18030：GBK的取代版本。
+		BIG-5码：通行于台湾、香港等地的一个繁体字编码方案，俗称大五码。
+		Unicode：国际标准码，融合了多种文字。所有文字都用两个字节来表示，Java语言用的就是Unicode。
+		UTF-8：最多用三个字节来表示一个字符。
+	String类相关方法：
+		String(byte[] bys, String charsetName)													//通过指定字符集（编码表）解码给定字节数组，创建字符串对象
+		byte[] getBytes(String charsetName)														//s.getBytes(编码表名)，使用给定字符集（编码表）将字符串编码为字节数组
+		
+14.字符流OutputStreamWriter/InputStreamReader
+	重要构造方法：
+		OutputStreamWriter(OutputStream out)												//根据默认编码把字节流的数据转换为字符流
+		OutputStreamWriter(OutputStream out, String charsetName)				//根据给定编码把字节流的数据转换为字符流
+		InputStreamReader(InputStream in)														//根据默认编码读取数据
+		InputStreamReader(InputStream in, String charsetName)						//根据指定编码读取数据
+	OutputStreamWriter的重要方法：
+		public void write(int c)																			//osw.write(int)，写一个字符
+		public void write(char[] cbuf)																//osw.write(char[])，写一个字符数组
+		public void write(char[] cbuf, int off, int len)											//osw.write(char[], 开始索引, 长度)，写一个字符数组的一部分
+		public void write(String str)																	//osw.write(String)，写一个字符串
+		public void write(String str, int off, int len)											//osw.write(String, 开始索引, 长度)，写一个字符串的一部分
+	InputStreamReader的重要方法：
+		int read()																								//isr.read()，一次读取一个字符
+		int read(char[] chs)																				//isr.read(char[])，一次读取一个字符数组
+		
+15.flush()方法相关
+	概述：
+		该方法是IO流根类OutputStream和Writer都有的方法，作用是刷新该流的缓冲，将流的缓冲中所有write()方法保存的内容写入到文件中。
+	相关重要问题：
+		close()和flush()的区别？
+			A.close()关闭流对象，在关闭之前会刷新一次缓冲区。关闭之后流对象就不能继续使用了；
+			B.flush()仅仅刷新缓冲区，刷新之后流对象还可以继续使用。
+			
+16.字符缓冲流BufferedWriter/BufferedReader
+	概述：
+		字符流为了高效读写，也提供了对应的字符缓冲流。
+		BufferedWriter：字符缓冲输出流
+			将文本写入字符输出流，缓冲各个字符，从而提供单个字符，数组和字符串的高效写入。
+			可以指定缓冲区的大小，然而在大多数情况下，默认值就足够大了。
+		BufferedReader：字符缓冲输入流
+			从字符输入流中读取文本，缓冲各个字符，从而实现字符、数组和行的高效读取。
+			可以指定缓冲区大小，然而在大多数情况下，默认值就足够大了。
+	重要构造方法：
+		BufferedWriter(Writer out)																	//创建一个具有默认大小缓冲区的缓冲字符输出流
+		BufferedReader(Reader in)																	//创建一个具有默认大小缓冲区的缓冲字符输入流
+	重要特殊方法：
+		BufferedWriter：
+			public void newLine()																		//bw.newLine()，根据系统来写入换行符
+		BufferedReader：
+			public String readLine()																		//br.readLine()，一次读取一行数据。结束依据为任何换行符，返回的字符串不包含任何换行符。如果已达流末尾，返回null。
+		
+17.数据输入/输出流DataInputStream/DataOutputStream
+	概述：
+		操作基本数据类型的流。
+	重要构造方法：
+		DataInputStream(InputStream in)															//传一个InputStream构造DataInputStream对象
+		DataOutputStream(OutputStream out)													//传一个OutputStream构造DataOutputStream对象
+	重要方法：
+		DataOutputStream：
+			public final void write基本数据类型(基本数据类型对象)							//dos.writeInt(0)
+		DataInputStream：
+			public final 基本数据类型 read基本数据类型()										//dis.readInt()
+			
+18.内存操作流
+	概述：
+		用于临时存储信息，程序结束，临时存储的信息就从内存中消失。
+		此种流的close()方法没有意义，因为其源码中没有任何内容，是空实现。
+		此处将概述：
+			字节数组内存操作流ByteArrayInputStream和ByteArrayOutputStream；
+			字符数组内存操作流CharArrayReader和CharArrayWriter；
+			字符串内存操作流StringReader和StringWriter。
+	构造方法：
+		输入流一般传入一个对应数据类型对象构造输入流对象。
+		输出流一般使用空参构造，缓冲区会随着写入数据的增加自动扩充。
+		也可以传一个size指定缓冲区大小，不过一般没有必要。
+	字节数组内存操作流的使用举例（另外两个流类似）：
+		// 写数据
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		baos.write("abc".getBytes());
+		byte[] bys = baos.toByteArray();
+		// 读数据
+		ByteArrayInputStream bais = new ByteArrayInputStream(bys);
+		int len = 0;
+		byte[] arr = new byte[1024];
+		while((len = bais.read(arr)) != -1) {
+			System.out.println(new String(arr, 0, len));
+		}
+		
+19.打印流
+	概述：
+		打印流包括字节打印流PrintStream和字符打印流PrintWriter
+	打印流的特点：
+		1）只有写数据的，没有读取数据的。只能操作目的地，不能操作数据源；
+		2）可以操作任意类型的数据；
+		3）如果启用了自动刷新，可以自动进行刷新无需手动flush()；
+		4）该流可以直接操作文本文件（不像缓冲流需要传一个操作文件的基本流）。
+			所以，常用的可以直接操作文本文件的流有：
+				FileInputStream，FileOutputStream，FileReader，FileWriter，PrintStream，PrintWriter
+	PrintWriter概述：
+		重要构造方法：
+			可以传一个File或文件名字符串构造打印输出流，不过这样将不能自动刷新。
+			也可以传一个字节输出流OutputStream或字符输出流Writer，这种方式若想要自动刷新，需第二参数boolean autoFlush。
+			public PrintWriter(OutputStream out, boolean autoFlush)					//需注意print()方法不能自动刷新，println()才可以
+			public PrintWriter(Writer out, boolean autoFlush)
+		使用举例：
+			PrintWriter pw = new PrintWriter(new FileWriter("demo.txt"), true);
+			pw.println("hello");
+			pw.println("100");
+			//此处println()一个方法相当于BufferedWriter的bw.write()，bw.newLine()，bw.flush()三者的组合。
+			
+20.标准输入/输出流
+	概述：
+		System类中的字段in和out。
+		分别代表了系统标准的输入和输出设备，默认输入设备是键盘，默认输出设备是显示器。
+		System.in的类型为InputStream，System.out的类型为PrintStream（字节打印流，OutputStream的子类FilterOutputStream的子类）。
+	相关问题：
+		键盘录入数据的三种方式：
+			1）main方法的参数String[] args数组接收参数，举例：
+				java HelloWorld hello world java
+			2）Scanner（JDK5后），举例：
+				Scanner sc = new Scanner(System.in);
+				sc.nextInt();
+			3）通过字符缓冲输入流BufferedReader包装标准输入流实现（BufferedReader需要一个Reader，通过InputStreamReader包装System.in实现）,举例：
+				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+				String line = br.readLine();
