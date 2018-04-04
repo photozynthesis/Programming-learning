@@ -384,3 +384,30 @@
 			3）通过字符缓冲输入流BufferedReader包装标准输入流实现（BufferedReader需要一个Reader，通过InputStreamReader包装System.in实现）,举例：
 				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 				String line = br.readLine();
+				
+21.随机访问流RandomAccessFile
+	概述：
+		（可以在文件指定位置进行读写操作）支持对文件的随机访问和写入。
+		RandomAccessFile包含了一个记录指针以标识当前独写的位置。当新创建对象时，指针位于文件开头；读/写了n个字节后，指针也会向后移动n个字节。
+		RandomAccessFile在io包下，不过不属于任何一个io流根类，其继承自Object。
+		融合了InputStream和OutputStream的功能。
+		RandomAccessFile不能向指针位置（除末尾）插入内容（将会覆盖原本存在的内容）。若想插入内容，可以先将指针后的内容存储到临时文件，追加内容，最后追加临时文件中的内容。
+	重要构造方法：
+		public RandomAccessFile(String name, String mode)							//第一个参数可以是文件或文件名，第二个参数为操作文件的模式，有"r"，"rw"，"rws"，"rwd"可选。常用"rw"进行读写。
+	重要方法：
+		public long getFilePointer()																	//raf.getFilePointer()，返回文件记录指针的当前位置
+		public long seek(long pos)																	//raf.seek(偏移量)，将文件记录指针设置到pos位置
+		InputStream具有的三个read()方法															//单个字节，字节数组，字节数组的一部分
+		OutputStream具有的三个write()方法														//单个字节，字节数组，字节数组的一部分
+		
+22.合并流SequenceInputStream
+	概述：
+		（将多个字节输入流合并为一个）表示其他输入流的逻辑串联。将会从第一个（输入流的有序集合第一个）开始，读完了读第二个，直到最后一个读完为止。
+		继承自InputStream。
+	重要构造方法：
+		public SequenceInputStream(InputStream s1, InputStream s2)				//创建包含两个InputStream的合并流，先读s1后读s2
+		public SequenceInputStream(Enumeration<? extends InputStream> e)//可以进行多个流的合并，具体说明如下：
+	Enumeration构造方法的具体说明：
+		Enumeration是有序集合Vector中public Enumeration<E> elements()方法的返回值，有序包含Vector中所有元素。
+		使用该种构造方法，需要先创建Vector集合对象，然后将多个InputStream添加到集合，最后调用集合的elements方法得到Enumeration（枚举）对象，以构造合并流对象。
+		
