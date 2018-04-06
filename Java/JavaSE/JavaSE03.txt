@@ -387,7 +387,8 @@
 				
 21.随机访问流RandomAccessFile
 	概述：
-		（可以在文件指定位置进行读写操作）支持对文件的随机访问和写入。
+		（可以在文件指定位置进行读写操作）
+		支持对文件的随机访问和写入。
 		RandomAccessFile包含了一个记录指针以标识当前独写的位置。当新创建对象时，指针位于文件开头；读/写了n个字节后，指针也会向后移动n个字节。
 		RandomAccessFile在io包下，不过不属于任何一个io流根类，其继承自Object。
 		融合了InputStream和OutputStream的功能。
@@ -402,7 +403,8 @@
 		
 22.合并流SequenceInputStream
 	概述：
-		（将多个字节输入流合并为一个）表示其他输入流的逻辑串联。将会从第一个（输入流的有序集合第一个）开始，读完了读第二个，直到最后一个读完为止。
+		（将多个字节输入流合并为一个）
+		表示其他输入流的逻辑串联。将会从第一个（输入流的有序集合第一个）开始，读完了读第二个，直到最后一个读完为止。
 		继承自InputStream。
 	重要构造方法：
 		public SequenceInputStream(InputStream s1, InputStream s2)				//创建包含两个InputStream的合并流，先读s1后读s2
@@ -410,4 +412,27 @@
 	Enumeration构造方法的具体说明：
 		Enumeration是有序集合Vector中public Enumeration<E> elements()方法的返回值，有序包含Vector中所有元素。
 		使用该种构造方法，需要先创建Vector集合对象，然后将多个InputStream添加到集合，最后调用集合的elements方法得到Enumeration（枚举）对象，以构造合并流对象。
+		
+23.序列化流ObjectInputStream/ObjectOutputStream
+	概述：
+		（把对象存入文件/从文件读出对象）
+		把对象按照流一样的方式存入文本文件或者在网络中传输/把文本文件或网络中的流对象数据还原成对象。
+		注意，写入和读取的对象需要实现Serializable接口，否则在操作的时候会抛出NotSerializableException。
+		Serializable为标记接口，内部没有任何方法。
+	重要构造方法：
+		public ObjectInputStream(InputStream in)											//创建从指定InputStream读取的ObjectInputStream
+		public ObjectOutputStream(OutputStream out)									//创建用指定OutputStream输出的ObjectOutputStream
+	重要方法：
+		public final Object readObject()															//ois.readObject()，从ObjectInputStream中读取Object对象
+		public final void writeObject(Object o)													//oos.writeObject(Object)，将指定对象写入ObjectOutputStream
+	注意事项：
+		1）如果写入一个已序列化类的对象，之后对该类的Java文件进行了改动，再执行读取的时候会报错。
+			要解决该问题，可以点击IDE中黄色叹号，自动生成成员变量序列化ID值。
+			该方式同时也可以去除黄色警告线。
+		2）若不想实例化某成员变量，可以用关键字transient修饰。
+		
+24.属性集合类Properties
+	概述：
+		（可以和IO流相结合使用的Map集合类）
+		该类的对象可以保存在流中或从流中加载。
 		
