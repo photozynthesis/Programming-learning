@@ -434,5 +434,21 @@
 24.属性集合类Properties
 	概述：
 		（可以和IO流相结合使用的Map集合类）
-		该类的对象可以保存在流中或从流中加载。
+		该类的对象可以保存在流中或从流中加载，属性列表中每一个键及其对应值都是一个字符串。
+		是Hashtable的子类，是一个map集合。
+	重要构造方法：
+		public Properties()																				//创建一个无默认值的空属性列表
+	重要特殊方法：
+		public Object setProperty(String key, String value)								//p.setProperty(str1, str2)，添加元素（原理为调用父类Hashtable的put()）
+		public String getProperty(String key)														//p.getProperty(key)，根据键找值
+		public Set<String> stringPropertyNames()											//p.stringPropertyNames()，获取所有键的集合
+		
+		public void load(Reader reader)															//p.load(Reader)，把文件中的数据读取到集合中
+		public void store(Writer writer, String comments)									//p.store(Writer, 注释)，把集合中的数据和注释存储到文件，注释可以为null
+	存储到文件中的格式：
+		#comments
+		#时间
+		键1=值1
+		键2=值2
+		...
 		
