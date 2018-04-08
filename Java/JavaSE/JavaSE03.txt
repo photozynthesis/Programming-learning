@@ -452,3 +452,22 @@
 		键2=值2
 		...
 		
+25.nio（新IO）
+	概述：
+		于JDK4出现nio，其和传统io有着相同的目的，都是用于输入和输出。不过新io采用了不同的处理方式，其原理是将文件或文件的一段区域映射到内存，像访问内存一样访问文件，效率更高。
+		目前旧io使用较多，此处内容仅需了解。
+	了解内容：
+		Path（1.7）：
+			为java.nio.file包下一个接口，表示路径。
+		Paths（1.7）：
+			一个最终类，其中有一个静态方法static Path get(URI uri)，根据给定URI确定文件路径。
+		Files（1.7）：
+			操作文件的工具类，方法全部为静态。
+			需要了解的方法：
+				public static long copy(Path source, OutputStream out)				//Files.copy(Path, OutputStream)，将一个文件中的全部字节复制到一个OutputStream
+				public static Path write(Path path, Iterable<? extends CharSequence> lines, Charset cs, OpenOption... options)
+					//把集合的元素写到文件
+		使用举例：
+			Files.copy(Paths.get("Demo.java"), new FileOutputStream("Copy.java"));		//复制文件
+			File.write(Paths.get("List.txt"), new ArrayList<String>(...), Charset.forName("GBK"));		//将集合的元素写到文件
+		
