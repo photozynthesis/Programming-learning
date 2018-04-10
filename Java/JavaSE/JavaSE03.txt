@@ -489,8 +489,90 @@
 	并行和并发：
 		并行：是指逻辑上同时发生，在某一个时间段内同时运行多个程序。
 		并发：是指物理上同时发生，在某一个时间点上同时运行多个程序。
+	Java程序的运行原理：
+		java命令会先启动Java虚拟机（JVM），也就是启动了一个程序（启动了一个进程）。该程序会启动一个主线程，然后该线程去调用某个类的main方法。
 	相关问题：
 		多个进程在单CPU上是同时进行的吗？
 			不是，因为单CPU在某一个时间点上只能做一件事情。
 			我们感觉到的同时进行，是因为CPU在做着进程间的高效切换。
+		Java虚拟机的启动是单线程的还是多线程的？
+			是多线程的。
+			因为至少启动了主线程和垃圾回收器线程。
+			
+27.多线程程序的实现
+	如何实现：
+		由于线程是依赖进程存在的，所以首先应创建一个进程。
+		进程是由系统创建的，所以我们需要调用系统功能去创建一个进程。
+		Java不能直接调用系统功能，没有办法直接实现多线程程序，不过可以通过调用C/C++写好的程序来实现。
+		将C/C++写好的程序功能封装成Java类，就可以实现Java多线程程序了。
+	Java提供的线程类是：
+		Thread
+	实现Java多线程程序的两种方法：
+		方式一：
+			1）自定义类MyThread继承自Thread类；
+			2）MyThread类里面重写run()方法；
+			3）创建对象；
+			4）启动线程。
+			实例：
+				public class MyThread{
+					public void run() {
+						...(线程中要执行的内容)
+					}
+				}
+				public class Demo{
+					MyThread tr1 = new MyThread();
+					MyThread tr2 = new MyThread();
+					
+					// tr1.setName("线程1")；
+					// tr2.setName("线程2")；
+					
+					tr1.start();									//启动线程，如果调用run()方法，只是相当于走了一遍run()中的代码
+					tr2.start();
+				}
+	相关重要问题：
+		1）为什么要重写run()方法？
+			不是类中所有代码都要被线程执行的。
+			为了区分哪些代码需要被线程执行，Java提供了Thread中的run()方法来包含被线程执行的代码。
+		2）调用run()方法为什么是单线程的呢？
+			因为run()方法的调用其实就相当于普通的方法调用，看到的自然是单线程的效果。
+		3）run()和start()的区别？
+			run()：仅仅是封装需要被线程执行的代码，直接调用仅相当于普通方法调用。
+			start()：启动线程，然后Java虚拟机调用该线程的run()方法。
+		4）线程能不能多次启动？
+			不能。
+			不过可以创建不同的线程对象分别启动。
+		
+28.Thread类
+	概述：
+		Thread是程序中的执行线程。
+	重要构造方法：
+		public Thread()										//分配新的Thread对象，自动生成的名称的形式为"Thread-" + n
+		public Thread(String name)					//使用给定的名称构造新的Thread对象
+	重要方法：
+		public final void setName(String name)		//th.setName("线程名")，设置线程名称
+		public final String getName()						//th.getName()，返回线程名称
+		public void run()											//th.run()，Thread的子类应该重写该方法
+		public void start()											//th.start()，使该线程开始执行，Java虚拟机调用该线程的run()方法
+		public static Thread currentThread()				//Thread.currentThread()，返回当前正在执行的Thread对象
+		public final int getPriority()							//th.getPriority()，返回线程对象的优先级
+		public final void setPriority(int newPriority)	//th.setPriority()，更改线程的优先级
+		
+29.线程调度
+	概述：
+		线程只有得到CPU的使用权，才可以执行指令。
+		线程有两种调度模型：
+			1）分时调度模型
+				所有线程轮流获得CPU的使用权，平均分配每个线程占用CPU的时间片。
+			2）抢占式调度模型：
+				优先让优先级高的线程使用CPU。
+				如果线程的优先级相同，会随机选择一个。
+				优先级高的线程获得的CPU时间片会多一些。
+		Java使用的是抢占式调度模型。
+	Java线程优先级：
+		线程默认优先级是：5
+		线程优先级的范围是：1 - 10
+		线程优先级高表示线程获取CPU时间片的几率高，调用次数越多将越能体现这一点，次数少会更多的表现出随机性。
+	相关异常：
+		IllegalArgumentException：非法参数异常
+			抛出此异常表明向方法传递了一个不合法或不正确的参数。
 		
