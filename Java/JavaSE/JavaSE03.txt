@@ -556,6 +556,12 @@
 		public static Thread currentThread()				//Thread.currentThread()，返回当前正在执行的Thread对象
 		public final int getPriority()							//th.getPriority()，返回线程对象的优先级
 		public final void setPriority(int newPriority)	//th.setPriority()，更改线程的优先级
+		public static void sleep(long millis)				//Thread.sleep(毫秒数)，在指定的毫秒数内让正在执行的线程休眠（暂停执行），此操作受系统计时器、调度精度等因素影响
+		public final void join()									//th.join()，等待该线程终止
+		public static void yield()								//Thread.yield()，暂停当前正在执行的线程对象，并执行其他线程
+		public final void setDaemon(boolean on)		//th.setDaemon()，将该线程标记为守护线程/用户线程/后台线程。当正在运行的线程都是守护线程时，Java虚拟机退出。必须在启动线程前调用
+		public void interrupt()									//th.interrupt()，中断线程。把线程的状态终止，并抛出一个InterruptedException
+		public final void stop()									//th.stop()，已过时，强迫线程终止执行。
 		
 29.线程调度
 	概述：
@@ -575,4 +581,17 @@
 	相关异常：
 		IllegalArgumentException：非法参数异常
 			抛出此异常表明向方法传递了一个不合法或不正确的参数。
+			
+30.线程控制
+	线程休眠：
+		在线程的run()方法内静态调用sleep(long millis)方法，可将当前实例休眠指定的毫秒数。
+	线程加入：
+		th.join()，将等待该线程终止才会去执行其他线程/执行后面的代码。
+	线程礼让：
+		在线程的run()方法内静态调用yield()方法，暂停当前正在执行的线程对象，并执行其他线程。
+	后台线程/守护线程：
+		（必须）在启动线程前调用th.setDaemon(boolean on)方法，可以将该线程标记为守护线程/后台线程。
+		当所有正在运行的线程都是守护线程时，Java虚拟机退出。
+	线程终止：
+		th.interrupt()，把线程的状态终止，并抛出一个InterruptedException。
 		
