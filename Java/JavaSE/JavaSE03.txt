@@ -514,20 +514,45 @@
 			3）创建对象；
 			4）启动线程。
 			实例：
-				public class MyThread{
+				public class MyThread extends Thread{
 					public void run() {
 						...(线程中要执行的内容)
 					}
 				}
 				public class Demo{
-					MyThread tr1 = new MyThread();
-					MyThread tr2 = new MyThread();
-					
-					// tr1.setName("线程1")；
-					// tr2.setName("线程2")；
-					
-					tr1.start();									//启动线程，如果调用run()方法，只是相当于走了一遍run()中的代码
-					tr2.start();
+					public static void main(String[] args){
+						MyThread tr1 = new MyThread();
+						MyThread tr2 = new MyThread();
+						
+						// tr1.setName("线程1")；
+						// tr2.setName("线程2")；
+						
+						tr1.start();									//启动线程，如果调用run()方法，只是相当于走了一遍run()中的代码
+						tr2.start();
+					}
+				}
+		方式二：
+			1）自定义类MyRunnable实现接口Runnable；
+			2）重写run()方法；
+			3）创建MyRunnable类的对象；
+			4）创建Thread类的对象，并把C步骤的对象当成参数传递；
+			5）启动线程。
+			实例：
+				public class MyRunnable implements Runnable{
+					public void run(){
+						...(线程中要执行的内容)
+					}
+				}
+				public class Demo{
+					public static void main(String[] args){
+						MyRunnable mr = new MyRunnable();
+						
+						Thread th1 = new Thread(mr, "线程1")；
+						Thread th2 = new Thread(mr)；
+						
+						th1.start();
+						th2.start();
+					}
 				}
 	相关重要问题：
 		1）为什么要重写run()方法？
@@ -548,6 +573,8 @@
 	重要构造方法：
 		public Thread()										//分配新的Thread对象，自动生成的名称的形式为"Thread-" + n
 		public Thread(String name)					//使用给定的名称构造新的Thread对象
+		public Thread(Runable target)				//传一个Runnable实现类，构造Thread对象
+		public Thread(Runable target, String name)		//传一个Runnable实现类和线程名称，构造Thread对象
 	重要方法：
 		public final void setName(String name)		//th.setName("线程名")，设置线程名称
 		public final String getName()						//th.getName()，返回线程名称
@@ -594,4 +621,22 @@
 		当所有正在运行的线程都是守护线程时，Java虚拟机退出。
 	线程终止：
 		th.interrupt()，把线程的状态终止，并抛出一个InterruptedException。
+		
+31.线程生命周期
+	1）新建
+		创建线程对象。
+		调用start()方法可进入就绪状态。
+	2）就绪
+		有执行资格，没有执行权。
+		若得到了CPU的执行权即进入运行状态。
+	3）运行
+		有执行资格，有执行权。
+		若被别的线程得到了CPU执行权，则回到就绪状态。
+		若运行了sleep()或wait()等方法，则进入阻塞状态。
+		若run()方法执行结束或中断了线程，进入死亡状态。
+	4）阻塞
+		没有执行资格，没有执行权。
+		若sleep()时间到或运行了notify()等方法，可恢复到就绪状态。
+	5）死亡
+		线程对象变成垃圾，等待被回收。
 		
