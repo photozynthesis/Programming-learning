@@ -661,8 +661,8 @@
 	同步的好处：
 		同步的出现解决了多线程的安全问题。
 	同步的弊端：
-		当线程很多时，每个线程都会去判断同步上的锁。
-		这将会耗费更多资源，降低程序运行效率。
+		1）当线程很多时，每个线程都会去判断同步上的锁。这将会耗费更多资源，降低程序运行效率。
+		2）容易产生死锁。
 	相关问题：
 		1）同步代码块的锁对象是什么？
 			是任意对象。
@@ -673,3 +673,65 @@
 				是this。
 		3）静态方法的锁对象是什么？
 			是类的字节码文件对象（demo.class）。
+			
+33.Lock锁（JDK5新特性）
+	概述：
+		（为了更清晰的表达如何加锁和释放锁）
+		java.util.concurrent.locks下的接口Lock，提供了比使用synchronized方法和语句可获得的更广泛的锁定操作。
+		允许更灵活的结构。
+	重要方法：
+		void lock()				//lock.lock()，获取锁
+		void unlock()			//lock.unlock()，释放锁
+	常用实现类：
+		ReentrantLock
+		
+34.线程死锁问题
+	概述：
+		两个或两个以上的线程在争夺资源的过程中，发生的一种互相等待的现象。
+	举例：
+		如下的程序在创建两个对象并分别传入0和1时，极有可能出现线程死锁现象。
+		public class DeadlockThread implements Runnable{
+		
+			private Object lockA = new Object();
+			private Object lockB = new Object();
+			private int x;
+			
+			public DeadlockThread (int x) {
+				this.x = x;
+			}
+			
+			public void run () {
+				while (true) {
+					if (x%2 == 0) {
+						synchronized (lockA) {
+							System.out.println("已经进入lockA，正在等待lockB");
+							synchronized (lockB) {
+								System.out.println("成功进入lockB")
+							}
+						}
+					} else {
+						synchronized (lockB) {
+							System.out.println("已经进入lockB，正在等待lockA");
+							synchronized (lockA) {
+								System.out.println("成功进入lockA")
+							}
+						}
+					}
+					x ++;
+				}
+			}
+		}
+		
+35.等待唤醒机制
+	概述：
+		Object类中提供了多个等待和唤醒方法。
+		这些方法定义在Object中的原因是，锁的对象可以是任意对象。
+	方法：
+		public final void wait()			//lock.wait()，让当前线程等待
+		public final void notify()		//lock.notify()，唤醒在此对象监视器上等待的单个线程
+		public final void notifyAll()		//lock.notifyAll()，唤醒在此对象监视器上等待的所有线程
+		
+36.线程组
+	概述：
+		（把多个线程合并到一起）
+		它可以对一批线程进行分类管理，Java允许程序直接对线程组进行控制。
