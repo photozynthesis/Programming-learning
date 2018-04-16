@@ -509,6 +509,7 @@
 		Thread
 	实现Java多线程程序的两种方法：
 		方式一：
+			（继承Thread类）
 			1）自定义类MyThread继承自Thread类；
 			2）MyThread类里面重写run()方法；
 			3）创建对象；
@@ -532,6 +533,7 @@
 					}
 				}
 		方式二：
+			（实现Runnable）
 			1）自定义类MyRunnable实现接口Runnable；
 			2）重写run()方法；
 			3）创建MyRunnable类的对象；
@@ -554,6 +556,47 @@
 						th2.start();
 					}
 				}
+			方式三（了解）：
+				（使用ExecutorService（线程池）、Callable和Future实现有返回值的多线程）
+				1）自定义类实现Callable<V>；
+				2）重写<V> call()方法，返回值为V；
+				3）创建线程池；
+				4）创建Callable<V>实现类对象；
+				5）将对象submit到常量池，用Future<V>对象接收；
+				6）Future<V>对象调用get()方法得到返回值；
+				7）关闭线程池。
+				实例（两个线程计算从1到number求和）：
+					class MyCallable implements Callable<Integer>{
+						private int number;
+						
+						public MyCallable(int number){
+							this.number = number;
+						}
+						public void call() throws Exception{
+							int sum = 0;
+							for(int x = 1; x <= number; x ++){
+								sum += x;
+							}
+							return sum;
+						}
+					}
+					class Demo{
+						public static void main(String[] args) throws Exception{
+							ExecutorService pool = Executors.newFixedThreadPool(2);
+							
+							Future<Integer> f1 = pool.submit(new MyCallable(100));
+							Future<Integer> f2 = pool.submit(new MyCallable(200));
+							
+							Integer i1 = f1.get();			//如有必要，等待计算完成，然后获取结果（API）
+							Integer i2 = f2.get();
+							
+							System.out.println(i1);
+							System.out.println(i2);
+							
+							pool.shutdown();
+						}
+					}
+					
 	相关重要问题：
 		1）为什么要重写run()方法？
 			不是类中所有代码都要被线程执行的。
@@ -579,6 +622,7 @@
 		public Thread(String name)					//使用给定的名称构造新的Thread对象
 		public Thread(Runable target)				//传一个Runnable实现类，构造Thread对象
 		public Thread(Runable target, String name)		//传一个Runnable实现类和线程名称，构造Thread对象
+		public Thread(ThreadGroup tg, Runnable target, String name)		//根据线程组，Runnable和名称构建Thread对象
 	重要方法：
 		public final void setName(String name)		//th.setName("线程名")，设置线程名称
 		public final String getName()						//th.getName()，返回线程名称
@@ -726,7 +770,7 @@
 	概述：
 		Object类中提供了多个等待和唤醒方法。
 		这些方法定义在Object中的原因是，锁的对象可以是任意对象。
-	方法：
+	方法（位于Object）：
 		public final void wait()			//lock.wait()，让当前线程等待
 		public final void notify()		//lock.notify()，唤醒在此对象监视器上等待的单个线程
 		public final void notifyAll()		//lock.notifyAll()，唤醒在此对象监视器上等待的所有线程
@@ -735,3 +779,28 @@
 	概述：
 		（把多个线程合并到一起）
 		它可以对一批线程进行分类管理，Java允许程序直接对线程组进行控制。
+		默认情况下，所有线程都属于主线程组（main）。
+		通过Thread类的构造方法public Thread(ThreadGroup tg, Runnable target, String name)，可将Thread在创建时就加入某一线程组。
+	重要构造方法：
+		public ThreadGroup(String name)			//构建一个新线程组，名字为name
+		
+37.线程池
+	概述：
+		程序启动一个新线程的成本是比较高的，因为要涉及到与操作系统的交互。
+		使用线程池可以很好地提高性能，尤其是需要创建大量生存期很短地线程时。
+		线程池中每一个线程代码结束后，不会死亡，而是回到线程池中成为空闲状态，等待下一个对象来使用。
+		此处将使用Executors类。
+	固定大小的线程池newFixedThreadPool：
+		public static ExecutorService newFixedThreadPool(int nThreads)			//Executors.newFixedThreadPool(线程数)，创建一个固定大小的线程池
+		使用举例：
+			ExecutorService pool = Executors.newFixedThreadPool(2);
+			pool.submit(new MyRunnable());
+			pool.submit(new MyRunnable());
+			pool.shutdown();
+	此外还有：
+		单任务线程池：
+			public static ExecutorService newSingleThreadExecutor()
+		可变尺寸的线程池：
+			public static ExecutorService newCachedThreadPool()
+		
+		
