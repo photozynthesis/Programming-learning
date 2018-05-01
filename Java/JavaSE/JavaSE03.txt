@@ -803,4 +803,89 @@
 		可变尺寸的线程池：
 			public static ExecutorService newCachedThreadPool()
 		
+38.定时器
+	概述：
+		可以让我们在指定时间做某件事情，还可以重复做某件事情。
+		主要依赖Timer和TimerTask这两个类。
+	Timer定时器类：
+		重要构造方法：
+			public Timer()
+		重要方法：
+			public void schedule(TimerTask, Date time)				//t.schedule(TimerTask, Date)，安排在指定时间执行指定任务
+			public void schedule(TimerTask, Date firstTime, long period)				//t.schedule(TimerTask, Date, period)，安排任务在指定时间开始固定延迟地执行
+			public void schedule(TimerTask task, long delay)				//t.schedule(TimerTask, delay)，安排在指定延迟后执行指定任务
+			public void schedule(TimerTask task, long delay, long period)				//t.schedule(TimerTask, delay, period)，安排任务在指定延迟后开始固定延迟地执行
+			public void cancel()				//t.cancel()，终止此计时器，并丢弃所有已安排的任务
+	TimerTask任务类：
+		为抽象类，实现了Runnable。
+		需要创建子类，并重写run()方法，run()方法中的内容就是要执行的任务。
+		
+39.设计模式
+	设计模式是经验的总结。
+	概述：
+		设计模式是一种思想，和具体的语言无关。
+		学习设计模式，可以和面向对象思想的理解相辅相成。
+		学习设计模式的目的在于建立面向对象的思想，尽可能地面向接口编程，高内聚，低耦合，使设计的程序可复用。
+		设计模式总体分为三种类型：
+			1）创建型		创建对象
+			2）结构型		对象的组成
+			3）行为型		对象的功能
+
+40.简单工厂模式
+	概述：
+		又叫静态工厂模式，特点是定义一些具体的工厂类负责创建一些类的实例（例如提供工厂类，专门造猫和狗，这样就不用手动new了）。
+	优点：
+		明确了各个类的职责，客户端不再需要负责对象的创建。
+	缺点：
+		若有新的对象增加，或某些对象创建方法不同，需要后期不断修改工厂类，不利于后期维护。
+		
+41.工厂方法模式
+	概述：
+		工厂方法模式会有抽象工厂类，负责定义创建对象的接口。
+		当增加一个需要创建的类的时候，就需要造一个小工厂继承抽象工厂，专门负责造这种类的对象。
+	优点：
+		解决了简单工厂模式的一些缺陷，后期维护不再需要修改工厂类。
+		当增加了需要创建的对象的时候，只需要增加一个具体的工厂即可。
+		增加了可维护性和系统的扩展性。
+	缺点：
+		需要编写额外的代码，增加了工作量。
+		
+42.单例模式
+	概述：
+		单例模式就是确保类在内存中只有一个对象，该实例必须自动创建，并对外提供。
+		单例模式分为饿汉式和懒汉式。
+	实现过程：
+		1）私有类的构造方法；
+		2）设置一个类型为本类的成员变量，使用以下修饰：
+			private：防止外界访问和修改
+			static：随着类的加载而加载，同时也是由于 提供对象的方法也是静态修饰
+			synchronized：用于懒汉式，因为懒汉式存在线程安全问题（多条语句操作同一变量）
+		3）提供公共访问的方式（静态方法）
+	饿汉式与懒汉式的区别：
+		饿汉式：
+			开始时就造好对象，举例：
+				private static Student s = new Sdudent();
+			这种方式一般不存在线程安全问题。
+		懒汉式：
+			在需要时再造对象，举例：
+				private static Student s = null;
+				public synchronized static Student getStudent() {
+					if(s == null){
+						s = new Student();
+					}
+					return s;
+				}
+	优点：
+		由于在系统中只存在一个对象，所以可以节约系统资源。
+		对于需要频繁创建和销毁对象的操作，单例模式可以提高系统性能。
+	缺点：
+		没有抽象层，扩展很难。
+		职责过重，一定程度上违背了单一职责。
+		
+43.Runtime类
+	概述：
+		该类属于单例模式饿汉式。
+		每个Java程序都有一个Runtime类实例，使应用程序能够与其运行的环境相连接，可以通过getRuntime()获取当前的运行时。
+	重要方法：
+		public Process exec(String command)			//rt.exec(“运行”中的命令)
 		
