@@ -1018,8 +1018,137 @@
 	概述：
 		LayoutManager是定义如何布置Container类的接口。
 	常用布局：
-		流式布局FlowLayout：
-		边界布局：
-		网格布局：
-		网格包布局：
-		卡片布局：
+		流式布局FlowLayout
+		边界布局
+		网格布局
+		网格包布局
+		卡片布局
+		
+48.网络编程
+	概述：
+		网络编程就是用来实现网络互联的不同计算机上运行的程序之间可以进行数据交换。
+		计算机网络之间以何种规则进行通信，就是网络模型研究的问题。
+	网络模型：
+		OSI(Open System Interconnection 开放系统互连)参考模型
+		TCP/IP参考模型
+	网络编程三要素：
+		1）IP地址 ：
+			网络中计算机的唯一标识。
+			IP地址的组成为网络号段+主机号段
+			A类IP地址：第一号段为网络号段 + 后三号段为主机号段
+				1.0.0.1 - 127.255.255.254 (10.x.x.x是私有地址)
+			B类IP地址：前二号段为网络号段 + 后二号段为主机号段
+				128.0.0.1 - 191.255.255.254(172.16.0.0 - 172.31.255.255是私有地址，169.254.x.x是保留地址)
+			C类IP地址：前三号段为网络号段 + 后一号段为主机号段
+				192.0.0.1 - 223.255.255.254(192.168.x.x是私有地址)
+			D类...
+			E类...
+			特殊IP地址：
+				127.0.0.1 (回环地址，表示本机)
+				x.x.x.255 (广播地址)
+				x.x.x.0 (网络地址)
+		2）端口
+			正在运行的程序的标识。
+			端口分为物理端口、网卡口和逻辑端口，这里指的是逻辑端口。
+			说明：
+				1）每个程序都至少会有一个逻辑端口；
+				2）有效端口：0 - 65535，其中0 - 1024为系统使用或保留端口。
+		3）协议
+			通信的规则。
+			分为UDP协议和TCP协议：
+				1）UDP特点：
+					把数据打包
+					数据有限制(64K)
+					不建立连接
+					速度快
+					不可靠
+				2）TCP特点：
+					建立连接通道
+					数据无限制
+					速度慢
+					可靠
+		
+49.InetAddress类
+	概述：
+		为了方便我们对IP地址的获取和操作，Java提供了InetAddress类供使用。
+	获取对象：
+		public static InetAddress getByName(String host)			//根据主机名或ip地址的字符串表示得到InetAddress对象
+	重要方法：
+		public String getHostName()				//address.getHostName()，获取主机名
+		public String getHostAddress()			//address.getHostAddress()，获取主机IP地址
+	相关问题：
+		如果一个类没有构造方法，是为什么？
+			1）成员全部是静态的(如Math, Arrays, Collections)；
+			2）单例设计模式(如Runtime)；
+			3）类中有静态方法返回该类的对象(如InetAddress)。
+			
+50.Socket(UDP)
+	概述：
+		网络套接字。
+		Socket编程，就是套接字编程/网络编程。
+		Socket包含了IP地址+端口。
+		这里使用类DatagramSocket。
+	Socket原理：
+		通信的两端都有Socket，网络通信其实就是Socket间的通信，数据在两个Socket间通过IO传输。
+	使用概要：
+		A.Socket发送数据
+			1）创建发送端Socket对象：
+				DatagramSocket ds = new DatagramSocket();
+			2）创建数据，并把数据打包
+				byte[] bys = "Hello, Socket, UDP".getBytes();
+				int length = bys.length();
+				InetAddress address = InetAddress.getByName("192.168.1.102");
+				int port = 10086;
+				DatagramPacket dp = new DatagramPacket(bys, length, address, port);			//使用数据（字节数组）、长度、目标IP地址和端口构建DatagramPacket数据包
+			3）发送数据
+				ds.send(dp);			//发送数据包
+			4）释放资源
+				ds.close();
+		B.Socket接收数据
+			1）创建接收端Socket对象：
+				DatagramSocket ds = new DatagramSocket(10086);				//因为不用发送数据包，所以在构造里指定接收端口
+			2）创建一个数据包（接收容器）
+				byte[] bys = new byte[1024];
+				int length = bys.length;
+				DatagramPacket dp = new DatagramPacket(bys, length);
+			3）调用Socket的接收方法接收数据包
+				ds.receive(dp);				//该方法在接收到数据包之前一直阻塞
+			4）解析数据包，并显示数据在控制台
+				InetAddress address = dp.getAddress();
+				String ip = address.getHostAddress();				//获取发送方的ip地址
+				byte[] bys2 = dp.getData();
+				int len = dp.getLength();
+				String s = new String(bys2, 0, len);					//将获取到的数据转成字符串
+				System.out.println(s);
+			5）释放资源
+				ds.close();
+				
+51.Socket(TCP)
+	概述：
+		这里使用类Socket和类ServerSocket。
+	使用概要：
+		A.Socket发送数据：
+			1）创建发送端的Socket对象
+				Socket s = new Socket("192.168.1.114", 12306);
+			2）获取输出流，写数据
+				OutputStream os = s.getOutputStream();
+				os.write("Hello,TCP".getBytes());
+			3）释放资源
+				s.close();
+		B.Socket接收数据
+			1）创建接收端的Socket对象
+				ServerSocket ss = new ServerSocket(12306);
+			2）监听客户端连接，返回一个对应的Socket对象
+				Socket s = ss.accept();					//监听并接收此套接字的连接，此方法在连接传入之前一直阻塞
+			3）获取输入流，读取数据显示在控制台
+				InputStream is = s.getInputStream();					//得到套接字连接的InputStream
+				
+				byte[] bys = new byte[1024];
+				int len = is.read(bys);				//收到数据之前一直阻塞
+				String str = new String(bys, 0, len);					//得到数据
+				
+				String ip = s.getInetAddress().getHostAddress();				//获取发送端的ip地址
+				
+				System.out.println(ip + "：" + str);					//输出发送端的ip地址和发送的数据
+			4）释放资源
+				s.close();				//注意ServerSocket（连接监听器）不应关闭，只需关闭Socket（本次连接）

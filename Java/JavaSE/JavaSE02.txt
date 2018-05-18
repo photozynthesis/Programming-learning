@@ -71,7 +71,7 @@
 		B：自动式：
 			a：编写一个带包的Java文件；
 			b：javac编译的时候带上-d即可，示例：
-				javac -d . HelloWorld.javac
+				javac -d . HelloWorld.java
 			c：回到包根目录所在目录，然后带包运行。
 		带包运行格式：
 			java 包名.类名
