@@ -1126,6 +1126,9 @@
 51.Socket(TCP)
 	概述：
 		这里使用类Socket和类ServerSocket。
+	Socket类的特殊功能：
+		public void shutdownInput()			//s.shutdownInput()，将此套接字的流置于"流的末尾"。调用此方法后若继续从输入流读取数据，则将返回EOF（文件结束符）
+		public void shutdownOutput()			//s.shutdownOutput()，禁用此套接字的输出流，任何之前写入的数据都将被发送，并后跟TCP正常连接终止序列。
 	使用概要：
 		A.Socket发送数据：
 			1）创建发送端的Socket对象
@@ -1152,3 +1155,47 @@
 				System.out.println(ip + "：" + str);					//输出发送端的ip地址和发送的数据
 			4）释放资源
 				s.close();				//注意ServerSocket（连接监听器）不应关闭，只需关闭Socket（本次连接）
+				
+52.反射
+	概述：
+		就是通过class文件对象，去使用该文件中的成员变量、构造方法和成员方法。
+	Class文件对象：
+		获取Class文件对象的方式：
+			A：Object类的getClass()方法；
+			B：数据类型的静态属性class；
+			C：Class类中的静态方法public static Class forName(String className)
+		重要方法：
+			（1）获取构造方法：
+					B.获取单个
+						public Constructor<T> getDeclaredConstructor(Class<?>... parameterTypes)			//c.getDeclaredConstructor(要获取的构造方法的参数个数及数据类型的class字节码文件对象)
+						public Constructor<T> getConstructor(Class<?>... parameterTypes)			//c.getConstructor(要获取的构造方法的参数个数及数据类型的class字节码文件对象)，根据参数获取指定构造方法
+					A.获取所有
+						public Constructor[] getConstructors()						//c.getConstructors()，获取该类所有公共（public修饰）构造方法
+						public Constructor[] getDeclaredConstructors()			//c.getDeclaredConstructors()，获取该类所有声明的构造方法
+			（2）获取成员变量：
+					A.获取单个
+						public Field getField(String name)						//c.getField(成员变量名)，获取指定的公共字段
+						public Field getDeclaredField(String name)			//c.getDeclaredField(字段名)，获取指定的声明的字段
+					B.获取所有
+						public Field[] getFields()						//c.getFields()，返回所有公共字段的数组
+						public Field[] getDeclaredFields()		//c.getDeclaredFields()，获取所有声明的字段的数组
+			（3）获取成员方法：
+					A.获取单个
+						pubilc Method getMethod(String name, class<?>... parameterTypes)						//c.getMethod(方法名, 参数.class数组)，获取指定公共成员方法
+						public Method getDeclaredMethod(String name, class<?>... parameterTypes)			//c.getDeclaredMethod(方法名, 参数.class数组)，获取指定本类声明的成员方法
+					B.获取所有
+						public Method[] getMethods()							//c.getMethods()，获取本类包括父亲的公共方法
+						public Method[] getDeclaredMethods()				//c.getDeclaredMethods()，获取本类声明的所有方法
+	Constructor<T>构造方法对象：
+		重要方法：
+			public T newInstance(Object... initargs)				//cons.newInstance(参数)，使用该构造方法构造一个新对象
+			public void setAccessible(boolean flag)				//cons.setAccessible(true)，设置为true则对象在使用时取消Java的访问检查（无视权限修饰符）
+	Field成员变量(域)对象：
+		重要方法：
+			public void set(Object obj, Object value)					//nameField.set(s1, "周树人")，将obj的该变量设置值为value
+			public void setAccessible(boolean flag)					//nameField.setAccessible(true)，设置为true则对象在使用时取消Java的访问检查（无视权限修饰符）
+	Method成员方法对象：
+		重要方法：
+			pubilc Object invoke(Object obj, Object... args)				//method1.invoke(s1, 参数...)，用obj调用方法
+			public void setAccessible(boolean flag)							//method1.setAccessible(true)，设置为true则对象在使用时取消Java的访问检查（无视权限修饰符）
+			
