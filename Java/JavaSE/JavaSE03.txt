@@ -1199,3 +1199,51 @@
 			pubilc Object invoke(Object obj, Object... args)				//method1.invoke(s1, 参数...)，用obj调用方法
 			public void setAccessible(boolean flag)							//method1.setAccessible(true)，设置为true则对象在使用时取消Java的访问检查（无视权限修饰符）
 			
+53.动态代理
+	概述：
+		利用反射机制实现方法的增强，在不修改源码仅仅扩展的情况下，在方法执行前后做你想做的事情（例如权限校验、日志记录等）。
+		这里指Java提供的，使用接口辅助的动态代理，使用Proxy类和InvocationHandler接口。
+	使用步骤：
+		1）创建接口和实现类；
+		2）新建类实现InvocationHandler接口，重写其中的方法：
+			Object invoke(Object proxy, Method method, Object[] args)					//在方法中写Object result = method.invoke(target, args[])，并在前后加上需要做的事情（例如权限校验、日志记录等），返回值为invoke产生的Object
+			举例：
+				public class MyInvocationHandler implments InvocationHandler {
+					private Object target;
+					public MyInvocationHandler (Object target) {
+						this.target = target;
+					}
+					public Object invoke (Object proxy, Method method, Object[] args) throws Throwable {
+						System.out.println("日志记录");
+						Object result = method.invoke(target, args);
+						System.out.println("权限校验");
+						return result;
+					}
+				}
+		3）创建上述类的对象；
+		4）通过Proxy类的静态方法newProxyInstance得到代理对象：
+			public static Object newProxyInstance(ClassLoader loader, Class<?>[] interfaces, InvocationHandler handler)
+				//loader：接口实现类.getClass().getClassLoader()即可；interfaces：接口实现类.getClass().getInterfaces()即可；handler：刚才创建的MyInvocationHandler。
+				//返回值类型为Object，强转为接口实现类接收
+		5）使用得到的代理对象来调用方法，即可实现在方法前后添加功能。
+		
+54.模板设计模式
+	概述：
+		定义一个算法的框架，而将具体算法推迟到具体子类中实现
+		例如计算一段代码的执行时间，将两个System.currentTimeMillis()之间的代码定义为一个抽象方法，方法中的内容在具体子类中实现。
+	优点：
+		在定义骨架算法的同时，可以灵活地实现具体算法，满足不同的需求。
+	缺点：
+		如果算法骨架有修改的话，则需要修改抽象类。
+		
+55.装饰设计模式
+	概述：
+		使用被装饰类的子类的一个实例，在客户端将这个实例交给装饰类，以扩展类的功能。
+		是继承的一个替代方案。
+	举例：
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	优点：
+		相比于继承，装饰模式可以更为灵活地扩展对象的功能。
+		装饰模式甚至可以动态添加、随意组合添加的功能。
+	缺点：
+		随意组合中可能会出现一些不合理的逻辑。
