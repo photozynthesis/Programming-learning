@@ -1247,3 +1247,37 @@
 		装饰模式甚至可以动态添加、随意组合添加的功能。
 	缺点：
 		随意组合中可能会出现一些不合理的逻辑。
+		
+56.枚举
+	枚举类的概述：
+		1）一种特殊的类，用关键字enum定义，与class、interface平级；
+		2）与单例模式类似又有所不同，当一个类的对象有且只有有限个时（例如一个星期只有七天，一年只有十二个月），这样的类被称为枚举类。
+	枚举类的重要特征：
+		1）枚举类的首行必须是枚举值的列表，各个枚举值用逗号隔开。若枚举值之后还有内容，则需在最后一个枚举值后加上分号；
+		2）枚举类默认继承了Enum类，并实现了Serializable和Comparable<E>接口；
+		3）所有的枚举值都是public static final的，非抽象的枚举类不能再派生子类。
+	枚举类的重要方法：
+		static values()				//WeekEnum.values()，返回包含所有枚举值的数组，返回的数组类型是当前枚举类（WeekEnum[]）
+		public final int comparaTo(E o)		//WeekEnum.MONDAY.comparaTo(WeekEnum.TUESDAY)，同一个枚举实例只能和同类型的枚举实例比较，返回两实例“位置编号之差”（-1）
+		pubilc final String name()				//WeekEnum.SUNDAY.name()，返回枚举实例的名称
+		public String toString()					//WeekEnum.SUNDAY.toString()，返回枚举实例的名称，可重写
+		public static <T extends Enum<T>> T valueOf(Class<T> enumType, String name)			//WeekEnum.valueOf(WeekEnum.class, MONDAY)，返回带指定名称的指定枚举类型的枚举常量
+	举例：
+		public enum WeekEnum {
+			MONDAY, TUESDAY, WENDSDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
+		}
+		
+		public enum WeekEnum {
+			MONDAY("周一"),  TUESDAY("周二"),  WENDSDAY("周三"),  THURSDAY("周四"),  FRIDAY("周五"),  SATURDAY("周六"),  SUNDAY("周日");
+			
+			private String date;
+			
+			private WeekEnum (String date) {
+				this.date = date;
+			}
+			
+			public String toString () {
+				return "这是一个日子";
+			}
+		}
+-----------------------------------------------
