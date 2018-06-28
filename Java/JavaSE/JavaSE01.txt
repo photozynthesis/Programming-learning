@@ -3,8 +3,6 @@
 目录
 	
 	
-1.循环语句
-	
 1.键盘录入
 	1）导包 import java.util.Scanner;
 	2）创建键盘录入对象 Scanner sc = new Scanner (System.in);
