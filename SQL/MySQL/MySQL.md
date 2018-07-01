@@ -64,6 +64,20 @@ mysql -uroot -p123
 - create database 数据库名称;
 - use 数据库名称;    //选择当前操作的数据库
 
+### 3.7 编码相关
+
+- `set character_set_results = 'GBK'`，设置查询结果的编码方式，注意重新通过DOS登录后将失效
+- `show variables like '%char%';`查看MySQL相关字符编码方式
+
+### 3.8 关于SQL脚本
+
+- 将SQL语句依次写入一个.sql文件可以创建一个SQL脚本
+- `source xxx.sql`可以执行SQL脚本（快速的逐行执行脚本中的语句）
+
+### 3.9 获取当前系统时间
+
+- 使用函数`now()`，返回的是当前时间的date对象
+
 
 
 ## 4.表
@@ -178,6 +192,44 @@ MySql默认的日期格式如下：
   ```
 
   注意distinct前面不能有其他字段，distinct作用于后面的多个字段。
+
+- in
+
+  后跟括号，括号内写多个字段值，用于过滤查询结果。
+
+  ```sql
+  select ename,job from emp where job in('MANAGER','SALESMAN');
+  //查询工作为MANAGER和SALESMAN的员工
+  ```
+
+- union
+
+  用于将两个查询结果进行合并。
+
+  将union关键字放在两条select语句之间即可。
+
+  两条select语句查询的**字段数必须相等**。若是在oracle数据库中，字段的**类型也必须相等**。
+
+  ```sql
+  select ename,job from emp where job='MANAGER'
+  union
+  select ename,job from emp where job='SALSEMAN';
+  //查询职位为MANAGER和SALESMAN的员工
+  ```
+
+- limit
+
+  limit只在MySQL数据库中存在，用来获取一张表的部分数据。
+
+  在select语句的最后加上`limit 起始下标(从0开始),条目个数;`即可。
+
+  ```sql
+  select ename,sal from emp order by sal desc limit 0,5;
+  //查询工资排名前五名的员工
+  //此处的[limit 0,5]也可以写作[limit 5]
+  ```
+
+  
 
 
 
@@ -343,3 +395,148 @@ order by
 相当于将select语句的结果当作一张临时新表，参与到大的select语句中。
 
 将子select语句左右加上括号即可（句尾不要分号）。
+
+
+
+## 12.创建表
+
+MySQL的建表语句如下：
+
+```sql
+create table tableName(
+	columnName dataType(length),
+	columnName dataType(length),
+	...
+	columnName dataType(length) default defaultValue;	//设置具有默认值的字段
+);
+```
+
+注意事项：
+
+1. 表格的名字最好以`t_`或者`tbl_`开头，增强可读性。
+2. 需要存储中文的地方的varchar，其长度最好是2的倍数。
+3. 定义字段语句后跟default+默认值，可以设置某一字段的默认值，实例见上。
+
+
+
+## 13.删除表
+
+删除表的语句如下：
+
+```sql
+drop table 表名;	//若数据库中没有这张表，则报错
+drop table if exists 表名;	//为MySQL特有，如果存在这张表则删除，不会报错
+```
+
+
+
+## 14.MySQL常用数据类型
+
+- varchar
+
+  可变长度字符串。
+
+  其会**自动判断内容的长度**，以决定占用的存储空间。不过判断过程会消耗一些系统资源。
+
+  适合于长度在**一定范围内变化**的内容。
+
+- char
+
+  定长字符串。
+
+  长度**固定不变**，若实际长度不足则会自动补充空格。
+
+  适合于**定长**的内容。
+
+- int
+
+  整数型
+
+- bigint
+
+  长整型
+
+- float
+
+  单精度浮点型
+
+- double
+
+  双精度浮点型
+
+- date
+
+  日期类型（一般用字符串取代）
+
+- blob
+
+  Binary Large Object 二进制大对象
+
+  一般用来存储视频、图片等大文件。
+
+- clob
+
+  Character Large Object 字符大对象
+
+  可以存储比较大的文本。
+
+
+
+## 15.向表格中插入数据
+
+使用insert语句(DML)，格式：
+
+```
+insert into 表名(字段名1,字段名2,...) values(值1,值2,...);
+```
+
+注意事项：
+
+1. 字段和值必须一一对应，个数必须相同，类型必须匹配。
+2. 若插入数据的时候没有给出某个字段的值，且该字段没有约束的话，默认为null。
+3. 若省略表名后的括号，则相当于**按照顺序包含了全部字段**。**不建议省略**这个括号，若省略了这条语句会因为表扩充字段而失效（报错），不利于健壮性。
+
+
+
+## 16.复制表
+
+使用以下格式复制表：
+
+```sql
+create table tableName as select columnName1,columnName ... from tableName;
+//将select语句返回的表直接赋值给新表
+```
+
+
+
+## 17.将查询结果插入到某张表中
+
+使用以下格式：
+
+```sql
+insert into 表名 select语句;
+```
+
+
+
+## 18.增/删/改表的结构
+
+1. 给表增加一个字段：
+
+   ```sql
+   alter table 表名 add 字段名 数据类型(长度);
+   ```
+
+2. 更改某个字段的数据类型：
+
+   ```sql
+   alter table 表名 modify 字段名 新的数据类型(新的长度);
+   ```
+
+3. 删除表中某字段：
+
+   ```sql
+   alter table 表名 drop 字段名;
+   ```
+
+   
