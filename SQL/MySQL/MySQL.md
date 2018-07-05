@@ -540,3 +540,221 @@ insert into 表名 select语句;
    ```
 
    
+
+## 19.删/改表中的数据
+
+### 19.1 修改表中的数据
+
+```sql
+update 表名 set 字段名1=值1,字段名2=值2,... where 条件;
+```
+
+注意事项：
+
+1. 若没有where限制条件，则会修改表中**所有记录**。
+
+### 19.2 删除表中的数据
+
+```sql
+delete from 表名 where 条件;
+```
+
+注意事项：
+
+1. 若没有where限制条件，则会删除表中**所有记录**。
+
+
+
+## 20.约束
+
+约束（constraint），对表中字段进行**限制**。
+
+约束分为**列级约束**和**表级约束**，列级约束跟在建表语句字段定义后面，表级约束独占建表语句一行，具体如下。
+
+### 20.1 添加约束
+
+- 列级约束：在建表语句中将约束条件加在字段描述的后面，举例：
+
+  ```sql
+  create table tbl_student{
+  	name int(10) not null,
+  	num int(10) unique
+  }
+  ```
+
+- 表级约束：在建表语句中独占一行，可对多个字段联合添加约束，也可以给约束起名字
+
+  ```sql
+  create table xxx{
+  	...,
+  	(constraint 约束名) 约束类型(约束字段1,约束字段2,...)
+  }
+  ```
+
+  
+
+- 使用alter语句
+
+  ```sql
+  alter table 表名 add cnostraint 约束名 约束类型(约束字段) 附加信息;
+  ```
+
+### 20.2 删除约束
+
+- 使用alter语句
+
+  ```sql
+  alter table 表名 drop primary key;		//删除主键约束
+  alter table 表名 drop foreign key 约束名;	//删除外键约束
+  ```
+
+### 20.3 修改约束
+
+- 其实就是修改字段：
+
+  ```sql
+  alter table 表名 modify 字段名 新的字段数据类型(新的长度) 新的约束信息;
+  ```
+
+- 还可以删除字段重新添加（感觉不太好）
+
+### 20.4 约束类型
+
+- **非空约束：not null**
+
+  not null和unique约束可以同时存在。
+
+- **唯一性约束：unique**
+
+  注意unique约束的字段不能重复，不过可以存在多个null。
+
+- **主键约束（PK，primary key）**
+
+  **概述：**
+
+  - 表中某个字段在添加**主键约束**后，该字段就被成为**主键字段**，该字段中的每一个数据都被成为**主键值**。
+  - “**主键值**”是表中**当前行的唯一标识**，相当于“身份证号”。
+  - 主键字段自带not null unique（非空唯一），不过其不完全相同于not null unique修饰的字段。
+  - 一张表应该要有主键字段，若没有，表示这张表是无效的。
+
+  **分类：**
+
+  - 按照约束的字段数量分：
+    - 单一主键：即给单一字段添加主键约束
+    - 复合主键：给多个字段联合添加约束
+  - 根据主键性质分：
+    - 自然主键：主键为自然数，和当前表的业务没有任何任何关系
+    - 业务主键：主键值和当前表的业务紧密相关，使用较少
+
+  **添加方式：**
+
+  - 单一主键约束：建表语句中，在某个字段后添加`primary key`，也可以使用表级约束的方法。
+
+    ```sql
+    create table tbl_student{
+    	id int(10) primary key,		//向学生的id添加主键标识
+    	name varchar(20)
+    }
+    
+    create table tbl_student{
+    	id int(10),
+    	name varchar(20),
+    	(constraint xxx) primary key(id)
+    							//也可以使用表级约束的方法添加
+    }
+    ```
+
+  - 复合主键约束：只能使用表级约束的方法添加（因为有多个字段）。
+
+    ```sql
+    create table tbl_student{
+    	id int(10),
+    	name varchar(20),
+    	email varchar(40),
+    	(constraint xxx) primary key(id,name)		//添加复合主键约束
+    }
+    ```
+
+
+  **其他事项：**
+
+  1. MySQL提供了一个自增的数字，用来自动生成主键值。
+
+     ```sql
+     create table tbl_student{
+     	id int(10) primary key auto_increment,	//自增的id
+     	name varchar(20)
+     }
+     ```
+
+     自增的数字默认从1开始，以1递增，每个数字只能使用一次（即若删除了某条记录，对后续记录没有影响）。
+
+- **外键约束（FK，foreign key）**
+
+  **概述：**
+
+  - 外键约束用于将表中**某个字段的值**限制在**另一张表中某个字段值**的范围之内（例如学生表中有个字段班级编号，范围限制在班级编号与班级名对应表中）。
+  - 某个字段添加**外键约束**之后，这个字段就称为**外键字段**，该字段下所有值成为**外键值**。
+  - 外键约束的好处是减少了数据冗(rong3)余。
+
+  **添加方式：**
+
+  ```sql
+  create table tbl_student{
+  	id int(10) primary key,
+  	name varchar(20),
+  	classno int(3),
+  	(constraint 约束名) foreign key(字段名) references 表名(被参考字段名)
+  	//添加外键约束，若参考多个字段，用逗号分隔即可
+  }
+  ```
+
+  外键约束只能以表级约束的方式添加，不能用列级约束。
+
+  **注意事项：**
+
+  - 外键值**可以为NULL**。
+  - 外键字段所引用的另一张表中的字段，必须具有**unique**约束。
+  - 引用外键的表称为子表，被引用的表称为父表。创建表时应先创建父表后创建子表，插入数据的顺序也应是先父后子，而删除数据的时候应先删除子表中的数据。
+
+### 20.5 相关事项
+
+1. 带有名字的表级约束，可以在MySQL自带数据库information_schema中的表table_constraints中进行相关操作。
+
+
+
+## 21.级联更新/删除
+
+概述：
+
+​	一个关于外键约束中父子表关系的概念。
+
+​	在更新/删除父表中数据的时候，级联更新/删除子表中的数据。
+
+​	谨慎使用。
+
+使用：
+
+- 建表时在约束定义后加上附加信息：on delete/update cascade
+
+  ```sql
+  create table 表名{
+  	...,
+  	constraint 约束名 foreign key(字段名) references 表名(被参考字段) on delete/update cascade
+  }
+  ```
+
+- 也可以直接（删除约束之后重新）添加约束
+
+  ```sql
+  alter table 表名 add constraint 约束名 foreign key(字段名) references 表名(被参考字段) on delete/update cascade;
+  ```
+
+  
+
+
+
+
+
+
+
