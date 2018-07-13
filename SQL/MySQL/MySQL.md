@@ -576,19 +576,19 @@ delete from 表名 where 条件;
 - 列级约束：在建表语句中将约束条件加在字段描述的后面，举例：
 
   ```sql
-  create table tbl_student{
+  create table tbl_student(
   	name int(10) not null,
   	num int(10) unique
-  }
+  )
   ```
 
 - 表级约束：在建表语句中独占一行，可对多个字段联合添加约束，也可以给约束起名字
 
   ```sql
-  create table xxx{
+  create table xxx(
   	...,
   	(constraint 约束名) 约束类型(约束字段1,约束字段2,...)
-  }
+  )
   ```
 
   
@@ -651,28 +651,28 @@ delete from 表名 where 条件;
   - 单一主键约束：建表语句中，在某个字段后添加`primary key`，也可以使用表级约束的方法。
 
     ```sql
-    create table tbl_student{
+    create table tbl_student(
     	id int(10) primary key,		//向学生的id添加主键标识
     	name varchar(20)
-    }
+    )
     
-    create table tbl_student{
+    create table tbl_student(
     	id int(10),
     	name varchar(20),
     	(constraint xxx) primary key(id)
     							//也可以使用表级约束的方法添加
-    }
+    )
     ```
 
   - 复合主键约束：只能使用表级约束的方法添加（因为有多个字段）。
 
     ```sql
-    create table tbl_student{
+    create table tbl_student(
     	id int(10),
     	name varchar(20),
     	email varchar(40),
     	(constraint xxx) primary key(id,name)		//添加复合主键约束
-    }
+    )
     ```
 
 
@@ -681,10 +681,10 @@ delete from 表名 where 条件;
   1. MySQL提供了一个自增的数字，用来自动生成主键值。
 
      ```sql
-     create table tbl_student{
+     create table tbl_student(
      	id int(10) primary key auto_increment,	//自增的id
      	name varchar(20)
-     }
+     )
      ```
 
      自增的数字默认从1开始，以1递增，每个数字只能使用一次（即若删除了某条记录，对后续记录没有影响）。
@@ -700,13 +700,13 @@ delete from 表名 where 条件;
   **添加方式：**
 
   ```sql
-  create table tbl_student{
+  create table tbl_student(
   	id int(10) primary key,
   	name varchar(20),
   	classno int(3),
   	(constraint 约束名) foreign key(字段名) references 表名(被参考字段名)
   	//添加外键约束，若参考多个字段，用逗号分隔即可
-  }
+  )
   ```
 
   外键约束只能以表级约束的方式添加，不能用列级约束。
@@ -738,10 +738,10 @@ delete from 表名 where 条件;
 - 建表时在约束定义后加上附加信息：on delete/update cascade
 
   ```sql
-  create table 表名{
+  create table 表名(
   	...,
   	constraint 约束名 foreign key(字段名) references 表名(被参考字段) on delete/update cascade
-  }
+  )
   ```
 
 - 也可以直接（删除约束之后重新）添加约束
@@ -752,7 +752,55 @@ delete from 表名 where 条件;
 
   
 
+## 22.存储引擎
 
+**概述：**
+
+​	MySQL特色，在创建表的时候可以指定这张表的存储引擎（即数据的存储方式）。
+
+​	Java程序员需要了解的常用存储引擎有MyISAM、MEMORY和InnoDB。
+
+**常用操作：**
+
+- 查看有哪些存储引擎可用：
+
+  ```sql
+  show engines\G
+  ```
+
+- 查看某张表所用的存储引擎， 可以通过show create：
+
+  ```sql
+  show create table 表名;
+  ```
+
+
+**常用存储引擎：**
+
+- MyISAM
+  - 每张表使用三个文件表示：mytable.frm（存储表结构定义），mytable.MYD（存储表行的内容），mytable.MYI（存储表上的索引）
+  - 可以压缩、设置成只读表来节省空间
+- InnoDB
+  - MySQL默认存储引擎
+  - 支持事务
+  - 支持级联更新、级联删除，支持外键及引用的完整性
+  - 每个表以.frm文件表示
+  - 在MySQL服务器崩溃后提供自动恢复
+- MEMORY
+  - 每个表以.frm文件表示
+  - 表数据及索引存储在内存中，速度快
+
+
+
+## 23.事务
+
+**概述：**
+
+​	事务（Transaction），是一个最小的不可再分的工作单元，一个事务通常对应了一个完整的业务。
+
+​	一个完整的业务需要批量的DML（insert, delete, update）语句来协同完成，事务只和DML语句有关，只有DML语句才有事务。
+
+​	事务中的DML语句执行后只能同时成功，或同时失败。在使用事务进行操作时，操作的结果暂时在内存中；直到最后一条DML语句执行成功，才会将内存中的结果同步到数据库，若有DML语句执行失败，则删除所有的操作记录（不同步）。
 
 
 
