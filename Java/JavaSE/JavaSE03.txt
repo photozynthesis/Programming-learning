@@ -411,7 +411,7 @@
 		public SequenceInputStream(Enumeration<? extends InputStream> e)//可以进行多个流的合并，具体说明如下：
 	Enumeration构造方法的具体说明：
 		Enumeration是有序集合Vector中public Enumeration<E> elements()方法的返回值，有序包含Vector中所有元素。
-		使用该种构造方法，需要先创建Vector集合对象，然后将多个InputStream添加到集合，最后调用集合的elements方法得到Enumeration（枚举）对象，以构造合并流对象。
+		使用该种构造方法，需要先创建Vector集合对象，然后将多个InputStream添加到集合，最后调用集合的elements方法得到Enumeration对象，以构造合并流对象。
 		
 23.序列化流ObjectInputStream/ObjectOutputStream
 	概述：
@@ -442,7 +442,6 @@
 		public Object setProperty(String key, String value)								//p.setProperty(str1, str2)，添加元素（原理为调用父类Hashtable的put()）
 		public String getProperty(String key)														//p.getProperty(key)，根据键找值
 		public Set<String> stringPropertyNames()											//p.stringPropertyNames()，获取所有键的集合
-		
 		public void load(Reader reader)															//p.load(Reader)，把文件中的数据读取到集合中
 		public void store(Writer writer, String comments)									//p.store(Writer, 注释)，把集合中的数据和注释存储到文件，注释可以为null
 	存储到文件中的格式：

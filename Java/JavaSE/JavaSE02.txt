@@ -339,7 +339,7 @@
 			如：Integer i = 100;	i += 200;		可通过编译，后句等价于i = Integer.valueOf(i.intValue() + 200);
 		注意：在使用时若Integer i = null;	上述过程会出现NullPointerException空指针异常。
 		注意：Integer的数据直接赋值，如果在-128~127之间，会直接从缓冲池里获取数据。
-			如：Integer i = 127;	Integer ii = 127;		System.out,println( i == ii );		将会输出true
+			如：Integer i = 127;	Integer ii = 127;		System.out.println( i == ii );		将会输出true
 
 17.Character包装类
 	概述：
@@ -348,11 +348,11 @@
 	构造方法：
 		public Character(char value)
 	重要方法：
-		public static boolean isUpperCase(char ch)					//判断给定字符串是否是大写字符
-		public static boolean isLowerCase(char ch)					//判断给定字符串是否是小写字符
-		public static boolean isDigit(char ch)							//判断给定字符串是否是数字字符
-		public static char toUpperCase(char ch)						//把给定字符串转成大写字符
-		public static char toLowerCase(char ch)						//把给定字符串转成小写字符
+		public static boolean isUpperCase(char ch)					//判断给定字符是否是大写字符
+		public static boolean isLowerCase(char ch)					//判断给定字符是否是小写字符
+		public static boolean isDigit(char ch)							//判断给定字符是否是数字字符
+		public static char toUpperCase(char ch)						//把给定字符转成大写字符
+		public static char toLowerCase(char ch)						//把给定字符转成小写字符
 
 18.正则表达式
 	概述：
@@ -376,8 +376,8 @@
 			X? 						X，一次或一次也没有 
 			X* 						X，零次或多次 
 			X+ 						X，一次或多次 
-			X{n} 					X，恰好 n 次 
-			X{n,} 					X，至少 n 次 
+			X{n} 					X，恰好n次 
+			X{n,} 					X，至少n次 
 			X{n,m} 				X，至少 n 次，但是不超过 m 次 
 	使用：
 		String类的匹配功能：
@@ -427,7 +427,7 @@
 		public static void gc()														//System.gc()，调用垃圾回收器。实际上是调用了Object类的finalize()方法。建议除非是回收大量对象，不要使用该方法
 		public static void exit(int status)										//System.exit(0)，关闭当前运行的Java虚拟机。参数作为状态码，非0状态码表示异常终止
 		public static long currentTimeMillis()								//System.currentTimeMillis()，返回自1970年1月1日开始的当前时间的毫秒值表示
-		public static void arraycopy(Object src,int srcPos,Object desk,int deskPos,int length)			//System.arraycopy(原数组,原数组起始索引,目标数组,目标数组起始索引,要复制元素个数)
+		public static void arraycopy(Object src,int srcPos,Object dest,int deskPos,int length)			//System.arraycopy(原数组,原数组起始索引,目标数组,目标数组起始索引,要复制元素个数)
 			//从原数组中复制一个子数组到目标数组
 			//注意：arraycopy全部为小写
 
@@ -437,7 +437,7 @@
 	重要构造方法：
 		public BigInteger(String val)
 	重要方法：
-		public BigInteger add(BigInteger val)								//bi.add(bi2)，返回bi + bi2
+		public BigInteger add(BigInteger val)								//bi.add()，返回bi + bi2
 		public BigInteger subtract(BigInteger val)							//bi.subtract(bi2)，返回bi - bi2
 		public BigInteger multiply(BigInteger val)							//bi.multiply(bi2)，返回bi * bi2
 		public BigInteger divide(BigInteger val)								//bi.divide(bi2)，返回bi / bi2
@@ -445,7 +445,7 @@
 
 23.BigDecimal类
 	概述：
-		该类可以精确的表示及计算浮点数，不同于float和double在运算时有时会丢失精度。
+		该类可以精确的表示及计算浮点数，不同于bi2float和double在运算时有时会丢失精度。
 		不可变的，任意精度的有符号十进制数。
 	重要构造方法：
 		public BigDecimal(String val)											//将字符串转换为BigDecimal，此方法稳定/产生的结果可预知，首选
