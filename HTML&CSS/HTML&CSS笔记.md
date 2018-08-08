@@ -514,7 +514,7 @@ CSS盒子模型包含以下几个属性：
   举例：
 
   ```html
-  <span>左上</span>							//
+  <span>左上</span>
   <span>右上</span>
   <span style="display:block;">下一</span>
   <span style="display:block;">下二</span>
