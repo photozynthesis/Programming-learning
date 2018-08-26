@@ -1327,11 +1327,11 @@ Java语言最基本的单位是类，类是一组相关的属性和行为的集�
 
 - **重要方法：**
 
-  public static <T> void **sort**(List<T> list)		//Collections.sort(List<T>)，对集合进行排序。该构造方法使用自然排序（参数需要Comparable），可追加一个Comparator进行比较器排序。
-  public static <T> int **binarySearch**(List<?> list, T key)	//Collections.binarySearch(List<? extends T>, key)，使用二分查找法查找给定key在集合中的索引，需要传入已排序的list。
-  public static <T> T **max**(Collection<?> c)		//Collections.max(Collection)，获取集合中的最大值。
-  public static void **reverse**(List<?> list)		//Collections.reverse(List)，反转集合中的元素。
-  public static void **shuffel**(List<?> list)		//Collections.shuffel(List)，随机置换集合中的元素。
+  - public static <T> void **sort**(List<T> list)		//Collections.sort(List<T>)，对集合进行排序。该构造方法使用自然排序（参数需要Comparable），可追加一个Comparator进行比较器排序。
+  	 public static <T> int **binarySearch**(List<?> list, T key)	//Collections.binarySearch(List<? extends T>, key)，使用二分查找法查找给定key在集合中的索引，需要传入已排序的list。
+  	 public static <T> T **max**(Collection<?> c)		//Collections.max(Collection)，获取集合中的最大值。
+  	 public static void **reverse**(List<?> list)		//Collections.reverse(List)，反转集合中的元素。
+  	 public static void **shuffel**(List<?> list)		//Collections.shuffel(List)，随机置换集合中的元素。
 
 - **Collection和Collections的区别：**
 
@@ -1414,7 +1414,7 @@ Java语言最基本的单位是类，类是一组相关的属性和行为的集�
 
   - **栈：**
 
-    特点：先入（压栈）后出（弹栈）。
+    特点：先进（压栈）后出（弹栈）。
 
   - **队列：**
 
@@ -1423,17 +1423,39 @@ Java语言最基本的单位是类，类是一组相关的属性和行为的集�
   - **数组：**
 
     概述：
-    	存储同一种类型的多个元素的容器，有索引方便获取元素。
+
+    ​	存储同一种类型的多个元素的容器，有索引方便获取元素。
+
     特点：
-    	查询快，增删慢（由于长度固定需新建数组）。
+
+    ​	查询快，增删慢（由于长度固定需新建数组）。
 
   - **链表：**
 
     概述：
     	由一个“链子”把多个结点连起组成的数据。
-    	结点：由数据和地址组成（数据域和指针域）
+
+    ​	结点：由数据和地址组成（数据域和指针域）。
+
+    ​	存在一种双向的链表，其具有两个指针域，分别指向前一个和后一个结点。
+
     特点：
-    	查询慢（需从头开始），增删快。
+
+    ​	查询慢（需从头开始），增删快。
+
+- **红黑树：**
+
+  - **概述：**
+
+    红黑树是一种自平衡二叉查找树，有着良好的最坏情况运行时间，可以在O(log n)时间内做查找、插入和删除。
+
+  - **红黑树的规则：**
+
+    1. 节点是红色或者黑色；
+    2. 根是黑色；
+    3. 所有叶子（NIL，即末端节点）都是黑色；
+    4. 红色节点的子节点必须是黑色；
+    5. 从任一节点到其每个叶子的所有简单路径都包含相同数目的黑色节点。
 
 ### 5.4 JDK5新特性
 
@@ -1598,6 +1620,20 @@ Java语言最基本的单位是类，类是一组相关的属性和行为的集�
   - Unicode：国际标准码，融合了多种文字。所有文字都用两个字节来表示，Java语言用的就是Unicode。
   - UTF-8：最多用三个字节来表示一个字符。
 
+### 5.7 JDK7新特性
+
+
+
+### 5.8 JDK9新特性
+
+1. **集合的of方法**
+
+   **该方法可以方便地创建集合的不可变实例。**
+
+   of()方法是List、Set和Map这三个接口的静态方法，并不在其他地方出现。
+
+   需注意：若修改了of()生成的集合，会直接抛出异常。
+
 
 
 ## 6. 数组
@@ -1697,37 +1733,37 @@ int[][] arr = {{...},{...},...};				//简化的写法
 
   - **添加功能：**
 
-    boolean **add**(Object obj)		//c.add(o)，添加一个元素，成功操作返回true
-    boolean **addAll**(Collection c)	//c1.addAll(c2)，添加一个集合的元素，成功操作返回true
+    - boolean **add**(Object obj)		//c.add(o)，添加一个元素，成功操作返回true
+    - boolean **addAll**(Collection c)	//c1.addAll(c2)，添加一个集合的元素，成功操作返回true
 
   - **删除功能：**
 
-    void **clear**()					//c.clear()，清除所有元素
-    boolean **remove**(Object obj)	//c.remove(o)，移除一个元素，成功操作返回true
+    - void **clear**()					//c.clear()，清除所有元素
+    - boolean **remove**(Object obj)	//c.remove(o)，移除一个元素，成功操作返回true
+    - boolean **removeAll**(Collection c)	//c1.removeAll(c2)，从c1中移除c2包含的所有元素
 
-    boolean **removeAll**(Collection c)	//c1.removeAll(c2)，从c1中移除c2包含的所有元素
+  - **判断包含功能：**
 
-  - **判断功能：**
-
-    boolean **contains**(Object obj)		//c.contains(o)，判断集合中是否包含指定元素（底层是equals）
-    boolean **containsAll**(Collection c)	//c1.containsAll(c2)，判断c1中是否包含所有c2中的元素
+    - boolean **contains**(Object obj)		//c.contains(o)，判断集合中是否包含指定元素（底层是equals）
+    - boolean **containsAll**(Collection c)	//c1.containsAll(c2)，判断c1中是否包含所有c2中的元素
 
   - **迭代器：**
 
-    Iterator<E> **iterator**()				//Iterator it = c.iterator()，Iterator是一个接口，这里返回的是一个子类对象
-    迭代器的最终实现，是通过各集合最终实现类（如ArrayList）中的内部类。
-    	Iterator的功能：
-    		boolean **hasNext**()	//it.hasNext()，如果仍有元素可以迭代，返回true
-    		Object **next**()		//it.next()，获取元素，并移动到下一位置
+    - Iterator<E> **iterator**()				//Iterator it = c.iterator()，Iterator是一个接口，这里返回的是一个子类对象
+
+      迭代器的最终实现，是通过各集合最终实现类（如ArrayList）中的内部类。
+      	Iterator的功能：
+      		boolean **hasNext**()	//it.hasNext()，如果仍有元素可以迭代，返回true
+      		Object **next**()		//it.next()，获取元素，并移动到下一位置
 
   - **长度&交集&转换：**
 
-    int **size**()						//c.size()，返回集合中元素的个数
+    - int **size**()							//c.size()，返回集合中元素的个数
+
     注意：此处为集合与数组和String的不同之处，后两者的长度功能为length()
 
-    boolean **retainAll**(Collection c)	//c1.retainAll(c2)，c1和c2做交集，结果保存在c1中，c2不变。如果c1发生了改变返回true
-
-    Object[] **toArray**()			//c.toArray()，返回此collection中所有元素的数组
+    - boolean **retainAll**(Collection c)		//c1.retainAll(c2)，c1和c2做交集，结果保存在c1中，c2不变。如果c1发生了改变返回true
+    - Object[] **toArray**()			        //c.toArray()，返回此collection中所有元素的数组
 
 
 ### 7.3 List接口及其子类
@@ -1783,19 +1819,17 @@ int[][] arr = {{...},{...},...};				//简化的写法
 
      特有功能：
 
-     ​	public Object **elementAt**(int index)		//vec.elementAt(索引)，返回索引处
+     - public Object **elementAt**(int index)		//vec.elementAt(索引)，返回索引处
 
-     ​										的元素，场用get(index)替代
+          的元素，场用get(index)替代
 
-     ​	public Enumeration **elements**()	//vec.elements()，常用Iterator 
+          
 
-     ​									iterator()替代
+     - public Enumeration **elements**()	//vec.elements()，常用iterator()替代
 
-     ​	boolean **hasMoreElements**()		//en.hasMoreElements()，常用
+     - boolean **hasMoreElements**()		//en.hasMoreElements()，常用hasNext()替代
 
-     ​									hasNext()替代
-
-     ​	Object **nextElement**()				//en.nextElement()，常用next()替代
+     - Object **nextElement**()				//en.nextElement()，常用next()替代
 
   3. **LinkedList：**
 
@@ -1846,18 +1880,23 @@ int[][] arr = {{...},{...},...};				//简化的写法
 
     - **相关问题：**
 
-      存储多个相同字符串时只会留下一个的解释：
-      	public boolean add(E e)方法底层依赖hashCode()和equals()。
+      1. 存储多个相同字符串时只会留下一个的解释：
+
+      		public boolean add(E e)方法底层依赖hashCode()和equals()。
       	比较基于hashCode()的值是否相同，
       		相同：继续比较equals()，若也相同就不添加，否则就添加；
       		不同：添加。
+
+      2. JDK1.8后，HashSet的数据结构为`数组`+`链表`+`红黑树`。
+
+         准确来说，在同一hash下，若链表的节点数达到8，则该链表转换为红黑树。
 
   - **TreeSet<E>：**
 
     - **概述：**
 
       - 基于TreeMap的NavigableSet实现，能够按照**某种规则对元素进行过排序**。
-      - 默认使用[自然顺序]对元素进行排序，或者根据创建Set时提供的Comparator进行排序，具体取决于使用的构造方法。
+      - 默认使用`自然顺序`对元素进行排序，或者根据创建Set时提供的Comparator进行排序，具体取决于使用的构造方法。
       - 不论是自然排序还是比较器排序，该类会依次**从小到大排序**。
 
     - **特点：**
@@ -1908,6 +1947,11 @@ int[][] arr = {{...},{...},...};				//简化的写法
 
           ​	返回值等于0认为`o1`等于`o2` (不添加到集合)
 
+        - **简记：**
+
+          1. **返回o1 - o2即为升序排序；**
+          2. **返回o2 - o1即为降序排序。**
+
         - 建议不单独写一个Comparator<T>实现类，而是在参数处定义匿名内部类。格式：
 
           ```java
@@ -1931,7 +1975,7 @@ int[][] arr = {{...},{...},...};				//简化的写法
 
   - **添加功能：**
 
-    V **put**(K key, V value)			//m.put(key, value)，添加元素。若添加的key存在，用现在key对应的value替换之前的value并返回之前的value；若添加的key不存在，返回null。删除功能
+    V **put**(K key, V value)			//m.put(key, value)，添加元素。若添加的key存在，用现在key对应的value替换之前的value并返回之前的value；若添加的key不存在，返回null。
 
   - **删除功能：**
 
