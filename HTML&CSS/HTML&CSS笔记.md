@@ -28,7 +28,7 @@
 
 - 空格：`&nbsp;`
 
-  
+
 
 ## 3.常用标签
 
@@ -70,10 +70,47 @@
 ### 3.6 格式化标签
 
 - 使用`<b>粗体</b>`定义粗体
-
 - 使用`<i>斜体</i>`定义斜体
 
-  
+### 3.7 `<link>`标签
+
+- 一般放置于**head区域**
+
+- 定义了文档**与外部资源的关系**
+
+- 常用于**链接到样式表**
+
+- 没有内容，**不需要结束标签**
+
+- 实例如下：
+
+  ```html
+  <link rel="stylesheet" type="text/css" href="style.css">
+  ```
+
+### 3.8 `<meta>`标签
+
+- 一般放置于**head区域**
+
+- 描述了一些基本的**元数据**
+
+- **通常用于指定网页的描述、关键词、修改时间和作者等**
+
+- 实例：
+
+  ```html
+  <!-- 定义关键词 -->
+  <meta name="keywords" content="HTML, CSS, JavaScript">
+  <!-- 定义描述内容 -->
+  <meta name="description" content="WEB前端教程">
+  <!-- 定义作者 -->
+  <meta name="author" content="ZXY">
+  <!-- 固定秒数刷新页面 -->
+  <meta http-equiv="refresh" content="30">
+  ```
+
+
+
 
 ## 4.图片标签
 
@@ -91,7 +128,7 @@
   <img src="logo.jpg" width="300px" height="150px" alt="logo"/>
   ```
 
-  
+
 
 ## 5.列表标签
 
@@ -160,7 +197,7 @@
    <a href="index.html" target="_blank">PornHub</a>
    ```
 
-   
+
 
 ## 7.表格
 
@@ -197,7 +234,7 @@
    </table>
    ```
 
-   
+
 
 ## 8.框架结构标签
 
@@ -223,7 +260,7 @@
   </frameset>
   ```
 
-  
+
 
 ## 9.表单
 
@@ -254,7 +291,7 @@
 
    **注意事项**：大部分表单元素都需要使用属性**name来指定组**，用属性**value来指定值**。
 
-   ​	单选圆点和多选框可以使用属性``checked="checked"``来**指定默认值**。
+   	单选圆点和多选框可以使用属性``checked="checked"``来**指定默认值**。
 
 ### 9.2表单元素：下拉选择菜单`<select></select>`
 
@@ -334,7 +371,7 @@ html是整个网站的**框架**，而css是对整个网站骨架**进行的美�
    <link rel="stylesheet" type="text/css" href="css/demo1.css"/>
    ```
 
-   
+
 
 ## 12.CSS选择器
 
@@ -434,8 +471,6 @@ CSS盒子模型包含以下几个属性：
         padding:10px 20px 30px 40px;	//依次为上右下左内边距
     }
     ```
-
-    
 
   - 可通过下面四个单独属性分别设置上、右、下、左的内边距
 
