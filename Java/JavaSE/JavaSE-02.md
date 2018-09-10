@@ -2017,3 +2017,77 @@ Java提供的线程类是：Thread。
      //返回值类型为Object，强转为接口实现类接收
 
   5. 使用得到的代理对象来调用方法，即可实现在方法前后添加功能。
+
+
+
+## 14. 注解
+
+### 14.1 概述
+
+注解（Annotation），也叫元数据，是一种代码级别的说明。
+
+可以声明在包、类、字段、方法、局部变量、方法参数等的前面，用来对这些元素进行说明。
+
+注解与注释不同，可以通过反射等方式被机器识别。
+
+### 14.2 Java内置的注解
+
+- **@Override**
+
+  表示当前方法是覆盖的超类方法。若被注解的方法不构成重写，编译器就会报错。
+
+- **@Deprecated**
+
+  表示当前方法已过时，调用时编译器会发出警告。
+
+- **@SuppressWarnings**
+
+  关闭当前方法、类的警告信息。
+
+### 14.3 自定义注解
+
+- **格式：**
+
+  ```java
+  @Retention(RetentionPolicy.RUNTIME)
+  ...
+  public @interface MyAnno{
+      String value();
+      ...
+  }
+  ```
+
+- **注意事项：**
+
+  1. 注解的属性可以是**八种基本类型、String、Class(ClassName.class)、enum以及上述类型的数组**
+  2. 若注解内只有一个属性且名为value或除value外其他属性均有默认值时，赋值时可以省略value
+
+### 14.4 元注解
+
+- **@Target**
+
+  表示该注解可以用在什么地方，可用的ElementType参数：
+
+  - CONSTRUCTOR		构造器
+  - FIELD                              字段
+  - LOCAL_VARIABLE         局部变量
+  - METHOD                       方法
+  - PACKAGE                       包
+  - PARAMETER                  参数
+  - TYPE                               类、接口、枚举
+
+- **@Retention**
+
+  表示注解的存留时期。
+
+  - SOURCE                         仅存在于源代码
+  - CLASS                             最多存在于字节码时期，会被VM抛弃
+  - RUNTIME                       保存到VM运行时期
+
+- **@Documented**
+
+  表示该注解会被包含在javadoc中。
+
+- **@Inherited**
+
+  表示该注解会被继承。
