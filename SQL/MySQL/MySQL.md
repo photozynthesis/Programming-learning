@@ -2,13 +2,29 @@
 
 [TOC]
 
-## 1.MySQL概述
+## 1.SQL概述
 
-MySQL最初是由“MySQL AB”公司开发的一套关系型数据库管理系统，是流行的开源数据库管理系统。
+- **MySQL概述：**
 
-2008年Sun公司收购了MySQL AB公司，2009年Oracle公司收购了Sun公司，MySQL已并入Oracle的数据库产品线。
+  SQL（Structed Query Language）
 
+  数据库就是存储数据的仓库。从硬件上来说，数据库是一台安装了DBMS（数据库管理系统）的计算机；从软件上来说，数据库是一个文件系统。
 
+  MySQL最初是由“MySQL AB”公司开发的一套关系型数据库管理系统，是流行的开源数据库管理系统。
+
+  2008年Sun公司收购了MySQL AB公司，2009年Oracle公司收购了Sun公司，MySQL已并入Oracle的数据库产品线。
+
+- **关系型数据库和非关系型数据库的区别：**
+
+  - 关系型数据库：
+
+    增加、删除、修改的操作较快，查询较慢。
+
+  - 非关系型数据库：
+
+    在关系型数据库的基础上“阉割”了约束等部分功能。
+
+    查询非常快，增删改较为麻烦。
 
 ## 2.MySQL安装过程的注意事项
 
@@ -32,7 +48,7 @@ Windows下也可以：
 
 在CMD窗口：
 
-- mysql -u用户名 -p密码
+- mysql -h< ip:port > -u< username > -p< password >
 
 ```
 mysql -uroot -p123
@@ -61,8 +77,9 @@ mysql -uroot -p123
 
 ### 3.6 创建数据库
 
-- create database 数据库名称;
-- use 数据库名称;    //选择当前操作的数据库
+- create database < databaseName... >;
+- create database if not exists < databaseName... >;
+- use < databaseName... >;    //选择当前操作的数据库
 
 ### 3.7 编码相关
 
@@ -77,6 +94,12 @@ mysql -uroot -p123
 ### 3.9 获取当前系统时间
 
 - 使用函数`now()`，返回的是当前时间的date对象
+
+### 3.10 注释
+
+- `-- 注释内容`
+- `# 注释内容`（MySQL特有）
+- `/* 注释内容 */`（多行注释）
 
 
 
@@ -248,6 +271,11 @@ MySql默认的日期格式如下：
     // select * from 表名;
     ```
 
+- **常用操作**：
+
+  - `distinct`查询结果中去除重复记录
+  - `<field...> as <newName...>`可以取别名
+
 - **条件查询**：
 
   1. 查询语句后跟`where 条件语句`即可，举例：
@@ -287,9 +315,34 @@ MySql默认的日期格式如下：
 
     分组查询使用group by子句，后跟字段，根据字段不同的值来分组。
 
+    举例：
+
+    ​	查询从事各个工作的员工人数。
+
+    ```sql
+    select count(*) from emp group by job;
+    ```
+
     注意事项：
 
+<<<<<<< HEAD
     	若一条DQL与剧中有group by子句，那么select后面只能跟参与分组的字段和分组函数。
+=======
+    ​	若一条DQL语句中有group by子句，那么select后面只能跟参与分组的字段和分组函数。
+
+- **模糊查询：**
+
+    模糊查询的运作类似正则表达式，重要规则如下：
+
+    - `_`表示**单个任意字符**
+    - `%`表示**任意个任意字符**
+
+    使用举例如下：
+
+    ```sql
+    select * from emp where job like "%员";			-- 可查出'文员'和'销售员'等
+    ```
+>>>>>>> master
 
 **总结**：
 
@@ -406,7 +459,7 @@ create table tableName(
 	columnName dataType(length),
 	columnName dataType(length),
 	...
-	columnName dataType(length) default defaultValue;	//设置具有默认值的字段
+	columnName dataType(length) default defaultValue	//设置具有默认值的字段
 );
 ```
 
@@ -461,11 +514,29 @@ drop table if exists 表名;	//为MySQL特有，如果存在这张表则删除�
 
 - double
 
-  双精度浮点型
+  双精度浮点型。
+
+  （arg1, arg2）,arg1表示小数最大有几位，arg2表示保留几位小数。
+
+- decimal
+
+  （arg1, arg2）,更加精确。
 
 - date
 
-  日期类型（一般用字符串取代）
+  日期类型（一般用字符串取代），只包含年月日：yyyy-MM-dd
+
+- datetime
+
+  日期类型，包含年月日时分秒：yyyy-MM-dd HH:mm:ss
+
+  不会自动生成值。
+
+- timestamp
+
+  时间戳类型，包含年月日时分秒
+
+  会自动指定值。
 
 - blob
 
@@ -538,6 +609,11 @@ insert into 表名 select语句;
    alter table 表名 drop 字段名;
    ```
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> master
 
 ## 19.删/改表中的数据
 
