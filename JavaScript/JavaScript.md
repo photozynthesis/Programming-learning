@@ -70,7 +70,7 @@
 
 **注意事项：**
 
-​	使用第二种方式（引入外部文件）的时候，就不用在标签内写代码了，因为不会执行。
+	使用第二种方式（引入外部文件）的时候，就不用在标签内写代码了，因为不会执行。
 
 
 
@@ -228,7 +228,6 @@ JavaScript运算符的使用方法**基本与Java运算符的相同**，此处�
      var add = new Function("a,b", "var sum;sum = a + b;return sum;");
      ```
 
-     
 
 ## 8. JS的全局变量和局部变量
 
@@ -239,8 +238,34 @@ JavaScript运算符的使用方法**基本与Java运算符的相同**，此处�
   - 方法外部
   - 方法内部
   - 另一个script标签中
+  - 在页面关闭后销毁
 
 - **局部变量：**
 
   在方法内部定义一个变量，只能在方法内部使用。
+
+  在函数执行完毕后销毁。
+
+
+
+## 9. 事件
+
+- **概述**：
+
+  HTML中的元素可以添加属性，来使当发生特定的事件时，执行一些JavaScript代码。
+
+- **举例**：
+
+  ```javascript
+  <button onclick="getElementById('demo').innerHTML=Date()">
+  ```
+
+- **常见的HTML事件**：
+
+  - onchange：HTML元素改变
+  - onclick：用户点击HTML元素
+  - onmouseover：用户在一个HTML元素上移动鼠标
+  - onmouseout：用户在一个HTML元素上移开鼠标
+  - onkeydown：用户按下键盘按键
+  - onload：浏览器已完成页面的加载
 
