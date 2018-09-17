@@ -1,0 +1,115 @@
+body{
+	background: url("../img/5-min.jpg") center no-repeat;
+	background-size: cover;
+	background-attachment: fixed;
+	height: 100%;
+}
+p#Title{
+	font-size: 80px;
+	color: #dddddd;
+	line-height: 0%;
+	padding-top: 15px;
+	/*font-family: "Comic Sans MS", "Microsoft YaHei UI", sans-serif;*/
+	/*padding-left: 40px;*/
+	/*padding-top: 30px;*/
+	/*text-align: center;*/
+}
+div#container{
+	height: 100%;
+	width: 1000px;
+	margin: auto;
+	/*overflow: hidden;*/
+	/*border: solid 1px #000000;*/
+}
+div#header{
+	height: 200px;
+	width: 1000px;
+	margin-top: 20px;
+	margin-bottom: 15px;
+	text-align: center;
+	overflow: hidden;
+	background-color: #625441;
+	box-shadow: 8px 8px 10px #333333;
+	border-radius: 9px;
+}
+div#main{
+	height: 90%;
+	overflow: hidden;
+	box-shadow: 8px 8px 10px #333333;
+	background-color: #ffffff;
+	border-radius: 9px;
+}
+div#content{
+	height: 100%;
+	width: 800px;
+	float: left;
+	background-color: #bbbbbb;
+}
+div#navigator{
+	height: 100%;
+	width: 200px;
+	float: left;
+	background-color: #dddddd;
+	position: relative;
+}
+div#footer{
+	height: 80px;
+	width: 1000px;
+	clear: left;
+	background-color: #666666;
+	overflow: hidden;
+	box-shadow: 8px 8px 10px #333333;
+	margin-top: 15px;
+	margin-bottom: 20px;
+	border-radius: 9px;
+}
+ul{
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	width: 200px;
+}
+li a{
+	font-size: 25px;
+	text-decoration: none;
+	display: block;
+	color:#333333;
+	padding: 8px;
+	text-align: center;
+}
+li a:hover{
+	color: #dddddd;
+	background-color: #333333;
+}
+li.navTitle{
+	display: block;
+	background-color: #333333;
+	padding: 8px;
+	border-bottom: solid 1px #888888;
+	text-align: center;
+}
+div#navButtons{
+	width: 100%;
+	position: absolute;
+	bottom: 0px;
+}
+div.navButton a{
+	font-size: 25px;
+	text-decoration: none;
+	padding: 8px;
+	/*width: 184px;*/
+	display: block;
+	background-color: #aaaaaa;
+	text-align: center;
+}
+div.navButton a:hover{
+	color: #dddddd;
+	background-color: #333333;
+}
+p#end{
+	color: #dddddd;
+	font-size: 20px;
+	line-height: 0%;
+	padding-top: 22px;
+	text-align: center;
+}

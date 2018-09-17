@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+<head>
+    <meta charset="UTF-8">
+    <title>My Study Notebook</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <script type="text/javascript" src="js/clickevents.js"></script>
+</head>
+
+<body id="bodyE">
+<div id="container">
+    <div id="header">
+        <p id="Title">My Study Notebook</p>
+    </div>
+    <div id="main">
+        <div id="content">
+            <h1>&nbsp;&nbsp;&nbsp;README</h1>
+            <hr/>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击右侧目录来浏览。</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本项目中的笔记HTML页面由 <b>Typora</b> 转换生成。</p>
+        </div>
+        <div id="navigator">
+            <ul>
+                <li class="navTitle"><b style="font-size: 30px;color: #eeeeee;">目&nbsp;&nbsp;&nbsp;&nbsp;录</b></li>
+                <li><a onclick="showJavaSE01()">JavaSE-01</a></li>
+                <li><a onclick="showJavaSE02()">JavaSE-02</a></li>
+                <li><a onclick="showJDBC()">JDBC</a></li>
+                <li><a onclick="showMySQL()">MySQL</a></li>
+                <li><a onclick="showHTMLCSS()">HTML & CSS</a></li>
+                <li><a onclick="showJavaScript()">JavaScript</a></li>
+                <li><a onclick="showLinux()">Linux</a></li>
+                <li><a onclick="showMarkdown()">Markdown</a></li>
+                <li><a onclick="showIDEs()">IDEs</a></li>
+            </ul>
+            <div id="navButtons">
+                <div class="navButton">
+                    <a onclick="changeWallpaper()">更换壁纸</a>
+                </div>
+                <div class="navButton">
+                    <a onclick="toTop()">回到顶部</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <p id="end">Made by PhotoZynthesis with ❤</p>
+    </div>
+</div>
+</body>
+</html>
