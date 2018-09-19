@@ -206,3 +206,165 @@
 | :---------------------------------------: | :----------------------------: |
 | void **setXxx** (int paramIndex, Xxx xxx) | 根据编号给`?`赋值，编号从1开始 |
 
+
+
+## 3. 数据库连接池
+
+### 3.1 连接池技术概述
+
+**概述**：
+
+​	数据库连接池是一个存放数据库连接的容器（集合）。
+
+​	系统初始化后，创建容器并申请一些连接对象放入集合。当需要连接时，从池子中获取连接对象；使用完毕后，将连接对象归还给连接池。
+
+**好处**：
+
+- 节省系统资源
+- 访问高效
+
+**数据库连接池的使用**：
+
+- Java提供了一个标准接口：javax.sql.DataSource，方法如下：
+
+|              方法               |                             说明                             |
+| :-----------------------------: | :----------------------------------------------------------: |
+| Connection **getConnection** () |           获取一个到此DataSource表示的数据源的连接           |
+|       Connection.close ()       | 不是DataSource中的方法，而若该Connection是从连接池获取的，该close方法不会关闭连接而是归还连接到连接池 |
+
+​	一般数据库厂商会提供接口的实现。
+
+- 常用的实现：
+  - C3P0，数据库连接池技术，Hibernate和Spring都在使用
+  - Druid，Alibaba提供的数据库连接池技术
+
+### 3.2 C3P0连接池的使用
+
+1. 导入jar包：
+
+   - c3p0-0.9.5.2.jar
+   - mchange-commons-java-0.2.12.jar
+
+   以上内容可从 [SourceForge页](https://sourceforge.net/projects/c3p0/) 下载。
+
+2. 写配置文件：
+
+   在src目录下创建c3p0-config.xml文件，内容如下：
+
+   ```xml
+   <?xml version="1.0" encoding="UTF-8" ?>
+   <c3p0-config>
+       <default-config> 
+           <property name="jdbcUrl">
+               <![CDATA[
+                   jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF8&useServerPrepStmts=true&prepStmtCacheSqlLimit=256&cachePrepStmts=true&prepStmtCacheSize=256&rewriteBatchedStatements=true
+               ]]>
+           </property>
+           <property name="driverClass">com.mysql.jdbc.Driver</property>
+           <property name="user">root</property>
+           <property name="password">123</property> 
+   　　     <!--当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。Default: 3 -->
+           <property name="acquireIncrement">3</property>
+   　　     <!-- 初始化数据库连接池时连接的数量 -->
+           <property name="initialPoolSize">10</property>
+           <!-- 数据库连接池中的最小的数据库连接数 -->
+           <property name="minPoolSize">2</property>
+           <!-- 数据库连接池中的最大的数据库连接数 -->
+           <property name="maxPoolSize">10</property>
+       </default-config>
+   </c3p0-config>
+   ```
+
+   更多内容详见官网 [c3p0说明页](https://www.mchange.com/projects/c3p0/) 。
+
+3. 使用：
+
+```java
+import ...;
+
+public class JDBCUtils {
+    private static Connection conn;
+    private static ComboPooledDataSource ds = new ComboPooledDataSource();
+    
+    public static Connection getConnection(){
+        try {
+            conn = ds.getConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return conn;
+    }
+}
+```
+
+### 3.3 Druid连接池的使用
+
+**官方文档**：
+
+​	[Druid官方文档](https://github.com/alibaba/druid/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)
+
+**基本使用步骤**：
+
+1. 导入jar包
+
+2. 定义配置文件
+
+   ```properties
+   # 数据库访问配置
+   # 主数据源，默认的
+   spring.datasource.type=com.alibaba.druid.pool.DruidDataSource
+   spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+   spring.datasource.url=jdbc:mysql://localhost:3306/druid
+   spring.datasource.username=root
+   spring.datasource.password=root
+   
+   # 下面为连接池的补充设置，应用到上面所有数据源中
+   # 初始化大小，最小，最大
+   spring.datasource.initialSize=5
+   spring.datasource.minIdle=5
+   spring.datasource.maxActive=20
+   # 配置获取连接等待超时的时间
+   spring.datasource.maxWait=60000
+   # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+   spring.datasource.timeBetweenEvictionRunsMillis=60000
+   # 配置一个连接在池中最小生存的时间，单位是毫秒
+   spring.datasource.minEvictableIdleTimeMillis=300000
+   spring.datasource.validationQuery=SELECT 1 FROM DUAL
+   spring.datasource.testWhileIdle=true
+   spring.datasource.testOnBorrow=false
+   spring.datasource.testOnReturn=false
+   # 打开PSCache，并且指定每个连接上PSCache的大小
+   spring.datasource.poolPreparedStatements=true
+   spring.datasource.maxPoolPreparedStatementPerConnectionSize=20
+   # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+   spring.datasource.filters=stat,wall,log4j
+   # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+   spring.datasource.connectionProperties=druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+   # 合并多个DruidDataSource的监控数据
+   #spring.datasource.useGlobalDataSourceStat=true
+   
+   
+   #JPA配置
+   spring.jpa.hibernate.ddl-auto=update
+   spring.jpa.show-sql=true
+   spring.jackson.serialization.indent_output=true
+   
+   # 作者：Java3y
+   # 链接：https://juejin.im/post/5ab8d4686fb9a028dc4103f1
+   # 来源：掘金
+   # 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+   ```
+
+3. 加载配置文件
+
+4. 通过DruidDataSourceFactory工厂来获取DataSource对象
+
+   ```java
+   ds = DruidDataSourceFactory.createDataSource(properties);
+   ```
+
+5. 获取连接
+
+   ```java
+   ds.getConnection();
+   ```
