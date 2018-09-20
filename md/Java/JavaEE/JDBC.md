@@ -245,7 +245,7 @@
    - c3p0-0.9.5.2.jar
    - mchange-commons-java-0.2.12.jar
 
-   以上内容可从 [SourceForge页](https://sourceforge.net/projects/c3p0/) 下载。
+   以上内容可从 [https://sourceforge.net/projects/c3p0/](https://sourceforge.net/projects/c3p0/) 下载。
 
 2. 写配置文件：
 
@@ -255,27 +255,27 @@
    <?xml version="1.0" encoding="UTF-8" ?>
    <c3p0-config>
        <default-config> 
-           <property name="jdbcUrl">
-               <![CDATA[
-                   jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF8&useServerPrepStmts=true&prepStmtCacheSqlLimit=256&cachePrepStmts=true&prepStmtCacheSize=256&rewriteBatchedStatements=true
-               ]]>
-           </property>
+           <property name="jdbcUrl">jdbc:mysql://localhost:3306/test?allowPublicKeyRetrieval=true</property>
            <property name="driverClass">com.mysql.jdbc.Driver</property>
            <property name="user">root</property>
            <property name="password">123</property> 
+           
    　　     <!--当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。Default: 3 -->
            <property name="acquireIncrement">3</property>
+           
    　　     <!-- 初始化数据库连接池时连接的数量 -->
            <property name="initialPoolSize">10</property>
+           
            <!-- 数据库连接池中的最小的数据库连接数 -->
            <property name="minPoolSize">2</property>
+           
            <!-- 数据库连接池中的最大的数据库连接数 -->
            <property name="maxPoolSize">10</property>
        </default-config>
    </c3p0-config>
    ```
 
-   更多内容详见官网 [c3p0说明页](https://www.mchange.com/projects/c3p0/) 。
+   更多内容详见官网 [https://www.mchange.com/projects/c3p0/](https://www.mchange.com/projects/c3p0/) 。
 
 3. 使用：
 
@@ -301,58 +301,52 @@ public class JDBCUtils {
 
 **官方文档**：
 
-​	[Druid官方文档](https://github.com/alibaba/druid/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)
+​	[https://github.com/alibaba/druid/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98](https://github.com/alibaba/druid/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98) 
 
 **基本使用步骤**：
 
-1. 导入jar包
+1. 导入jar包/添加Maven依赖
+
+   jar包地址：
+
+   ​	[http://central.maven.org/maven2/com/alibaba/druid/ ](http://central.maven.org/maven2/com/alibaba/druid/ ) 
+
+   Maven添加格式：
+
+   ```xml
+   ...
+   <dependency>
+       <groupId>com.alibaba</groupId>
+       <artifactId>druid</artifactId>
+       <version>${druid-version}</version>
+   </dependency>
+   ...
+   ```
 
 2. 定义配置文件
 
    ```properties
-   # 数据库访问配置
-   # 主数据源，默认的
-   spring.datasource.type=com.alibaba.druid.pool.DruidDataSource
-   spring.datasource.driver-class-name=com.mysql.jdbc.Driver
-   spring.datasource.url=jdbc:mysql://localhost:3306/druid
-   spring.datasource.username=root
-   spring.datasource.password=root
+   url: jdbc:mysql://localhost:3306/test
+   driverClassName: com.mysql.jdbc.Driver
+   username: root
+   password: rootzxcvbnm
    
-   # 下面为连接池的补充设置，应用到上面所有数据源中
-   # 初始化大小，最小，最大
-   spring.datasource.initialSize=5
-   spring.datasource.minIdle=5
-   spring.datasource.maxActive=20
-   # 配置获取连接等待超时的时间
-   spring.datasource.maxWait=60000
-   # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
-   spring.datasource.timeBetweenEvictionRunsMillis=60000
-   # 配置一个连接在池中最小生存的时间，单位是毫秒
-   spring.datasource.minEvictableIdleTimeMillis=300000
-   spring.datasource.validationQuery=SELECT 1 FROM DUAL
-   spring.datasource.testWhileIdle=true
-   spring.datasource.testOnBorrow=false
-   spring.datasource.testOnReturn=false
-   # 打开PSCache，并且指定每个连接上PSCache的大小
-   spring.datasource.poolPreparedStatements=true
-   spring.datasource.maxPoolPreparedStatementPerConnectionSize=20
-   # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
-   spring.datasource.filters=stat,wall,log4j
-   # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
-   spring.datasource.connectionProperties=druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
-   # 合并多个DruidDataSource的监控数据
-   #spring.datasource.useGlobalDataSourceStat=true
-   
-   
-   #JPA配置
-   spring.jpa.hibernate.ddl-auto=update
-   spring.jpa.show-sql=true
-   spring.jackson.serialization.indent_output=true
-   
-   # 作者：Java3y
-   # 链接：https://juejin.im/post/5ab8d4686fb9a028dc4103f1
-   # 来源：掘金
-   # 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+   filters: stat
+   maxActive: 20
+   initialSize: 1
+   maxWait: 60000
+   minIdle: 10
+   maxIdle: 15
+   timeBetweenEvictionRunsMillis: 60000
+   minEvictableIdleTimeMillis: 300000
+   validationQuery: SELECT 'x'
+   testWhileIdle: true
+   testOnBorrow: false
+   testOnReturn: false
+   maxOpenPreparedStatements: 20
+   removeAbandoned: true
+   removeAbandonedTimeout: 1800
+   logAbandoned: true
    ```
 
 3. 加载配置文件
