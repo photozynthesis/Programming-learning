@@ -11,7 +11,17 @@ function changeWallpaper() {
 }
 
 function showPage(id) {
+    if (id == page) {
+        document.getElementById("content").innerHTML = '<object type="text/html" data="html/' + id + '.html" width="100%" height="100%"></object>';
+        return;
+    }
+    if (page != null) {
+        document.getElementById(page).style.backgroundColor = null;
+        document.getElementById(page).getElementsByTagName("a")[0].style.color = null;
+    }
     page = id;
+    document.getElementById(id).style.backgroundColor = '#333333';
+    document.getElementById(id).getElementsByTagName("a")[0].style.color = '#dddddd';
     document.getElementById("content").innerHTML = '<object type="text/html" data="html/' + id + '.html" width="100%" height="100%"></object>';
 }
 
