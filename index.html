@@ -14,10 +14,56 @@
     </div>
     <div id="main">
         <div id="content">
-            <h1>&nbsp;&nbsp;&nbsp;README</h1>
-            <hr/>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击右侧目录来浏览。</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本项目中的笔记HTML页面由 <b>Typora</b> 转换生成。</p>
+            <h1>&ensp;&nbsp;README</h1>
+            <hr />
+            <ul type="disc">
+                <li><h3>查阅</h3>
+                    <ol style="line-height: 200%;">
+                        <li>打开项目根目录下的 <b>index.html</b></li>
+                        <li>点击右侧导航栏即可查看已导出的文章</li>
+                    </ol>
+                </li>
+                <li><h3>修改</h3>
+                    <ol style="line-height: 200%;">
+                        <li>项目的md文件夹下即为所有Markdown格式笔记</li>
+                        <li>使用 <b>Typora</b> 编辑后点击导出为HTML，放置在HTML文件夹下，文件名不要改动</li>
+                    </ol>
+                </li>
+                <li><h3>新增</h3>
+                    <ol style="line-height: 200%;">
+                        <li>在md文件夹下新增Markdown格式笔记</li>
+                        <li>编辑后导出HTML文件到HTML文件夹</li>
+                        <li>在 <b>index.html</b> 中的 <b>div#navigator ul</b> 中添加一行，格式如下：</li>
+                    </ol>
+                    <div style="
+                    width: 690px;
+                    height: 80px;
+                    text-align: center;
+                    padding-top: 0px;
+                    line-height: 0px;
+                    overflow: hidden;
+                    background-color: #444444;
+                    border: 3px solid #f0f0f0;
+                    box-shadow: 5px 5px 5px #444444;
+                    margin-top: 15px;
+                    margin-bottom: 25px;
+                    margin-left: 18px;
+                    ">
+                        <p style="font-size: 20px;color: #99ff99;line-height: 80%">
+                            &lt;!-- 将fileName替换为导出的HTML文件名(不包含后缀) --&gt;
+                        </p>
+                        <p style="font-size: 20px;color: #ffff99">
+                            &lt;li id="fileName"&gt;&lt;a onclick="showPage('fileName')"&gt;title&lt;/a&gt;&lt;/li&gt;
+                        </p>
+                    </div>
+                </li>
+                <li><h3>注意事项</h3>
+                    <ol style="line-height: 200%;">
+                        <li>已知IE浏览器打开笔记页面加载缓慢，请尽量使用 <b>Chrome</b></li>
+                        <li>在部分电脑上的其他浏览器偶尔也会发生加载缓慢的情况</li>
+                    </ol>
+                </li>
+            </ul>
         </div>
         <div id="navigator">
             <ul>
@@ -42,6 +88,9 @@
                 </div>
             </div>
         </div>
+        <ul type="disc"><h3>注意事项</h3>
+
+        </ul>
     </div>
     <div id="footer">
         <p id="end">Made by PhotoZynthesis with ❤</p>
