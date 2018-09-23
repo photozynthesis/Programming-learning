@@ -271,29 +271,46 @@
 - **action**：向何处提交表单，可以是一个页面也可以是一个java文件
 - **method**：提交表单时所用的HTTP方法，常用GET、POST
 
-### 9.1 表单元素：输入框`<input />`
+### 9.1 表单元素：输入框`<input />` 
 
-1. 文本输入框：`<input type="text"/>`
+1. 文本输入框：`<input type="text"/>` 
 
-2. 密码输入框：`<input type="password"/>`
+   - 常一起用的属性：placeholder（H5），文本框中的灰色提示内容
+
+2. 密码输入框：`<input type="password"/>` 
 
 3. 单选圆点：`<input type="radio" name="sex"/>`男，注意要用name来分组
 
 4. 多选框：`<input type="checkbox" name="hobby"/>`打电动，注意要用name来分组
 
-5. 文件上传：`<input type="file"/>`
+5. 文件上传：`<input type="file"/>` 
 
-6. 提交按钮：`<input type="submit" value="注册"/>`
+6. 提交按钮：`<input type="submit" value="注册"/>` 
 
-7. 普通按钮：`<input type="button" value="按钮"/>`
+7. 普通按钮：`<input type="button" value="按钮"/>` 
 
-8. 重置按钮：`<input type="reset"/>`
+8. 重置按钮：`<input type="reset"/>` 
+
+9. 文本域：`<input type="textarea" cols="20" rows="5">` 
+
+10. 隐藏域：`<input type="hidden">` 
 
    **注意事项**：大部分表单元素都需要使用属性**name来指定组**，用属性**value来指定值**。
 
-   	单选圆点和多选框可以使用属性``checked="checked"``来**指定默认值**。
+   单选圆点和多选框可以使用属性``checked="checked"``来**指定默认值**。
 
-### 9.2表单元素：下拉选择菜单`<select></select>`
+### 9.2 form两种提交方式的区别：
+
+1. **get**：
+   - 请求的参数会在地址栏中显示，会封装到请求行中
+   - 请求的参数有大小限制
+   - 不安全
+2. **post**：
+   - 请求的参数不会在地址栏中显示，会封装到请求体中
+   - 请求参数不会在地址栏中显示
+   - 较为安全
+
+### 9.3表单元素：下拉选择菜单`<select></select>`
 
 - 下拉选择菜单**使用**`<select></select>`**标签**
 
@@ -329,7 +346,10 @@
 
 CSS(Cascading Style Sheets)，即**层叠样式表**。
 
-html是整个网站的**框架**，而css是对整个网站骨架**进行的美化**。
+- html是整个网站的**框架**，而css是对整个网站骨架**进行的美化**。
+
+- 降低耦合度
+- 提高开发效率
 
 ### 1.2 CSS语法和规范
 
@@ -394,6 +414,8 @@ h1{
 
 使用`#`+`ID名`作为选择器，大多数html元素都可以定义ID属性。
 
+ID选择器的优先级高于类选择器。
+
 举例：
 
 ```css
@@ -439,6 +461,43 @@ body div{
     color:red;
 }
 ```
+
+### 12.6 并集选择器
+
+选择多个。
+
+```css
+xxx,xxx{
+    ...
+}
+```
+
+### 12.7 父选择器
+
+选择demo2上的demo1。
+
+```css
+demo1 > demo2{
+    ...
+}
+```
+
+### 12.8 伪类选择器
+
+选择具有某状态的元素。
+
+```css
+xxx:status{
+    ...
+}
+```
+
+状态有：
+
+- visited
+- hover
+- link
+- active
 
 
 
