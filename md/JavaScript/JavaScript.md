@@ -467,7 +467,7 @@ JavaScript运算符的使用方法**基本与Java运算符的相同**，此处�
 |         write()          |          向文档写 HTML 表达式 或 JavaScript 代码。           |
 |        writeln()         | 等同于 write() 方法，不同的是在每个表达式之后写一个换行符。  |
 |     createElement()      |               创建新的元素，参数为一个节点名称               |
-|     createComment()      |                                                              |
+|     createTextNode()     |            创建文本结点，传入字符串形式的文本内容            |
 |       **more...**        |                    **更多方法需查阅文档**                    |
 
 #### 10.2.2 Element
@@ -500,7 +500,6 @@ JavaScript运算符的使用方法**基本与Java运算符的相同**，此处�
 
   - 所有DOM对象都可以认为是一个结点。
 
-- **常用属性和方法**：
 
 
 
