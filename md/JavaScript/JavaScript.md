@@ -271,12 +271,25 @@ JavaScript运算符的使用方法**基本与Java运算符的相同**，此处�
 
 - **常见的HTML事件**：
 
-  - onchange：HTML元素改变
-  - onclick：用户点击HTML元素
-  - onmouseover：用户在一个HTML元素上移动鼠标
-  - onmouseout：用户在一个HTML元素上移开鼠标
-  - onkeydown：用户按下键盘按键
-  - onload：浏览器已完成页面的加载
+  - 鼠标相关事件：
+    - onclick：用户点击HTML元素
+    - onmouseover：用户在一个HTML元素上移动鼠标
+    - onmouseout：用户在一个HTML元素上移开鼠标
+    - onmouseup：鼠标按钮松开
+    - onmousedown：鼠标按钮按下
+      - 可接收一个event对象，通过event对象的button属性可以获得鼠标点击的按键（0、1、2）
+  - 键盘相关事件：
+    - onkeydown：按下键盘按键
+    - onkeyup：松开键盘按键
+  - 加载相关事件：
+    - onload：浏览器已完成页面的加载
+  - 表单相关事件：
+    - onsubmit：表单提交
+    - onreset：
+  - 其他事件：
+    - onchange：HTML元素改变
+    - onfocus：获得焦点
+    - onblur：失去焦点
 
 
 
@@ -409,6 +422,8 @@ JavaScript运算符的使用方法**基本与Java运算符的相同**，此处�
   ```javascript
   var reg = new RegExp('<regex...>');
   var reg = /<regex...>/;
+  
+  var reg = /^<regex...>$/;			// 完全匹配
   ```
 
 - **使用**：
@@ -439,6 +454,11 @@ JavaScript运算符的使用方法**基本与Java运算符的相同**，此处�
   |   x{n}   |           X，恰好n次            |
   |  x{n,}   |           X，至少n次            |
   |  x{n,m}  |  X，至少 n 次，但是不超过 m 次  |
+
+- **遇到的坑**：
+  - 使用`/^<regex...>$/`会执行完全匹配，其他两种方式只要字符串中**包含**表达式的逻辑就会返回true。不要忽视开头和结尾的起始/结束符。
+  - 若使用`new RegExp("...")`，`\w`等的反斜线需要再加上一层转义符：`\\w`，其他两种方式则不需要。
+  - 使用`()`来包括多个内容。
 
 
 
