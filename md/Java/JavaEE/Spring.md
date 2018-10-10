@@ -15,13 +15,13 @@ Spring框架对JDBC的简单封装，提供一个JdbcTemplate对象来简化JDBC
 ```xml
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     ...
-    <dependances>
-    	<dependancy>
+    <dependencies>
+    	<dependency>
         	<groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
             <version>4.3.6.RELEASE</version>
-        </dependancy>
-    </dependances>
+        </dependency>
+    </dependencies>
 </project>
 ```
 
