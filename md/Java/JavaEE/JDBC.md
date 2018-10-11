@@ -249,13 +249,14 @@
 
 2. 写配置文件：
 
-   在src目录下创建c3p0-config.xml文件，内容如下：
+   在src目录下创建c3p0-config.xml文件，**注意需要将文件添加到.classpath**。
+   内容如下：
 
    ```xml
    <?xml version="1.0" encoding="UTF-8" ?>
    <c3p0-config>
        <default-config> 
-           <property name="jdbcUrl">jdbc:mysql://localhost:3306/test?allowPublicKeyRetrieval=true</property>
+           <property name="jdbcUrl">jdbc:mysql://localhost:3306/test?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;serverTimezone=UTC</property>
            <property name="driverClass">com.mysql.jdbc.Driver</property>
            <property name="user">root</property>
            <property name="password">123</property> 

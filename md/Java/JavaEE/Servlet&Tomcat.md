@@ -241,27 +241,78 @@ Servlet的生命周期方法如下：
 
 
 
-## 7. Servlet：请求与响应
+## 7. Servlet：Request & Response
 
-### 7.0 HTTP协议消息的格式
+### 7.0 HTTP协议入门
 
-示例图片：
+- **HttpRequest格式**：
 
 ![](C:\Users\Photo\Documents\Github\Programming-learning\md\Java\JavaEE\httpProtocol.jpg)
 
-示例文本：
+- **HttpResponse格式**：
 
-```http
-POST /sample.Jsp HTTP/1.1
-Accept:image/gif.image/jpeg,*/*
-Accept-Language:zh-cn
-Connection:Keep-Alive
-Host:localhost
-User-Agent:Mozila/4.0(compatible;MSIE5.01;Window NT5.0)
-Accept-Encoding:gzip,deflate
- 
-username=jinqiao&password=1234
-```
+  > <协议版本...> <响应状态码...> <状态码描述...>
+  >
+  > <头部字段名称...>:<值...>
+  >
+  > <头部字段名称...>:<值...>
+  >
+  > ...
+  >
+  >
+  >
+  > 响应体...
+
+- **Http响应状态码概述**：
+
+  | 分类 |                      说明                      |
+  | :--: | :--------------------------------------------: |
+  | 1xx  |  信息，服务器收到请求，需要请求者继续执行操作  |
+  | 2xx  |           成功，操作被成功接收并处理           |
+  | 3xx  |       重定向，需要进一步的操作以完成请求       |
+  | 4xx  |   客户端错误，请求包含语法错误或无法完成请求   |
+  | 5xx  | 服务器错误，服务器在处理请求的过程中发生了错误 |
+
+  常用：
+
+  - 200：OK，请求成功。一般用于GET与POST请求
+  - 302：Found，临时移动（重定向）。与301类似。但资源只是临时被移动。客户端应继续使用原有URI
+  - 304：Not Modified，未修改（访问缓存）。所请求的资源未修改，服务器返回此状态码时，不会返回任何资源。客户端通常会缓存访问过的资源，通过提供一个头信息指出客户端希望只返回在指定日期之后修改的资源
+  - 404：Not Found，服务器无法根据客户端的请求找到资源（网页）。通过此代码，网站设计人员可设置"您所请求的资源无法找到"的个性页面
+  - 405：Method Not Allowed，（没有doGet/doPost方法）客户端请求中的方法被禁止
+  - 500：Internal Server Error，服务器内部错误，无法完成请求
+
+- **示例文本**：
+
+  ```http
+  POST /sample.Jsp HTTP/1.1
+  Accept:image/gif.image/jpeg,*/*
+  Accept-Language:zh-cn
+  Connection:Keep-Alive
+  Host:localhost
+  User-Agent:Mozila/4.0(compatible;MSIE5.01;Window NT5.0)
+  Accept-Encoding:gzip,deflate
+  
+  username=jinqiao&password=1234
+  ```
+
+  ```http
+  HTTP/1.1 200 OK
+  Server: bfe/1.0.8.18
+  Date: Thu, 03 Nov 2016 08:30:43 GMT
+  Content-Type: text/html
+  Content-Length: 277
+  Last-Modified: Mon, 13 Jun 2016 02:50:03 GMT
+  Connection: Keep-Alive
+  ETag: "575e1f5b-115"
+  Cache-Control: private, no-cache, no-store, proxy-revalidate, no-transform
+  Pragma: no-cache
+  Accept-Ranges: bytes
+  
+  <html>
+  	...
+  </html>
+  ```
 
 ### 7.1 请求：Request
 
@@ -355,7 +406,124 @@ Servlet中的service()、doGet()、doPost()等方法会自动传递参数Request
 
   #### 7.1.7 获取ServletContext
 
+  - ServletContext **getServletContext**()
 
+    也可以在Servlet内部用`this.getServletContext()`，获得的ServletContext是同一个。
+
+    关于ServletContext的说明，见下文。
 
 ### 7.2 响应：Response
 
+Servlet中的service()、doGet()、doPost()等方法会自动传递参数Request和Response。
+
+- **重要功能**：
+
+  #### 7.2.1 设置响应行
+
+  |            方法            |               说明                |
+  | :------------------------: | :-------------------------------: |
+  | void **setStatus**(int sc) | 设置状态码（HttpServletResponse） |
+
+  #### 7.2.2 设置响应头
+
+  |                     方法                      |               说明                |
+  | :-------------------------------------------: | :-------------------------------: |
+  | void **setHeader**(String name, String value) | 设置响应头（HttpServletResponse） |
+
+  **常用**：
+
+  - 
+
+  #### 7.2.3 设置响应体
+
+  |                   方法                    |               说明                |
+  | :---------------------------------------: | :-------------------------------: |
+  |        PrintWriter **getWriter**()        | 获取字符输出流（ServletResponse） |
+  | ServletOutputStream **getOutputStream**() | 获取字节输出流（ServletResponse） |
+
+  #### 7.2.4 发送重定向
+
+  |                  方法                  |                             说明                             |
+  | :------------------------------------: | :----------------------------------------------------------: |
+  | void **sendRedirect**(String location) | 用给定地址向客户端发送重定向响应，并清除缓存（HttpServletResponse） |
+
+  - **重定向概述**：
+
+    重定向是一种资源跳转方式。
+
+    不同于请求转发，重定向具有如下特点：
+
+    - 地址栏发生变化（请求转发不发生变化）
+    - 可以访问其他站点的资源（请求转发只能跳转到服务器内部资源）
+    - 重定向一共是两次请求（请求转发是一次）
+
+  - **使用示例**：
+
+    ```java
+    // 设置状态码后设置响应头
+    response.setStatus(302);
+    response.setHeader("location", "/demoLocation/demoServlet");
+    
+    // 简略写法，效果完全相同
+    response.sendRedirect("/demoLocation/demoServlet");
+    ```
+
+
+
+## 8. Servlet：ServletContext
+
+- **概述**：
+
+  代表整个Web应用，可以和Servlet容器进行通信。
+
+  ServletContext是一个全局的储存信息的空间，服务器开始，其就存在，服务器关闭，其才释放。
+
+- **获取方式**：
+
+  - 通过Request对象：
+
+    ```java
+    request.getServletContext();
+    ```
+
+  - 通过HttpServlet：
+
+    ```java
+    this.getServletContext();
+    ```
+
+  说明：
+
+  ​	两种方式获得的ServletContext是同一个。
+
+- **功能**：
+
+  - **获取MIME类型**：
+
+    |                方法                 |      说明      |
+    | :---------------------------------: | :------------: |
+    | String **getMimeType**(String file) | 获取MIME的类型 |
+
+    MIME类型是在互联网通信过程中定义的一种文件数据类型。
+
+    获取的String具有如下格式：
+
+    ​	<大类型...>/<小类型...>，举例：
+
+    ​	text/html、image/jpeg
+
+  - **共享数据**：
+
+    |                       方法                       |         说明         |
+    | :----------------------------------------------: | :------------------: |
+    | void **setAttribute**(String name, Object value) |     设置共享数据     |
+    |       Object **getAttribute**(String name)       | 根据键获取共享数据值 |
+    |      void **removeAttribute**(String name)       |  根据键移除共享数据  |
+
+    ServletContext的共享数据作用于整个服务器。
+
+  - **获取真实路径**：
+
+    |                方法                 |                    说明                    |
+    | :---------------------------------: | :----------------------------------------: |
+    | String **getRealPath**(String path) | 通过文件的虚拟路径获取其在硬盘上的完整路径 |
