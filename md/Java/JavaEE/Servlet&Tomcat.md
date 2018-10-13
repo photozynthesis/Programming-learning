@@ -432,7 +432,20 @@ Servlet中的service()、doGet()、doPost()等方法会自动传递参数Request
 
   **常用**：
 
-  - 
+  - 文件下载响应头：
+
+    ```http
+    HTTP/1.1 200 OK
+    content-disposition:attachment;filename=xxx
+    ```
+
+    发送文件下载响应的步骤：
+
+    1. 页面中编辑超链接的href属性，指向Servlet，传递资源名称；
+    2. Servlet中获取文件真实名称；
+    3. 使用字节流加载文件进内存；
+    4. 设置Response响应头：`content-disposition:attachment;filename=xxx` 
+    5. 将文件数据写出到Response输出流。
 
   #### 7.2.3 设置响应体
 
@@ -527,3 +540,178 @@ Servlet中的service()、doGet()、doPost()等方法会自动传递参数Request
     |                方法                 |                    说明                    |
     | :---------------------------------: | :----------------------------------------: |
     | String **getRealPath**(String path) | 通过文件的虚拟路径获取其在硬盘上的完整路径 |
+
+
+
+## 9. Servlet：Cookie & Session
+
+### 9.1 会话技术概述
+
+会话，即是指包含多次请求和响应的“会话”。浏览器第一次给服务器资源发送请求，会话建立，直到有一方断开为止，会话结束。
+
+由于HTTP协议是面向无连接的，所以主要使用会话技术来共享数据。
+
+这里记下两种会话技术：
+
+- 客户端会话技术：Cookie（饼干）
+- 服务器端会话技术：Session（主菜）
+
+### 9.2 Cookie
+
+- **概述**：
+
+  Cookie是客户端会话技术，数据保存在客户端。
+
+  与服务器通信过程中，服务器会将Cookie通过响应发送到客户端，客户端在本地存储Cookie；之后再次进行通信时，客户端会带着Cookie发送请求。依此达到了数据共享的目的。
+
+  常用于完成服务端对客户端身份的识别。
+
+  **Cookie具有以下主要特性**：
+
+  - 存储数据在**客户端**浏览器
+  - 单个Cookie大小有限制：**4kb**；同一域名下总Cookie数量也有限制：**20个** 
+  - Cookie一般用于存储**少量**的**不太敏感**的数据
+
+- **常用内容**：
+
+  #### 9.2.1 创建/发送/获取
+
+  - 创建：
+
+    ```java
+    // Cookie的构造方法
+    new Cookie(String name, String value);
+    ```
+
+  - 发送：
+
+    ```java
+    // 添加到Response
+    response.addCookie(Cookie cookie);
+    ```
+
+    - 实际上是写入了响应头的`set-cookie`中。
+
+  - 获取：
+
+    ```java
+    // 通过请求获取全部Cookie
+    Cookie[] cks = request.getCookies();
+    ```
+
+    - 实际上是读取了请求头中的`cookie`。
+
+  - 获取内容：
+
+    ```java
+    // 获取名称和内容
+    String name = cookie.getName();
+    String value = cookie.getValue();
+    ```
+
+  #### 9.2.2 持久化存储
+
+  |            方法             |           说明           |
+  | :-------------------------: | :----------------------: |
+  | void setMaxAge(int seconds) | 使用秒数来设置多久后到期 |
+
+  - 注意：默认情况下，Cookie将在浏览器关闭后被销毁。
+  - 若此处设置：
+    - 正值：设置Cookie寿命
+    - 负值：设置Cookie将在浏览器关闭后销毁
+    - 0：删除Cookie
+
+  #### 9.2.3 中文存储
+
+  - Tomcat 8 以前，cookie中不能直接存储中文数据，一般使用URL编码转码后进行存储。
+  - Tomcat 8 以后资瓷中文数据。
+
+  附：使用URL编码存储中文数据：
+
+  ```java
+  URLEncoder.encode(String chnString, "UTF-8");
+  
+  cookie.setValue(chnString);
+  response.addCookie(cookie);
+  ```
+
+  #### 9.2.4 共享
+
+  - 同一Tomcat服务器下不同Web项目之间的共享：
+
+    - 默认情况下不同Web项目之间的Cookie不能共享。
+
+    - 使用`setPath(String path)`可以设置Cookie的获取范围。
+
+      不设置时其默认值为当前的虚拟目录。
+
+      设置为"/"可以在所有项目间共享。
+
+  - 不同Tomcat服务器之间的共享：
+
+    - 使用`setDomain(String path)`可以设置一级域名相同的多个服务器间共享Cookie。
+
+    - 示例：
+
+      ```
+      // 经过以下设置，tieba.baidu.com和news.baidu.com可以共享cookie
+      cookie.setDomain(".baidu.com");
+      ```
+
+### 9.3 Session
+
+- **概述**：
+
+  Session是服务器端会话技术，在一次会话的多次请求间共享数据，数据保存在服务器端的对象（内存）中。
+
+  Session技术依赖于Cookie，具体可见下文。
+
+  **Session的主要特点如下**：
+
+  - 存储在**服务端**，相对Cookie更**安全** 
+  - 可以存储**任意类型、任意大小**的数据
+  - **依赖于Cookie** 
+
+- **常用内容**：
+
+  #### 9.3.1 获取
+
+  ```java
+  // 通过Request获取
+  HttpSession session = request.getSession();
+  ```
+
+  **说明**：
+
+  - 服务器创建session出来后，会把session的id号，以cookie的形式回写给客户机，这样，只要客户机的浏览器不关，再去访问服务器时，都会带着session的id号去，服务器发现客户机浏览器带session id过来了，就会使用内存中与之对应的session为之服务。
+  - Cookie中ID号的name为：`JSESSIONID`。
+
+  #### 9.3.2 共享数据
+
+  |                       方法                       | 说明 |
+  | :----------------------------------------------: | :--: |
+  |       Object **getAttribute**(String name)       | 获取 |
+  | void **setAttribute**(String name, Object value) | 设置 |
+  |      void **removeAttribute**(String name)       | 移除 |
+
+  #### 9.3.3 一方断开后的存续问题
+
+  - **服务端不关闭+客户端关闭后，两次获取的Session是否为同一个**：
+
+    - 默认情况下**不是**同一个，Session默认标识一次浏览器会话。
+
+    - 可以使用以下方式使第二次会话使用相同Session：
+
+      ```java
+      Cookie ck = new Cookie("JSESSIONID", session.getId());
+      response.addCookie(ck);
+      ```
+
+  - **客户端不关闭+服务器关闭后，两次获取的Session是否为同一个**：
+
+    - 
+
+
+
+## 10. JSP入门
+
