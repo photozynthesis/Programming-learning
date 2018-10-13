@@ -247,7 +247,7 @@ Servlet的生命周期方法如下：
 
 - **HttpRequest格式**：
 
-![](C:\Users\Photo\Documents\Github\Programming-learning\md\Java\JavaEE\httpProtocol.jpg)
+![](httpProtocol.jpg)
 
 - **HttpResponse格式**：
 
@@ -686,7 +686,24 @@ Servlet中的service()、doGet()、doPost()等方法会自动传递参数Request
   - 服务器创建session出来后，会把session的id号，以cookie的形式回写给客户机，这样，只要客户机的浏览器不关，再去访问服务器时，都会带着session的id号去，服务器发现客户机浏览器带session id过来了，就会使用内存中与之对应的session为之服务。
   - Cookie中ID号的name为：`JSESSIONID`。
 
-  #### 9.3.2 共享数据
+  #### 9.3.2 销毁
+
+  Session对象的销毁时机如下：
+
+  - 服务器关闭*（不明确）
+
+  - session对象调用`invalidate()` 
+
+  - 在默认失效事件过后销毁。默认失效时间可以在`web.xml`文件中如下位置修改：
+
+    ```xml
+    <!-- 默认：30min -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+    ```
+
+  #### 9.3.3 共享数据
 
   |                       方法                       | 说明 |
   | :----------------------------------------------: | :--: |
@@ -694,7 +711,7 @@ Servlet中的service()、doGet()、doPost()等方法会自动传递参数Request
   | void **setAttribute**(String name, Object value) | 设置 |
   |      void **removeAttribute**(String name)       | 移除 |
 
-  #### 9.3.3 一方断开后的存续问题
+  #### 9.3.4 一方断开后的存续问题
 
   - **服务端不关闭+客户端关闭后，两次获取的Session是否为同一个**：
 
@@ -709,9 +726,76 @@ Servlet中的service()、doGet()、doPost()等方法会自动传递参数Request
 
   - **客户端不关闭+服务器关闭后，两次获取的Session是否为同一个**：
 
-    - 
+    - 为了确保数据不丢失，Tomcat会自动完成以下工作：
+      - Session的钝化：服务器**正常关闭**（shutdown.sh）之前，将Session对象序列化到硬盘上，保存为`.ser`文件。
+      - Session的活化：在服务器再次开启后，将Session文件转化为内存中的Session对象。
+    - Intellij IDEA中此功能工作不正常。
 
 
 
 ## 10. JSP入门
 
+- **概述**：
+
+  JSP（Java Server Pages），即Java服务器端页面，是一种动态页面技术。
+
+  JSP的内同类似HTML，可以写HTML代码，同时可以在特定区域写Java代码。
+
+  JSP的本质是Servlet，使用JSP可以简化书写。
+
+- **JSP中Java脚本定义方式**：
+
+  - **脚本**：
+
+    ```jsp
+    <% 代码 %>
+    ```
+
+    以上标签中定义的代码实际上在Servlet的`service()`方法中。
+
+    可以写任何能在`service()`方法中写的内容。
+
+  - **声明**：
+
+    ```jsp
+    <%! 代码 %>
+    ```
+
+    以上标签中定义的代码实际上在Servlet的成员部分（方法外）。
+
+  - **表达式**：
+
+    ```
+    <%= Java中的变量/对象/有返回值的方法 %>
+    
+    <%= user.getName() %>
+    ```
+
+    以上标签中定义的内容，在将JSP页面转换成Servlet后，使用out.print()将表达式的值输出。
+
+    注意：在方法的后面不能有分号。
+
+- **JSP内置对象**：
+
+  - **概述**：
+
+    - 内置对象是JSP页面中不需要获取/创建的对象，可以直接使用。
+    - 一共有9个。
+
+  - **常用对象**：
+
+    - request
+
+      即service方法传递的request。
+
+    - response
+
+      即service方法传递的response。
+
+    - out
+
+      字符输出流对象，可以将数据输出到页面中。
+
+      类似于`response.getWriter()`。
+
+      区别：`response.getWriter()`数据输出永远在`out.write()`之前。
