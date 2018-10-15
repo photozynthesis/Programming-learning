@@ -1,4 +1,4 @@
-# Servlet & Tomcat
+# Tomcat & Servlet & JSP
 
 [TOC]
 
@@ -735,67 +735,326 @@ Servlet中的service()、doGet()、doPost()等方法会自动传递参数Request
 
 ## 10. JSP入门
 
+JSP（Java Server Pages），即Java服务器端页面，是一种动态页面技术。
+
+JSP的内同类似HTML，可以写HTML代码，同时可以在特定区域写Java代码。
+
+JSP的本质是Servlet，使用JSP可以简化书写。
+
+### 10.1 JSP标签
+
+- **脚本**：
+
+  ```jsp
+  <% 代码 %>
+  ```
+
+  以上标签中定义的代码实际上在Servlet的`service()`方法中。
+
+  可以写任何能在`service()`方法中写的内容。
+
+- **声明**：
+
+  ```jsp
+  <%! 代码 %>
+  ```
+
+  以上标签中定义的代码实际上在Servlet的成员部分（方法外）。
+
+- **表达式**：
+
+  ```
+  <%= Java中的变量/对象/有返回值的方法 %>
+  
+  <%= user.getName() %>
+  ```
+
+  以上标签中定义的内容，在将JSP页面转换成Servlet后，使用out.print()将表达式的值输出。
+
+  注意：在方法的后面不能有分号。
+
+- **指令**：
+
+  ```jsp
+  <%@ 指令名称 属性名1=属性值1 属性名2=属性值2 ... %>
+  ```
+
+  JSP指令用来配置整个JSP页面的相关属性，引入资源文件等。
+
+  **JSP有如下三个指令**：
+
+  - **page**：
+
+    - 作用：配置当前页面，提供一些说明。
+
+    - 一个JSP可以配置多个。
+
+    - 常用属性：
+
+      | 属性               | 描述                                                |
+      | ------------------ | --------------------------------------------------- |
+      | **buffer**         | 指定out对象使用缓冲区的大小                         |
+      | autoFlush          | 控制out对象的 缓存区                                |
+      | **contentType**    | 指定当前JSP页面的MIME类型和字符编码                 |
+      | **errorPage**      | 指定当JSP页面发生异常时需要转向的错误处理页面       |
+      | **isErrorPage**    | 指定当前页面是否可以作为另一个JSP页面的错误处理页面 |
+      | extends            | 指定servlet从哪一个类继承                           |
+      | **import**         | 导入要使用的Java类（一般IDE自动生成）               |
+      | info               | 定义JSP页面的描述信息                               |
+      | isThreadSafe       | 指定对JSP页面的访问是否为线程安全                   |
+      | **language**       | 定义JSP页面所用的脚本语言，默认是Java               |
+      | session            | 指定JSP页面是否使用session                          |
+      | **isELIgnored**    | 指定是否执行EL表达式                                |
+      | isScriptingEnabled | 确定脚本元素能否被使用                              |
+
+    ```jsp
+    <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+    ```
+
+  - **include**：
+
+    - 作用：包含其他文件。
+    - 被包含得文件可以是JSP、HTML或文本文件，被包含得文件类似JSP文件的一部分，**会被同时编译执行**。
+
+    ```jsp
+    <%@ include file="文件相对url地址" %>
+    ```
+
+  - **taglib**：
+
+    - 作用：导入外部标签库。
+
+    ```jsp
+    <%-- 导入jstl --%>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    ```
+
+- **注释**：
+
+  ```jsp
+  <%-- 此注释可以注释JSP中任意内容 --%>
+  <%-- 传统HTML注释<!--  -->只能注释HTML代码片段 --%>
+  ```
+
+### 10.2 JSP内置对象
+
 - **概述**：
 
-  JSP（Java Server Pages），即Java服务器端页面，是一种动态页面技术。
+  - 内置对象是JSP页面中不需要获取/创建的对象，可以直接使用。
+  - 又被称为隐式对象。
+  - 一共有9个。
 
-  JSP的内同类似HTML，可以写HTML代码，同时可以在特定区域写Java代码。
+- **常用对象**：
 
-  JSP的本质是Servlet，使用JSP可以简化书写。
+  - request
 
-- **JSP中Java脚本定义方式**：
+    即service方法传递的request。
 
-  - **脚本**：
+  - response
 
-    ```jsp
-    <% 代码 %>
-    ```
+    即service方法传递的response。
 
-    以上标签中定义的代码实际上在Servlet的`service()`方法中。
+  - out
 
-    可以写任何能在`service()`方法中写的内容。
+    字符输出流对象，可以将数据输出到页面中。
 
-  - **声明**：
+    类似于`response.getWriter()`。
 
-    ```jsp
-    <%! 代码 %>
-    ```
+    区别：`response.getWriter()`数据输出永远在`out.write()`之前。
 
-    以上标签中定义的代码实际上在Servlet的成员部分（方法外）。
+- **其他对象**：
 
-  - **表达式**：
+  | 对象        | 类型           | 说明                                                       |
+  | ----------- | -------------- | ---------------------------------------------------------- |
+  | pageContext | PageContext    | 代表整个JSP页面，可以通过此对象获取其他八个对象。          |
+  | session     | HttpSession    | 和Servlets中的session对象有一样的行为                      |
+  | application | ServletContext | 在JSP页面的整个生命周期中都代表着这个JSP页面，可以共享数据 |
+  | page        |                | 同义于this关键字，是整个JSP页面的代表                      |
+  | config      | ServletConfig  | Servlet的配置对象                                          |
+  | exception   | Throwable      | 异常对象                                                   |
 
-    ```
-    <%= Java中的变量/对象/有返回值的方法 %>
-    
-    <%= user.getName() %>
-    ```
 
-    以上标签中定义的内容，在将JSP页面转换成Servlet后，使用out.print()将表达式的值输出。
 
-    注意：在方法的后面不能有分号。
+## 11. JSP：EL表达式
 
-- **JSP内置对象**：
+EL（Expression Language），即JSP表达式语言。
 
-  - **概述**：
+EL可以简化JSP页面中Java代码的编写，同时也使在JSP页面中访问JavaBean和集合中的数据变得简单。
 
-    - 内置对象是JSP页面中不需要获取/创建的对象，可以直接使用。
-    - 一共有9个。
+在JSP EL表达式内可以使用整型数，浮点数，字符串，常量true、false，还有null。
 
-  - **常用对象**：
+### 11.1 运算符
 
-    - request
+| 运算符                    | 说明         |
+| ------------------------- | ------------ |
+| +  -  *  /(div)  %(mod)   | 算数运算符   |
+| <  >  <  =  >  =          | 比较运算符   |
+| &&(and)  \|\|(or)  !(not) | 逻辑运算符   |
+| empty                     | 测试是否空值 |
 
-      即service方法传递的request。
+示例：
 
-    - response
+```jsp
+${3 > 4}
+<%-- false --%>
 
-      即service方法传递的response。
+${3 + 4}
+<%-- 7 --%>
+```
 
-    - out
+### 11.2 EL访问数据
 
-      字符输出流对象，可以将数据输出到页面中。
+- **通过Scope访问共享数据**：
 
-      类似于`response.getWriter()`。
+  Scope对象从小到大排列一共有四个：
 
-      区别：`response.getWriter()`数据输出永远在`out.write()`之前。
+  - pageScope，代表pageContext
+  - requestScope，代表request
+  - sessionScope，代表session
+  - applicationScope，代表application（ServletContext）
+
+  可以通过以上Scope获取对应域中的共享数据：
+
+  ```jsp
+  ${域名称.键}
+  
+  <%-- 通过键获取 --%>
+  ${requestScope.key}
+  
+  <%-- 若不使用Scope，则依次从最小的Scope向上查找 --%>
+  ${key}
+  ```
+
+- **获取JavaBean成员数据**：
+
+  ```jsp
+  <%-- 本质为调用getter --%>
+  ${域名称.键名.属性名}
+  ```
+
+- **获取Map、List数据**：
+
+  List：
+
+  ```jsp
+  ${域名称.键名[索引]}
+  ```
+
+  Map：
+
+  ```jsp
+  ${域名称.键名.key}
+  ${域名称.键名["key"]}
+  ```
+
+- **通过隐含对象获取值**：
+
+  EL表达式可以使用以下隐含对象：
+
+  | 隐含对象         | 描述                          |
+  | ---------------- | ----------------------------- |
+  | pageScope        | page 作用域                   |
+  | requestScope     | request 作用域                |
+  | sessionScope     | session 作用域                |
+  | applicationScope | application 作用域            |
+  | param            | Request 对象的参数，字符串    |
+  | paramValues      | Request对象的参数，字符串集合 |
+  | header           | HTTP 信息头，字符串           |
+  | headerValues     | HTTP 信息头，字符串集合       |
+  | initParam        | 上下文初始化参数              |
+  | cookie           | Cookie值                      |
+  | pageContext      | 当前页面的pageContext         |
+
+
+
+## 12. JSP：JSTL标准标签库
+
+JSTL（Java Server pages Tag Library），即JSP标准标签库。
+
+JSTL是Apache组织提供的开源、免费的JSP标签库。
+
+JSTL可以简化JSP页面上的java代码。
+
+### 12.1 下载&引入
+
+- 下载：
+
+  http://archive.apache.org/dist/jakarta/taglibs/standard/binaries/
+
+  下载解压并添加为库。
+
+- 引入：
+
+  ```jsp
+  <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+  ```
+
+以上方式，任选其一。
+
+### 12.2 常用标签
+
+- < c:if >
+
+  - 相当于java中的if
+  - 必须要有属性`test`，接受boolean表达式。若表达式为true，则显示标签体内容；若为false，则不显示。
+
+  ```jsp
+  <%-- test为必须 --%>
+  <c:if test="<boolean>" var="<string>" scope="<string>">
+     ...
+  </c:if>
+  
+  <c:if test="${salary > 2000}">
+     <p>我的工资为: <c:out value="${salary}"/><p>
+  </c:if>
+  ```
+
+- < c:choose >
+
+  - 与Java switch语句的功能一样
+
+  ```jsp
+  <c:choose>
+      <c:when test="<boolean>">
+          ...
+      </c:when>
+      <c:when test="<boolean>">
+          ...
+      </c:when>
+      ...
+      ...
+      <c:otherwise>
+          ...
+      </c:otherwise>
+  </c:choose>
+  ```
+
+- < c:forEach >
+
+  - 封装了Java中的for，while，do-while循环
+
+  ```jsp
+  <c:forEach
+      items="<object>"
+      begin="<int>"
+      end="<int>"
+      step="<int>"
+      var="<string>"
+      varStatus="<string>">
+  	...
+  </c:forEach>
+      
+      
+  <c:forEach var="i" begin="1" end="5">
+     Item <c:out value="${i}"/><p>
+  </c:forEach>
+  ```
+
+  | **属性**  | **描述**                                   | **是否必要** | **默认值**   |
+  | --------- | ------------------------------------------ | ------------ | ------------ |
+  | items     | 要被循环的信息                             | 否           | 无           |
+  | begin     | 开始的元素（0=第一个元素，1=第二个元素）   | 否           | 0            |
+  | end       | 最后一个元素（0=第一个元素，1=第二个元素） | 否           | Last element |
+  | step      | 每一次迭代的步长                           | 否           | 1            |
+  | var       | 代表当前条目的变量名称                     | 否           | 无           |
+  | varStatus | 代表循环状态的变量名称                     | 否           | 无           |
