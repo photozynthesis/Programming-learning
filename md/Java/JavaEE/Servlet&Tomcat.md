@@ -733,7 +733,152 @@ Servlet中的service()、doGet()、doPost()等方法会自动传递参数Request
 
 
 
-## 10. JSP入门
+## 10. Servlet：Filter
+
+### 10.1 概述
+
+Filter（过滤器）是一个程序，它先于与之相关的servlet或JSP页面运行在服务器上。
+
+过滤器可附加到一个或多个servlet或JSP页面上，并且可以检查进入这些资源的请求信息。
+
+一个Web容器中可以有多个过滤器，多个过滤器组成过滤器链（Filter Chain），一个过滤器在执行完后，会交给下一个过滤器执行，最后请求会被发送到目标资源。目标资源发送响应后，响应又会沿过滤器链返回，依次经过每一个过滤器。
+
+过滤器可以做如下事情：
+
+- 以常规的方式调用资源（即，调用servlet或JSP页面）
+- 利用修改过的请求信息调用资源
+- 调用资源，但在发送响应到客户机前对其进行修改
+- 阻止该资源调用，代之以转到其他的资源，返回一个特定的状态代码或生成替换输出
+
+（most from http://blog.51cto.com/zhangjunhd/20629）
+
+### 10.2 使用
+
+- **配置**：
+
+  - **web.xml**：
+
+    ```xml
+    <filter>
+    	<filter-name>demoFilter</filter-name>
+        <filter-class>***.filter.demoFilter</filter-class>
+    </filter>
+    <filter-mapping>
+    	<filter-name>demoFilter</filter-name>
+        <!-- 拦截路径 -->
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    ```
+
+    同时可以使用`<dispatcher>`标签设置拦截的请求类型。
+
+    可以设置为`REQUEST（默认）`、`FORWARD`、`INCLUDE`和`ERROR`，具体说明见下文。
+
+  - **注解（Servlet 3.0）**：
+
+    ```java
+    @WebFilter(urlPatterns={"/*"})
+    public class DemoFilter implements Filter{
+        ...
+    }
+    ```
+
+    注解配置同时可以设置dispatcherTypes属性，用于指定Filter拦截的请求类型。可以设置为多个值，典型的如下：
+
+    - REQUEST：默认，拦截浏览器直接请求的资源。
+    - FORWARD：拦截转发访问资源。
+    - INCLUDE：包含访问资源。
+    - ERROR：错误跳转资源。
+    - ASYNC：异步访问资源。
+
+  - **拦截路径详解**：
+
+    - 拦截具体资源路径：
+
+      ```
+      /index.jsp
+      /demoServlet
+      ```
+
+    - 拦截目录：
+
+      ```
+      /servlet/*
+      ```
+
+    - 后缀名拦截：
+
+      ```
+      *.jsp
+      *.css
+      *.js
+      ```
+
+    - 拦截所有资源：
+
+      ```
+      /*
+      ```
+
+  - **拦截先后顺序**：
+
+    - web.xml：
+
+      按照`<filter-mapping>`的顺序依次从上到下执行。
+
+    - 注解配置：
+
+      按照Filter类名的字符串比较规则，较小的先执行。
+
+      例如：AFilter将比BFilter先执行。
+
+- **生命周期方法**：
+
+  - **init(FilterConfig)**：
+
+    服务器启动后会创建Filter对象，并调用`init()`方法。
+
+    该方法在一次启动中只调用一次，一般用于加载资源。
+
+  - **doFilter(ServletRequest, ServletResponse, FilterChain)**：
+
+    每一次请求被拦截时，会执行。
+
+    该方法中调用`chain.doFilter(request, response)`即为将请求传回过滤器链（放行）。该方法之后的代码为对返回的响应的处理。
+
+  - **distroy()**：
+
+    在服务器正常关闭时，会销毁Filter对象并调用`distroy()`方法。
+
+    一般用于释放资源。
+
+
+
+## 11. Servlet：Listener
+
+### 11.1 概述
+
+Listener（监听器）是web的三大组件之一。
+
+事件监听涉及到三个组件：事件源、事件对象、事件监听器。
+
+当事件源上发生某个动作时，它会调用事件监听器的一个方法，并在调用该方法时把事件对象传递进去。开发人员在监听器中通过事件对象，就可以拿到事件源，从而对事件源进行操作。事件对象封装事件源和动作，而监听器对象通过事件对象对事件源进行处理。
+
+**Servlet API提供了以下监听器接口**：
+
+1. javax.servlet.AsyncListener - 如果在添加了侦听器的ServletRequest上启动的异步操作已完成，超时或导致错误，将会通知侦听器。
+2. javax.servlet.ServletContextListener - 用于接收关于ServletContext生命周期更改的通知事件的接口。
+3. javax.servlet.ServletContextAttributeListener - 接收关于ServletContext属性更改的通知事件的接口。
+4. javax.servlet.ServletRequestListener - 用于接收关于进入和超出Web应用程序范围的请求的通知事件的接口。
+5. javax.servlet.ServletRequestAttributeListener - 接收关于ServletRequest属性更改的通知事件的接口。
+6. javax.servlet.http.HttpSessionListener - 接收关于HttpSession生命周期更改的通知事件的接口。
+7. javax.servlet.http.HttpSessionBindingListener - 使对象从会话绑定到绑定或从其绑定时被通知。
+8. javax.servlet.http.HttpSessionAttributeListener - 用于接收关于HttpSession属性更改的通知事件的接口。
+9. javax.servlet.http.HttpSessionActivationListener - 绑定到会话的对象可能会侦听容器事件，通知他们会话将被钝化，该会话将被激活。需要在VM或持久化会话之间迁移会话的容器来通知绑定到实现HttpSessionActivationListener的会话的所有属性。
+
+
+
+## 12. JSP入门
 
 JSP（Java Server Pages），即Java服务器端页面，是一种动态页面技术。
 
@@ -741,7 +886,7 @@ JSP的内同类似HTML，可以写HTML代码，同时可以在特定区域写Jav
 
 JSP的本质是Servlet，使用JSP可以简化书写。
 
-### 10.1 JSP标签
+### 12.1 JSP标签
 
 - **脚本**：
 
@@ -836,7 +981,7 @@ JSP的本质是Servlet，使用JSP可以简化书写。
   <%-- 传统HTML注释<!--  -->只能注释HTML代码片段 --%>
   ```
 
-### 10.2 JSP内置对象
+### 12.2 JSP内置对象
 
 - **概述**：
 
@@ -875,7 +1020,7 @@ JSP的本质是Servlet，使用JSP可以简化书写。
 
 
 
-## 11. JSP：EL表达式
+## 13. JSP：EL表达式
 
 EL（Expression Language），即JSP表达式语言。
 
@@ -883,7 +1028,7 @@ EL可以简化JSP页面中Java代码的编写，同时也使在JSP页面中访�
 
 在JSP EL表达式内可以使用整型数，浮点数，字符串，常量true、false，还有null。
 
-### 11.1 运算符
+### 13.1 运算符
 
 | 运算符                    | 说明         |
 | ------------------------- | ------------ |
@@ -902,7 +1047,7 @@ ${3 + 4}
 <%-- 7 --%>
 ```
 
-### 11.2 EL访问数据
+### 13.2 EL访问数据
 
 - **通过Scope访问共享数据**：
 
@@ -967,7 +1112,7 @@ ${3 + 4}
 
 
 
-## 12. JSP：JSTL标准标签库
+## 14. JSP：JSTL标准标签库
 
 JSTL（Java Server pages Tag Library），即JSP标准标签库。
 
@@ -975,7 +1120,7 @@ JSTL是Apache组织提供的开源、免费的JSP标签库。
 
 JSTL可以简化JSP页面上的java代码。
 
-### 12.1 下载&引入
+### 14.1 下载&引入
 
 - 下载：
 
@@ -991,7 +1136,7 @@ JSTL可以简化JSP页面上的java代码。
 
 以上方式，任选其一。
 
-### 12.2 常用标签
+### 14.2 常用标签
 
 - < c:if >
 
