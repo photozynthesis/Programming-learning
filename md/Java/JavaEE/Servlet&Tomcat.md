@@ -954,6 +954,7 @@ JSP的本质是Servlet，使用JSP可以简化书写。
 
     ```jsp
     <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+    // <%@ page contentType="application/json;charset=UTF-8" language="java" %>
     ```
 
   - **include**：
