@@ -27,6 +27,10 @@ JavaBean即标准的Java类，使用BeanUtils需要至少Bean满足以下条件�
 |                               |                                   |
 |                               |                                   |
 
+说明：
+
+- populate方法会对bean中存在的相关属性进行封装，若map中的键不存在于bean中，则该键不产生效果。
+
 
 
 ## 2. 项目设计

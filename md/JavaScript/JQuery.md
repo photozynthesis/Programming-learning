@@ -192,6 +192,9 @@ $("#btn[id='xx']").click(function () {
 $("#div_demo").css("background-color", "gold");
 // or
 $("#div_demo").css("backgroundColor", "gold");
+
+// 以下方法可以删除设置的css
+$("#div_demo").css("backgroundColor", "");
 ```
 
 
@@ -317,6 +320,22 @@ JQuery提供了多种事件绑定的方法。
   注意：若事件方法不传递回调函数，则会触发浏览器默认行为。
 
   例如：表单对象.submit();	//直接提交表单
+
+- **submit**：
+
+  只能为表单元素绑定该事件。
+
+  ```javascript
+  $('#form_demo').submit(function () {
+      ...
+  })
+  ```
+
+  说明：
+
+  - 该函数规定表单提交时发生的事件
+  - 若传递的函数没有return或return true，则在return后提交表单
+  - 若传递的函数return false，则return后不进行提交
 
 - **on & off**：
 
