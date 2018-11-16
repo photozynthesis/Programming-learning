@@ -77,3 +77,32 @@ JavaBean即标准的Java类，使用BeanUtils需要至少Bean满足以下条件�
 - 数据访问层（DAO层）
   - Data Access Object
   - 定义了对数据/数据库基本的操作。
+
+
+
+## 3. ThreadLocal
+
+### 3.1 概述
+
+- ThreadLocal是一个关于创建线程局部变量的类。
+- 通常情况下，我们创建的变量是可以被任何一个线程访问并修改的。而使用ThreadLocal创建的变量只能被当前线程访问，其他线程则无法访问和修改。
+
+### 3.2 使用
+
+- 创建：
+
+  ```java
+  ThreadLocal<String> mStringThreadLocal = new ThreadLocal<>();
+  ```
+
+- set方法：
+
+  ```java
+  mStringThreadLocal.set("droidyue.com");
+  ```
+
+- get方法：
+
+  ```java
+  mStringThreadLocal.get();
+  ```
