@@ -46,7 +46,7 @@
 
   如果程序出现问题，并没有做任何处理，Jvm最终会做出默认处理。
   默认处理方式：
-  	把异常的名称、原因，及出现异常的位置输出在控制台，并**结束程序**。
+  ​	把异常的名称、原因，及出现异常的位置输出在控制台，并**结束程序**。
 
 - **手动处理：**
 
@@ -578,9 +578,9 @@ Java对数据的操作是通过流的方式，用于操作流的对象都在IO�
   此种流的close()方法没有意义，因为其源码中没有任何内容，是空实现。
 
   此处将概述：
-  	字节数组内存操作流ByteArrayInputStream和ByteArrayOutputStream；
-  	字符数组内存操作流CharArrayReader和CharArrayWriter；
-  	字符串内存操作流StringReader和StringWriter。
+  ​	字节数组内存操作流ByteArrayInputStream和ByteArrayOutputStream；
+  ​	字符数组内存操作流CharArrayReader和CharArrayWriter；
+  ​	字符串内存操作流StringReader和StringWriter。
 
 - **构造方法：**
 
@@ -1467,8 +1467,8 @@ Java提供的线程类是：Thread。
 **设计模式总体分为三种类型：**
 
 1. 创建型		//创建对象
-  . 结构型		//对象的组成
-  . 行为型		//对象的功能
+    . 结构型		//对象的组成
+    . 行为型		//对象的功能
 
 ### 11.2 简单工厂模式
 
@@ -1974,6 +1974,8 @@ Java提供的线程类是：Thread。
   利用反射机制实现方法的增强，在不修改源码仅仅扩展的情况下，在方法执行前后做你想做的事情（例如权限校验、日志记录等）。
 
   这里指Java提供的，使用接口辅助的动态代理，使用Proxy类和InvocationHandler接口。
+
+  **要求被代理的类至少要实现一个接口**。
 
 - **使用步骤：**
 

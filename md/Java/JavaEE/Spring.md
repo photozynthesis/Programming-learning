@@ -382,7 +382,7 @@ bean 标签位于 Spring 容器 xml 文件的根标签`beans`下，用于配置�
 
 
 
-## 7. IOC：注解实现
+## 7. IOC/DI：注解实现
 
 ### 7.1 准备工作
 
@@ -604,6 +604,39 @@ public class BeansConfig {
     }
 }
 ```
+
+### 8.5 引入其他配置类
+
+在一个配置类中引入其他配置类后，其他配置类就不用写`@Configuration`注解了（写也可以）。
+
+利于配置类的管理。
+
+- **@Import**：
+  - 位置：配置类的类声明。
+  - 说明：引入其他配置类。
+  - 属性：value[]：指定导入的配置类的 class 字节码文件。
+
+示例：
+
+```java
+@Configuration
+@Import({UserBeansConfig.class, AccountBeansConfig.class})
+public class CoreBeansConfig {
+    
+}
+
+public class UserBeansConfig {
+    @Bean("id")
+    ...
+}
+
+public class AccountBeansConfig {
+    @Bean("aid")
+    ...
+}
+```
+
+
 
 
 
