@@ -638,7 +638,510 @@ public class AccountBeansConfig {
 
 
 
+## 9. AOP：概述
 
+### 9.1 AOP 的概述
+
+- AOP（Aspect Oriented Programming），即面向切面编程。
+- 利用 AOP 可以对业务逻辑中各个部分进行隔离，从而降低各模块间的耦合度。
+- AOP 可以将程序中重复的代码抽取出来。需要使用的时候，使用动态代理的技术，在不对代码进行修改的基础上对已有的方法进行增强。
+
+### 9.2 AOP 的优势
+
+- 减少重复代码。
+- 提高开发效率。
+- 维护方便。
+
+### 9.3 相关术语
+
+- joinpoint：连接点，即被拦截到的点。在 Spring 中指方法。
+- pointcut：切入点，说明要对哪些连接点进行拦截。
+- advice：通知/增强，拦截到连接点后要做的事情就是连接点。通知有多种类型：
+  - 前置通知
+  - 后置通知
+  - 异常通知
+  - 最终通知
+  - 环绕通知
+- introduction：引介，是一种特殊的通知。在不修改类代码的前提下, Introduction 可以在运行期为类动态地添加一些方法或 Field。
+- target：目标对象，代理的目标对象。
+- weaving：织入，是指把增强应用到目标对象来创建新的代理对象的过程。
+- proxy：代理，即一个类被织入增强后产生的结果代理类。
+- aspect：切面，即切入点和 通知/引介 的结合。 
+
+
+
+## 10. AOP：XML 实现
+
+### 10.1 准备工作
+
+- **导入包**
+
+  - aspectjweaver
+  - aopalliance
+  - spring-aop
+  - spring-aspects
+  - **IOC 的全部内容**
+
+- **Spring 配置文件的约束文件**
+
+  ```xml
+  <?xml version="1.0" encoding="UTF-8"?> 
+  <beans xmlns="http://www.springframework.org/schema/beans" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xmlns:aop="http://www.springframework.org/schema/aop"        				xsi:schemaLocation="http://www.springframework.org/schema/beans               http://www.springframework.org/schema/beans/spring-beans.xsd 
+               http://www.springframework.org/schema/aop               				http://www.springframework.org/schema/aop/spring-aop.xsd">
+  </beans>
+  ```
+
+### 10.2 相关标签
+
+- `<aop:config></aop:config>`：
+  - 声明开始 aop，是个根标签。
+- `<aop:aspect id="demoId" ref="demo"></aop:aspect>`：
+  - 用于配置切面
+  - 属性：
+    - id：切面的唯一标识
+    - ref：通知类 bean 的 id
+- `<aop:pointcut id="demoId" expression="execution(public void ...)" />`：
+  - 配置切入点表达式，指定对哪些类/哪些方法进行增强。
+  - 属性：
+    - expression：切入点表达式，下文将详细描述
+    - id：切入点表达式的唯一标识
+- **通知配置相关标签**：
+  - 一共有如下几种
+    - `<aop:before>`：**前置通知**，增强的方法将在**切入点方法之前执行** 
+    - `<aop:after-returning>`：**后置通知**，增强的方法将在**切入点方法正常执行之后执行**
+    - `<aop:after-throwing>`：**异常通知**，增强的方法将**在前置通知+切入点方法+后置通知中出现异常的时候执行**
+    - `<aop:after>`：**最终通知**，增强的方法**在上面这些全执行完了才执行，出现异常不会触发异常通知**。
+  - **规则概述：上面的这些东西，简直就是在一个 `try...catch...finally...` 里**。
+  - 通用属性：
+    - method：指定通知类中的增强方法名。
+    - pointcut-ref：指定配置好的 pointcut 的 id。
+    - pointcut：定义自己的切入点表达式。
+
+### 10.3 切入点表达式
+
+- **概述**：
+
+  - 切入点表达式**用于说明要对哪些方法进行监听/增强**。
+
+- **规则（execution表达式）**：
+
+  - 以 `execution(...)` 为格式，以下为括号中的内容。
+
+  - 完整匹配（示例）：
+
+    > 权限修饰符 返回值类型 包.包.类名.方法名(包.包.类名, 包.包.类名)
+
+  - 权限修饰符 可以省略。
+
+  - 权限修饰符 可以用 `*` 通配。
+
+  - 包 可以用 `*` 通配，不过包的级数不能变。
+
+    ```
+    execution(void io.*.*.service.MyService(java.lang.String, java.lang.Integer))
+    ```
+
+  - 包 可以用 `包..类名` 来表示当前包及所有子包。
+
+  - 类名 可以用 `*` 通配。
+
+  - 方法名 可以用 `*` 通配。
+
+  - 参数 可以用 `*` 通配，但是必须要有参数。
+
+  - 参数 可以用 `..` 来通配一切，有无参数，有多少个参数都行。
+
+  - 全通配示例：
+
+    ```
+    execution(* *..*.*(..))
+    ```
+
+### 10.4 环绕通知
+
+- **概述**：
+
+  - 可以手动控制增强代码何时执行，一般独立使用（不同时使用其他四种通知）。
+
+  - 需要在通知类中写环绕通知对应方法，传递 spring 提供的 ProceedingJoinPoint 接口，并在方法中手动写入一个 `try...catch...finally...` ，以在随意位置进行想要的操作。
+
+  - 在环绕通知方法体中可以使用
+
+    ```java
+    Object[] args = proceedingJoinPoint.getArgs();
+    ```
+
+    来**得到被增强方法的参数**。
+
+  - 在环绕通知方法体中可以使用
+
+    ```java
+    Object result = proceedingJoinPoint.proceed(args);
+    ```
+
+    来**模拟被增强方法的执行**。
+
+  - 若有返回值，需要进行 return 返回。
+
+- **属性**：
+
+  tm 跟其他几个通知一样。
+
+### 10.5 示例
+
+- **一个后置通知的示例**：
+
+  springConfig.xml
+
+  ```xml
+  ...
+  <beans ...>
+      
+  	<aop:config>
+      	<aop:aspect id="myAspect" ref="myAdvice">
+          	<aop:pointcut id="pc" expression="execution(void io.*.*.service.MyService.demoOperation())" />
+              <aop:after-returning method="log" pointcut-ref="pc" />
+          </aop:aspect>
+      </aop:config>
+      
+      <bean id="myAdvice" class="io.github.pz.domain.MyAdvice" />
+      
+  </beans>
+  ```
+
+  MyAdvice.java
+
+  ```java
+  @Component
+  public class MyAdvice {
+      // 日志记录
+      public void log() {
+          System.out.println("日志记录");
+      }
+  }
+  ```
+
+  MyService.java
+
+  ```java
+  @Service
+  public class MyService {
+      public void demoOperation() {
+          System.out.println("操作中...");
+      }
+  }
+  ```
+
+- **一个环绕通知的示例**：
+
+  springConfig.xml
+
+  > 参考上文
+
+  MyAdvice.java
+
+  ```java
+  @Component
+  public class MyAdvice {
+      public Object myAdviceAround(ProceedingJoinPoint joinPoint) {
+          try {
+              someBefore();
+              Object[] args = joinPoint.getArgs();
+              Object result = joinPoint.proceed(args);
+              someAfter_Returning();
+          } catch (Throwable e) {
+              someAfter_Throwing();
+          } finally {
+              someAfter();
+          }
+          return result;
+      }
+      
+      // 这里还有一堆其他增强方法，懒得写了
+      ...
+  }
+  ```
+
+  MyService.java
+
+  > 参考上文
+
+
+
+## 11. AOP：注解实现
+
+### 11.1 简要流程概述
+
+- 在 springConfig.xml 配置文件中**指定要扫描的包**（一般来说早就弄好了）。
+
+  ```xml
+  <context:component-scan base-package="io.github.pz" />
+  ```
+
+- 在 springConfig.xml 配置文件中**开启注解 AOP 支持**。
+
+  ```xml
+  <aop:aspectj-autoproxy />
+  ```
+
+- **用注解配置通知类（应该做的），并同时使用 `@Aspect` 注解将其声明为切面**。
+
+  ```java
+  @Component("myAdvice")
+  @Aspect
+  public class MyAdvice{
+      ...
+  }
+  ```
+
+- **在通知类的方法上使用注解将其设置为各种通知，可以直接传递切入点表达式**。
+
+  ```java
+  @Component("myAdvice")
+  @Aspect
+  public class MyAdvice{
+      @AfterReturning("execution(* *..*.*(..))")
+      public void demoAfterRetruningMethod() {
+          ...
+      }
+  }
+  ```
+
+  - @Before
+  - @AfterReturning
+  - @AfterThrowing
+  - @After
+  - @Around
+
+### 11.2 定义可重用的切入点表达式
+
+随便弄个空的方法加上注解 `@Pointcut(表达式)` 就行了。该方法的**方法名()**就可以直接作为其他通知方法前的注解的参数。
+
+```java
+@Component("myAdvice")
+@Aspect
+public class MyAdvice{
+    @Pointcut("execution(* *..*.*(..))")
+    public void pc() {}
+    @AfterReturning("pc()")
+    public void demoAfterRetruningMethod() {
+        ...
+    }
+}
+```
+
+### *11.3 使用配置类来开启注解 AOP 支持
+
+```java
+@Configuration
+@ComponentScan(basePackages="io.github.photozynthesis")
+@EnableAspectJAutoProxy
+public class SpringConfiguration {
+    
+}
+```
+
+
+
+## 12. 事务控制：XML 实现
+
+### *12.0 Spring 事务控制 API 概述
+
+- PlatformTransactionManager：Spring 的事务管理器
+- TransactionDefinition：事务信息对象
+- TransactionStatus：事务状态对象
+
+### 12.1 准备工作
+
+- **导入包**
+
+  - spring-jdbc
+  - spring-tx
+
+- **约束**
+
+  ```xml
+  <?xml version="1.0" encoding="UTF-8"?>
+  <beans xmlns="http://www.springframework.org/schema/beans" 
+         xmlns:aop="http://www.springframework.org/schema/aop"
+         xmlns:tx="http://www.springframework.org/schema/tx"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans 
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx.xsd">
+  </beans>
+  ```
+
+### 12.2 配置步骤
+
+- 在 springConfig.xml 中**配置事务管理器**（spring-jdbc 包提供）。需要一个 dataSource，自行配置连接池。
+
+  springConfig.xml
+
+  ```xml
+  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+  	<property name="dataSource" ref="dataSource" />
+  </bean>
+  <!-- 自行配置连接池 -->
+  <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+          <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+          <property name="url" value="jdbc:mysql://localhost:3306/test?serverTimezone=UTC&amp;useSSL=false&amp;allowPublicKeyRetrieval=true" />
+          <property name="username" value="root" />
+          <property name="password" value="demopasswd" />
+      </bean>
+  ```
+
+- **配置事务通知**。
+
+  springConfig.xml
+
+  ```xml
+  <!-- 需要指定之前配置的事务管理器的 id -->
+  <tx:advice id="txAdvice" transaction-manager="transactionManager">
+  	<!-- 置事务的属性 -->
+      <tx:attributes>
+      	<tx:method name="transfer*" read-only="false" propagation="REQUIRED" />
+          <tx:method name="find*" read-only="true" propagation="SUPPORTS" />
+      </tx:attributes>
+  </tx:advice>
+  ```
+
+  `<tx:method>` 的重要属性：
+
+  - **name**：指示对应属性的事务将要应用到的方法，`*` 为通配符，例如 `find*` 表示所有以 find 开头的方法都要应用该标签表示的事务。
+  - **read-only**：是否只读事务。
+    - false（默认）
+    - true
+  - **propagation**：指定事务的传播行为。
+    - REQUIRED：如果当前没有事务，就新建一个事务；如果已经存在一个事务中，加入到这个事务中。（默认）（建议）
+    - SUPPORTS：支持当前事务，如果当前没有事务，就以*非事务方式执行*。
+    - MANDATORY
+    - REQUERS_NEW
+    - NOT_SUPPORED
+    - NEVER
+    - NESTED
+  - isolation：指定事务的隔离级别，默认为数据库的默认隔离级别。
+    - ISOLATION_DEFAULT
+    - ISOLATION_READ_UNCOMMITED
+    - ISOLATION_READ_COMMITED
+    - ISOLATION_REPEATABLE_READ
+    - ISOLATION_SERIALIZABLE
+  - timeout：指定超时时间，默认为 -1（永不超时），单位为 s。
+  - rollback-for：指定产生什么异常时事务回滚。默认任何异常都回滚，若设置了则只针对设置的异常进行回滚。
+  - no-roolback-for：指定产生什么异常时事务**不**回滚。默认任何异常**都回滚**，若设置了则只针对设置的异常之外的异常进行回滚。
+
+- **配置切入点表达式**，表示事务通知要应用于哪些包/类，注意不需具体到方法，因为方法已经在事务通知的配置中指定。
+
+  springConfig.xml
+
+  ```xml
+  <aop:config>
+  	<aop:pointcut id="demoPointcut" expression="execution(* io.*.*.service.*.*(..))" />
+  </aop:config>
+  ```
+
+- **配置切入点表达式和事务通知的关系**，在上面的标签中配置。
+
+  springConfig.xml
+
+  ```xml
+  <aop:config>
+  	<aop:pointcut id="demoPointcut" expression="execution(* io.*.*.service.*.*(..))" />
+      <aop:advisor advice-ref="txAdvice" pointcut-ref="demoPointcut" />
+  </aop:config>
+  ```
+
+  - advice-ref：事务通知的 id。
+  - pointcut-ref：切入点表达式的 id。
+
+
+
+## 12. 事务控制：注解实现
+
+**概述**：
+
+- 导入包
+
+  略。
+
+- 约束
+
+  略。
+
+- 在 springConfig.xml 中**配置事务管理器**
+
+  ```xml
+  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+  	<property name="dataSource" ref="dataSource" />
+  </bean>
+  <!-- 自行配置连接池 -->
+  <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+          <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+          <property name="url" value="jdbc:mysql://localhost:3306/test?serverTimezone=UTC&amp;useSSL=false&amp;allowPublicKeyRetrieval=true" />
+          <property name="username" value="root" />
+          <property name="password" value="demopasswd" />
+      </bean>
+  ```
+
+- **开启 spring 对注解事务的支持**。
+
+  ```xml
+  <tx:annotation-driven transaction-manager="transactionManager" />
+  ```
+
+- 在 service 的 **接口/类/方法** 上使用 `@Transactional` 注解。
+
+  - 属性（可参考 xml 配置部分）：
+
+    - readOnly
+    - propagation
+      - Propagation.REQUIRED
+      - Propagation.SUPPORTS
+      - ...
+    - ...
+
+  - 关于注解位置的说明：
+
+    - 在接口上：该接口的所有实现类都有事务支持。
+    - 在类上：该类中所有方法都有事务支持。
+    - 在方法上：该方法有事务支持。
+    - 优先级：方法 > 类 > 接口。
+
+  - 示例：
+
+    ```java
+    @Service
+    @Transactional(readOnly=true, propagation=Propagation.SUPPORTS)
+    public class MyService {
+        @Transactional(readOnly=false, propagation=Propagation.REQUIRED)
+        public void transfer(...) {
+            ...
+        }
+    }
+    ```
+
+
+
+## #. 组件：Junit 整合
+
+1. 导入包
+
+   - spring-test
+
+2. 在测试类上加上 `@RunWith(SpringJUnit4ClassRunner.class)` 
+
+3. 在测试类上加上 `@ContextConfiguration(locations={"classpath:springConfig.xml"})` 
+
+   locations 为 Spring 配置文件的位置。
+
+4. 已经可以随意进行测试，运行测试方法时会自动启动框架。
+
+   若要使用容器中的变量，像往常一样定义成员变量然后使用 `@AutoWired` 之类即可。
 
 
 
