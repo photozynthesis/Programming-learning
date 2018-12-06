@@ -10,7 +10,7 @@
 
 
 
-## 2. 数据库与表空间、用户与连接
+## 2. 数据库与表空间、用户、连接
 
 ### 2.1 数据库与表空间
 
@@ -34,7 +34,7 @@
     next 10m
     ```
 
-### 2.2 用户与连接
+### 2.2 用户
 
 - 用户是在实例下建立的，不同实例可以创建相同名字的用户。
 
@@ -61,6 +61,28 @@
     ```sql
     grant connect|resource|dba to 用户名
     ```
+
+### 2.3 连接
+
+- 使用 sqlplus 连接：
+
+  ```shell
+  # 格式
+  sqlplus 用户名/密码@服务器地址:端口号/数据库名
+  # 实例
+  sqlplus system/oracle@localhost:1521/orcl
+  ```
+
+- 使用 jdbc 连接：
+
+  db.properties
+
+  ```properties
+  jdbc.driver=oracle.jdbc.driver.OracleDriver
+  jdbc.url=jdbc:oracle:thin:@local:1521:oracle
+  jdbc.username=username
+  jdbc.password=password
+  ```
 
 
 
