@@ -762,6 +762,7 @@ SqlMapConfig.xml是MyBatis的核心配置文件，包含很多框架基本的配
 
   - collection 的 property 属性为指定 集合 的名称（用于封装）。
   - collection 的 ofType 属性为 集合的泛型类名。
+  - SQL 语句方面，只需得到一张具有多条记录的表即可（多条记录之间 bean 除集合属性外其他属性内容一致，集合属性内容不同），mybatis 会自动封装成一个 JavaBean。
   - collection 的子标签相关内容与前文所述内容完全一致，无需赘述。
 
 
@@ -908,7 +909,9 @@ foreach 标签用于填充一个传入的集合中的值。
 
 说明：
 
-- collection：要遍历的集合，来自 JavaBean 的一个属性。
+- collection：要遍历的集合/数组，分多种情况：
+  - 若集合是 JavaBean 中的一个属性，此处需要写 JavaBean 中集合的字段名。
+  - 若集合为映射器的唯一参数（单独传一个集合/数组），此处需要填写 list 或 array。
 - open：语句开始的部分，可以认为是循环开始前拼接的字符串。
 - close：语句结束的部分，可以认为是循环结束后拼接的字符串。
 - separator：代表分隔多个循环元素间的字符串。
@@ -960,4 +963,8 @@ foreach 标签用于填充一个传入的集合中的值。
 ## #. Mapper：注解方式
 
 
+
+
+
+## #. 插件：PageHelper
 

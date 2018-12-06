@@ -419,3 +419,19 @@ JQuery提供了多种事件绑定的方法。
   ```
 
 
+
+## 10. JQuery 常用操作
+
+### 10.1 监听指定按键
+
+示例：
+
+```javascript
+$("input[name='input_search']").keyup(function (e) {
+    var key = e.which;
+    if (key == 13) {
+        queryWithCityName();
+    }
+});
+```
+

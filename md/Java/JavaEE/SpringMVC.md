@@ -211,6 +211,8 @@ springmvc.xml：
 
 - 说明：请求参数的 name 需要跟控制器方法的参数名称相同，区分大小写。
 
+- 若前端传递数组，并绑定到后端数组，使用 `@RequestParam` 注解，并设置 value 为 `前端数组名[]`。
+
 - 示例：
 
   ...?username=zhangsan&password=123
@@ -416,6 +418,8 @@ springmvc.xml：
   - 属性：
     - value：请求参数名
     - required：请求参数是否必须包含该参数，默认为 true，表示不提供将会报错。
+  - 特别说明：
+    - 若请求参数为数组，请求参数名需要加上 `[]`。
 
 - **示例**：
 
@@ -710,6 +714,7 @@ springmvc.xml：
   - 在 @SessionAttributes 中配置的 attributes，会在控制器将其存入 Model 时自动存入 session，也就是可以通过 Model 对象，也可以通过 ModelAndView 对象使用。
   - 属性 value 和 type 没有任何关系。
 - **位置**：
+
   - 控制器类定义上。
 - **属性**：
   - value/name[]：任何符合这些 key 的 attribute在存入 Model 时，都会存一份到 session 。
@@ -1111,7 +1116,7 @@ springmvc.xml
   MyHandlerInterceptor.java
 
   ```java
-  public class MyHandlerInterceptor {
+  public class MyHandlerInterceptor implements HandlerInterceptor {
       
       @Override
       public boolean preHandler(HttpServletRequest req, HttpServletResponse resp, Object handler) throws Exception {
