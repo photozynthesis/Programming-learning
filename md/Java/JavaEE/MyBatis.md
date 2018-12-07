@@ -966,5 +966,127 @@ foreach 标签用于填充一个传入的集合中的值。
 
 
 
+## #. MyBatis：Generator
+
+### #.1 概述
+
+- MyBatis 官方提供了一个逆向工程，可用于从数据库自动生成映射器的代码。
+
+### #.2 使用
+
+- 导入包
+
+  至少需要以下包：
+
+  - mybatis
+  - mybatis-generator-core
+  - 数据库驱动
+
+- 编写（粘贴修改）配置文件
+
+  下载的 jar 包中的帮助文档中有 generatorConfig.xml 配置文档的模板。
+
+  generatorConfig.xml
+
+  ```xml
+  <?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE generatorConfiguration
+    PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+    "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+  
+  <generatorConfiguration>
+      <context id="testTables" targetRuntime="MyBatis3">
+          <commentGenerator>
+              <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+              <property name="suppressAllComments" value="true" />
+          </commentGenerator>
+          <!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
+          <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+              connectionURL="jdbc:mysql://localhost:3306/mybatis" userId="root"
+              password="root">
+          </jdbcConnection>
+          <!-- <jdbcConnection driverClass="oracle.jdbc.OracleDriver"
+              connectionURL="jdbc:oracle:thin:@127.0.0.1:1521:demo" 
+              userId="demo"
+              password="demopasswd">
+          </jdbcConnection> -->
+  
+          <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer，为 true时把JDBC DECIMAL和NUMERIC类型解析为java.math.BigDecimal -->
+          <javaTypeResolver>
+              <property name="forceBigDecimals" value="false" />
+          </javaTypeResolver>
+  
+          <!-- targetProject:生成PO类的位置，重要！！ -->
+          <javaModelGenerator targetPackage="mybatis.po"
+              targetProject=".\src">
+              <!-- enableSubPackages:是否让schema作为包的后缀 -->
+              <property name="enableSubPackages" value="false" />
+              <!-- 从数据库返回的值被清理前后的空格 -->
+              <property name="trimStrings" value="true" />
+          </javaModelGenerator>
+          <!-- targetProject:mapper映射文件生成的位置，重要！！ -->
+          <sqlMapGenerator targetPackage="mybatis.mapper" 
+              targetProject=".\src">
+              <property name="enableSubPackages" value="false" />
+          </sqlMapGenerator>
+          <!-- targetPackage：mapper接口生成的位置，重要！！ -->
+          <javaClientGenerator type="XMLMAPPER"
+              targetPackage="mybatis.mapper" 
+              targetProject=".\src">
+              <property name="enableSubPackages" value="false" />
+          </javaClientGenerator>
+          <!-- 指定数据库表，要生成哪些表，就写哪些表，要和数据库中对应，不能写错！ -->
+          <table tableName="items"></table>
+          <table tableName="orders"></table>
+          <table tableName="orderdetail"></table>
+          <table tableName="user"></table>        
+      </context>
+  </generatorConfiguration>
+  ```
+
+  **说明**：
+
+  配置文件主要包含：
+
+  - 数据库连接信息
+  - 生成代码的位置
+  - 指定要生成代码的表
+
+- 执行生成
+
+  Generate.java
+
+  ```java
+  public class GeneratorSqlmap {
+  
+      public void generator() throws Exception{
+  
+          List<String> warnings = new ArrayList<String>();
+          boolean overwrite = true;
+          //指向逆向工程配置文件
+          File configFile = new File("generatorConfig.xml"); 
+          ConfigurationParser cp = new ConfigurationParser(warnings);
+          Configuration config = cp.parseConfiguration(configFile);
+          DefaultShellCallback callback = new DefaultShellCallback(overwrite);
+          MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config,
+                  callback, warnings);
+          myBatisGenerator.generate(null);
+  
+      } 
+      public static void main(String[] args) throws Exception {
+          try {
+              GeneratorSqlmap generatorSqlmap = new GeneratorSqlmap();
+              generatorSqlmap.generator();
+          } catch (Exception e) {
+              e.printStackTrace();
+          }
+  
+      }
+  
+  }
+  ```
+
+
+
 ## #. 插件：PageHelper
 

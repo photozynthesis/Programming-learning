@@ -148,7 +148,26 @@ Oracle 的常用数据类型如下表：
 
 ## 5. 视图
 
+### 5.1 概述
 
+- 视图就是封装了一条复杂的查询语句，定义后可方便地调用。
+
+### 5.2 定义与使用
+
+- 定义 view （视图）：
+
+  ```sql
+  create [or replace] view 视图名 as 
+  -- 定义的 sql 子查询语句
+  select * from emp 
+  [with read only]
+  ```
+
+- 使用视图：
+
+  ```sql
+  select * from 视图名
+  ```
 
 
 
@@ -156,7 +175,7 @@ Oracle 的常用数据类型如下表：
 
 ### 6.1 概述
 
-在表的列上构建一个二叉树，可以大幅提高查询的效率，却会影响增删改的效率。
+在表的列上构建一个二叉树，可以大幅**提高查询的效率**，却会影响增删改的效率。
 
 ### 6.2 创建索引
 
@@ -324,7 +343,7 @@ end;
 
   ```plsql
   declare
-  	
+  	...
   begin
   	过程名(参数);
   end;
@@ -334,7 +353,33 @@ end;
 
 ## 9. 存储函数
 
+### 9.1 概述
 
+- 存储函数与存储过程的主要区别在于**存储函数可以有一个返回值**，而存储过程没有返回值。
+- 可以利用 out 函数，实现在函数和过程中返回多个值。
+
+### 9.2 范例
+
+```plsql
+create or replace function empincome(eno in emp.empno%type) return number is
+	psal emp.sal%type;
+	pcomm emp.comm%type;
+begin
+	select t.sal into psal from emp t where t.empno = eno;
+	return psal * 12 + nvl(pcomm, 0);
+end;
+```
+
+### 9.3 调用
+
+```plsql
+declare
+	income number;
+begin
+	empincome(123, income);
+	dbms_output.put_line(income);
+end;
+```
 
 
 
@@ -364,3 +409,83 @@ end;
 
 ## 11. Oracle jdbc
 
+### 11.1 数据库版本与 ojdbc 版本的对应
+
+- Oracle 10g - ojdbc 14
+- Oracle 14g - ojdbc 6
+
+### 11.2 连接信息
+
+db.properties
+
+```properties
+driver = oracle.jdbc.OracleDriver
+url = jdbc:oracle:thin:@地址:1521:数据库
+username = ...
+password = ...
+```
+
+### 11.3 调用存储过程概述
+
+plsql
+
+```plsql
+create or replace procedure proc_countyearsal(eno in number,esal out number) as
+begin    
+	select sal*12+nvl(comm,0) into esal from emp where empno=eno; 
+end;
+```
+
+java
+
+```java
+public class Test {
+    String driver = ...;
+    String url = ...;
+    ...
+    public void test throws Exception() {
+        Class.forName(driver);
+        Connection conn = DriverManager.getConnection(url,username,password);
+        
+        // 定义预编译的存储过程
+        CallableStatement callSt = conn.prepareCall("call proc_countyearsal(?,?)");
+        // 设置参数
+        callSt.setInt(1, 123);
+        // 注册返回值
+        callSt.registerOutParameter(2, OracleTypes.NUMBER);
+        // 执行
+        callSt.execute();
+        // 输出返回值
+        System.out.println(callSt.getObject(2));
+        
+    }
+}
+```
+
+
+
+## #. 补充
+
+### #.1 方言：外连接的简略写法
+
+```sql
+select e.*,d.* from emp e and dept d where e.empno(+) = d.deptno
+```
+
+### #.2 方言：Rownum 与分页查询
+
+- rownum 是一个伪列，存在于每一张表中。
+
+- 若要在查询结果中显示 rownum 列，直接在 select 后面写上 rownum 即可，可以同时带上表的别名。
+
+- rownum 从 1 开始。
+
+- rownum 不支持使用 `>` 的逻辑判断，所以需要使用子查询来实现分页。
+
+- 分页示例：
+
+  ```sql
+  -- 查询第六到第十条信息
+  select * from (select rownum r,emp.* from emp) t
+  where b.r > 5 and b.r < 11
+  ```
