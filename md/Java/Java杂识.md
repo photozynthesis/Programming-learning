@@ -195,11 +195,16 @@ JavaBean即标准的Java类，使用BeanUtils需要至少Bean满足以下条件�
           <!-- 对哪些 url 进行权限控制，哪些角色可以访问（可用逗号分隔） -->
           <security:intercept-url pattern="/**" access="ROLE_USER" />
           <!-- 指定登录相关信息，如登陆页面，登录检查 url，成功 url，失败 url 等 -->
-          <security:form-login login-page="/admin/login" login-processing-url="/login"
-                               default-target-url="/admin/main" authentication-failure-url="/admin/login_failure"
-                              username-parameter="username" password-parameter="password"/>
+          <security:form-login login-page="/admin/login" 
+                               login-processing-url="/login" 
+                               default-target-url="/admin/main" 
+                               authentication-failure-url="/admin/login_failure" 
+                               username-parameter="username" 
+                               password-parameter="password"/>
           <!-- 指定登出相关信息，如是否销毁 session、登出处理 url、登出成功页面等 -->
-          <security:logout invalidate-session="true" logout-url="/logout" logout-success-url="/admin/login" />
+          <security:logout invalidate-session="true" 
+                           logout-url="/logout" 
+                           logout-success-url="/admin/login" />
           <!-- 防御 CSRF（跨站请求伪造） -->
           <security:csrf disabled="true" />
       </security:http>
@@ -280,3 +285,52 @@ JavaBean即标准的Java类，使用BeanUtils需要至少Bean满足以下条件�
   
   }
   ```
+
+#### 4.2.2 使用 BCrypt 对密码进行加密
+
+- **BCrypt 概述**：
+
+  BCrypt 是一种不可逆的加密算法。
+
+  用户表的密码通常使用 MD5 等不可逆算法加密后存储，为防止彩虹表破解更会先使用 一个特定的字符串（如域名）加密，然后再使用一个随机的 salt（盐值）加密。
+
+  特定字符串是程序代码中固定的，salt 是每个密码单独随机，一般给用户表加一个字段单独存储，比 较麻烦。
+
+  BCrypt 算法将 salt 随机并混入最终加密后的密码，验证时也无需单独提供之前的 salt，从而无需单独处理 salt 问题。 
+
+- **对密码进行加密存储**：
+
+  - 创建 BCryptPasswordEncoder 类对象（spring-security）；
+  - 调用 encode 方法加密一个 CharSequence（String、StringBuffer 等的接口），返回 String；
+  - 存储加密后的字符串。
+
+  ```java
+  BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+  seller.setPassword(encoder.encode(seller.getPassword()));
+  sellerService.add(seller);
+  ```
+
+- **在 spring-security 中配置加密登录**：
+
+  - 配置 BcryptPasswordEncoder 的 bean；
+  - 在 authentication-manager 的 authentication-provider 中添加 password-encoder，引用刚配置的 bean。
+
+  ```xml
+  <!-- 加密类 bean -->
+  <bean id="bCryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+  <!-- 认证管理器 -->
+  <authentication-manager>
+      <authentication-provider user-service-ref="userDetailsService">
+          <password-encoder ref="bCryptPasswordEncoder" />
+      </authentication-provider>
+  </authentication-manager>
+  ```
+
+#### 4.2.3 获取用户的登录名
+
+编写控制器，通过以下方法获取。
+
+```java
+String loginName = SecurityContextHolder.getContext().getAuthentication().getName();
+```
+

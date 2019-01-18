@@ -223,7 +223,7 @@ set**不允许**重复元素。
   (integer) 1
   ```
 
-### 3.5 srotedset：有序集合类型
+### 3.5 sortedset：有序集合类型
 
 **不允许重复**元素，且元素**有顺序**。
 
@@ -502,3 +502,122 @@ JedisPool
   port = 6379
   ```
 
+
+
+## 9. 事务
+
+
+
+
+
+## 10. spring-data-redis
+
+### 10.1 概述
+
+- spring-data-redis 是 spring 家族的一员，封装了 Jedis 等操作 Redis 的库，提供了诸多接口简化使用。
+
+### 10.2 使用准备工作
+
+- 引入 spring 基础依赖
+
+  - spring-context
+  - spring-beans
+
+  示例略
+
+- 引入包/依赖坐标
+
+  ```xml
+  <dependency>  
+      <groupId>redis.clients</groupId>  
+      <artifactId>jedis</artifactId>  
+      <version>2.8.1</version>  
+  </dependency>  
+  <dependency>  
+      <groupId>org.springframework.data</groupId>  
+      <artifactId>spring-data-redis</artifactId>  
+      <version>1.7.2.RELEASE</version>  
+  </dependency> 
+  ```
+
+- 创建 properties 配置文件
+
+  ```properties
+  redis.host=127.0.0.1  
+  redis.port=6379  
+  redis.pass=  
+  redis.database=0  
+  redis.maxIdle=300  
+  redis.maxWait=3000  
+  redis.testOnBorrow=true
+  ```
+
+- 创建 spring 配置文件 applicationContext-redis.xml
+
+  ```xml
+  <context:property-placeholder location="classpath*:properties/*.properties" />    
+  <!-- redis 相关配置 -->  
+  <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">   
+      <property name="maxIdle" value="${redis.maxIdle}" />    
+      <property name="maxWaitMillis" value="${redis.maxWait}" />   
+      <property name="testOnBorrow" value="${redis.testOnBorrow}" />   
+  </bean>   
+  <bean id="JedisConnectionFactory" 
+        class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"  
+        p:host-name="${redis.host}" p:port="${redis.port}" p:password="${redis.pass}" 
+        p:pool-config-ref="poolConfig"/>   
+  
+  <bean id="redisTemplate" 
+        class="org.springframework.data.redis.core.RedisTemplate">   
+      <property name="connectionFactory" ref="JedisConnectionFactory" />   
+  </bean> 
+  ```
+
+### 10.3 基本使用（通过 RedisTemplate）
+
+- 由于已配置该对象的 bean，可以直接通过 @AutoWired 注入。
+
+- 删除键值对
+
+  ```java
+  redisTemplate.delete("主键");
+  ```
+
+- 操作 string
+
+  ```java
+  // 新增
+  redisTemplate.boundValueOps("主键").set("值");
+  
+  // 还有 get() 拿值
+  ```
+
+- 操作 hash
+
+  ```java
+  // 新增 其他三个师弟未添加
+  redisTemplate.boundHashOps("主键").put("a", "唐僧"); 
+  
+  // 还有 keys() 和 values() 拿到所有键和值的集合
+  // 还有 get("键") 拿到值
+  // 还有 delete("键") 删除键值对
+  ```
+
+- 操作 set
+
+  ```java
+  // 添加
+  redisTemplate.boundSetOps("主键").add("曹操"); 
+  
+  // 还有 members() 拿到所有值的集合
+  // 还有 remove("值")
+  ```
+
+- 操作 list
+
+  ```java
+  redisTemplate.boundListOps("namelist1").rightPush("刘备"); 
+  // 还有 leftPush("值")
+  // 还有 range(索引1, 索引2) 范围拿值的集合
+  // 还有 index(索引) 拿值
+  ```

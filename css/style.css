@@ -69,6 +69,9 @@ div#navigator ul{
 	padding: 0;
 	width: 200px;
 }
+div#navigator li {
+	cursor: pointer;
+}
 div#navigator li a{
 	font-size: 23px;
 	text-decoration: none;
@@ -92,6 +95,9 @@ div#navButtons{
 	width: 100%;
 	position: absolute;
 	bottom: 0px;
+}
+div.navButton {
+	cursor: pointer;
 }
 div.navButton a{
 	font-size: 25px;

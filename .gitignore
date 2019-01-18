@@ -1,0 +1,7 @@
+# idea files
+.idea
+.idea/
+.idea/*
+
+# other files
+.directory

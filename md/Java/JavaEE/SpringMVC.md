@@ -269,9 +269,13 @@ springmvc.xml：
     </form>
     ```
 
+### 3.3 新增备注
+
+- SpringMVC 可以接收同时具有 query 参数（url 中的参数，就像 get）和请求体参数的 post 请求。可以使用 @RequestBody 和 @RequestParam 来接收参数。
 
 
-## 6. filter 解决乱码
+
+## 4. filter 解决乱码
 
 - 概述：
 
