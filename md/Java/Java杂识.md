@@ -334,3 +334,9 @@ JavaBean即标准的Java类，使用BeanUtils需要至少Bean满足以下条件�
 String loginName = SecurityContextHolder.getContext().getAuthentication().getName();
 ```
 
+
+
+## 5. Lombok
+
+- 简化 POJO 类的插件包，可以通过简单的注解来消除 getter/setter、构造方法、toString 等。
+- maven 导入依赖后，使用 @Data、@ToString 等注解即完成操作。

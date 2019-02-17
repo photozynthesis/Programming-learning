@@ -948,13 +948,36 @@ foreach 标签用于填充一个传入的集合中的值。
 
 
 
-## #. 延迟加载
+## 11. 延迟加载
+
+### 11.1 概述
+
+- 延迟加载，即在需要使用到数据时才加载，没用到的时候就不加载。又称懒加载。
+- 在某些情况下可以提高数据库性能，而有时候也会增加等待时间。
+- 在使用了 association 和 collection 时可以使用延迟加载。
+
+### 11.1 如何使用
+
+- 前提：
+
+  - 进行一对一、一对多查询并使用 association 或 collection（即返回的结果实体类包含其他实体 bean 或 其他实体集合）。
+
+- 开启懒加载：
+
+  在 SqlMapConfig.xml 中添加延迟加载的配置：
+
+  ```xml
+  <settings>
+  	<setting name="lazyLoadingEnabled" value="true" />
+      <setting name="aggressiveLazyLoading" value="false" />
+  </settings>
+  ```
+
+- 进行查询，并不使用结果的关联属性。
 
 
 
-
-
-## #. 缓存
+## 12. 缓存
 
 
 

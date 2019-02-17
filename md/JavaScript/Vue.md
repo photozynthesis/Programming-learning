@@ -75,12 +75,77 @@
 ### 3.3 实例
 
 ```javascript
-
+{{num + 1}}
+{{flag ? 'pass' : 'fail'}}
 ```
 
 
 
 ## 4. Vue.js 指令
+
+### 4.1 v-on
+
+监听 dom 事件，在触发时执行一些 js 代码（特指已在 vue 对象中定义的函数）。
+
+- 示例：
+
+  ```html
+  <div id='container'>
+      <button v-on:click="myFunc('hello')">say hello</button>
+  </div>
+  <script>
+      new Vue({
+          el: '#container',
+          data: {},
+          methods: {
+              myFunc: function(toSay) {
+                  alert(toSay);
+              }
+          }
+      })
+  </script>
+  ```
+
+- 其他说明：
+
+  - v-on 可以使用事件修饰符来处理 dom 事件细节，例如终止事件等。可使用的修饰符如下：
+
+    - `.stop`：event.preventDefault()
+    - `.prevent`：event.stopPropagation()
+    - `.capture`
+    - `.self`
+    - `.once`
+
+    示例：
+
+    ```html
+    <form @submit.prevent action='https://baidu.com'></form>
+    <a @click.stop href='https://baidu.com'></a>
+    ```
+
+  - v-on 可以使用按键修饰符来监听某个特定按键。可以使用的修饰符如下：
+
+    - `.enter`
+    - `.delete`
+    - `.tab`
+    - `.esc`
+    - `.space`
+    - `.up`
+    - `.down`
+    - `.left`
+    - `.right`
+    - `.ctrl`
+    - `.alt`
+    - `.shift`
+    - `.meta`
+
+    示例：
+
+    ```html
+    
+    ```
+
+### 4.2
 
 
 
@@ -89,4 +154,8 @@
 ## 5. Vue.js AJAX
 
 
+
+
+
+## 6. Vue 生命周期与钩子
 
