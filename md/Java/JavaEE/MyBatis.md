@@ -979,7 +979,70 @@ foreach 标签用于填充一个传入的集合中的值。
 
 ## 12. 缓存
 
+### 12.1 缓存概述
 
+- MyBatis 提供了缓存策略，以此可以减少数据库的查询次数，提高性能。
+- MyBatis 的缓存分为一级缓存和二级缓存。
+
+### 12.2 一级缓存
+
+- 概述：
+  - 一级缓存是 SqlSession 级别的缓存，只要 SqlSession 没有 close 或 flush，缓存就存在。
+  - 无需特意开启。
+- 注意事项：
+  - 当 sqlSession **调用添加、删除、修改、flush() 或 close()** 等的时候，会**清除缓存**。
+  - 在 mybatis-spring 中，由于使用 template，每次操作都是申请新的 sqlSession，所以**缓存无法在 mybatis-spring 中使用**。
+
+### 12.3 二级缓存
+
+- 概述
+
+  - 二级缓存是跨 sqlSession 的，是 mapper 级别的缓存。
+  - 开启后与一级缓存类似，一般没有事务操作、仅查询的前提下，不会向数据库发出新的查询请求，而是直接从数据库获取数据。
+
+- 开启方式
+
+  - 相关实体类实现 Serializable 接口
+
+  - 在 SqlMapConfig.xml 文件中添加配置，如下：
+
+    SqlMapConfig.xml
+
+    ```xml
+    <settings>
+    	<Setting name="cacheEnabled" value="true" />
+    </settings>
+    ```
+
+  - 在 mapper 映射文件中添加标签 `<cache></cache>`
+
+    UserDao.xml
+
+    ```xml
+    <?xml ...>
+    <...>
+    <mapper namespace="io.pz.github.xxxx">
+    	<cache></cache>
+    </mapper>
+    ```
+
+  - 在需要使用缓存的 statement 上添加属性 `useCache="true"`
+
+    ```xml
+    <select id="findById" resultType="user" parameterType="int" useCache="true">
+    	select * from user where id = #{uid}
+    </select>
+    ```
+
+- 在 spring boot 工程中开启
+
+  - 配置文件添加配置
+
+    ```properties
+    mybatis.configuration.cache-enabled = true
+    ```
+
+  - 其他步骤与上文相同
 
 
 

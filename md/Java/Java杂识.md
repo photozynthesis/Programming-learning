@@ -340,3 +340,131 @@ String loginName = SecurityContextHolder.getContext().getAuthentication().getNam
 
 - 简化 POJO 类的插件包，可以通过简单的注解来消除 getter/setter、构造方法、toString 等。
 - maven 导入依赖后，使用 @Data、@ToString 等注解即完成操作。
+
+
+
+## 6. Swagger 接口开发
+
+### 6.1 接口开发与 Swagger 概述
+
+- Swagger 是描述和记录 Rest Api 的一个规范，指定了 Rest 服务接口的格式，包含 url、资源、方法等。
+- 可以将 Swagger2 方便的集成进 Spring 工程中，根据代码方便地生成接口文档，并提供 html 访问。
+
+### 6.2 整合到 spring boot 工程
+
+- 创建 spring boot 工程。
+
+  略。
+
+- 引入 swagger2 的依赖。
+
+  pom.xml
+
+  ```xml
+  <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger2</artifactId>
+      <version>2.9.2</version>
+  </dependency>
+  <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger-ui</artifactId>
+      <version>2.9.2</version>
+  </dependency>
+  ```
+
+- 创建 swagger 配置类，并进行相关配置。
+
+  SwaggerConfig.java（名称可更改）
+
+  ```java
+  // 此处注解不能少
+  @Configuration
+  @EnableSwagger2
+  public class SwaggerConfig {
+      
+      /**
+      * 在此指定要扫描的 controller 包，并加载自行编写的 ApiInfo
+      */
+      @Bean
+      public Docket createDocket() {
+          return new Docket(DocumentationType.SWAGGER_2)
+              .apiInfo(getApiInfo())
+              .select()
+              .apis(RequestHandlerSelectors.basePackage("io.controller"))
+              .paths(PathSelectors.any())
+              .build();
+      }
+      
+      // 自行编写的 ApiInfo
+      private ApiInfo getApiInfo() {
+          return new ApiInfoBuilder()
+              .title("在此设置标题")
+              .description("在此设置描述")
+              .version("在此设置版本")
+              .build();
+      }
+  }
+  ```
+
+  注意：**要使 spring 扫描当前类**，否则无法获取 Docket。可以在 spring boot 启动类上加上 ComponentScan 注解并使用 basePackageClasses 属性。
+
+- 编写接口类（interface），添加相关注解（下文详细说明）。
+
+  略。
+
+- 编写 controller，实现接口类。
+
+- 启动 spring 工程，访问 http://localhost:port/swagger-ui.html 即可查看接口文档。
+
+  说明：html 文档的端口由 spring web 工程的端口决定。可以更改 server.port 属性来更改。
+
+### 6.3 编写接口类
+
+常用注解如下：
+
+#### 6.3.1 类上的注解
+
+- Api
+  - 在 api 接口声明上，表示是一个接口 interface。
+  - 常用参数：
+    - description - 接口类的描述
+- ApiModel
+  - 在后台模型类声明上，表示是一个后端 model。
+
+#### 6.3.2 方法上的注解
+
+- ApiOperation
+  - 在接口类的方法上，进行接口的描述。
+  - 常用参数：
+    - value - 描述
+- ApiImplicitParams
+  - 在接口类的方法上，描述接口的参数集合
+  - 参数：多个 ApiImplicitParam 注解
+- ApiImplicitParam
+  - 在接口类的方法上或 ApiImplicitParams 注解中，描述单个参数。
+  - 常用参数：
+    - name - 接收参数名
+    - value - 接收参数的描述
+    - required - 是否必填
+    - defaultValue - 默认值
+    - dataType - 参数的数据类型
+    - dataType - 查询参数类型，常用：
+      - path - 以地址的形式提供参数（参数包含在 url 中）
+      - query - url 中后跟参数完成自动映射赋值
+      - body - 以流的形式提交
+      - header - 请求头中提交
+      - form - 以 form 表单的形式提交
+- ApiResponses
+  - 在接口类的方法上，描述该接口的各个响应码状态码及对应信息。包含多个 ApiResponse 注解。
+- ApiResponse
+  - 常用参数：
+    - code - 状态码
+    - message - 描述信息
+- ApiIgnore
+  - 表示忽略此 api，不显示文档。
+
+#### 6.3.3 成员变量上的注解
+
+- ApiModelProperty
+  - 在模型类的成员变量上，对模型属性进行描述。

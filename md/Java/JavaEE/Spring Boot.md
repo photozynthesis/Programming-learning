@@ -159,6 +159,8 @@
 
 ## 4. Spring Boot 整合 MyBatis
 
+### 4.1 一般步骤
+
 1. **引入启动依赖及数据库驱动坐标**
 
    - mybatis-spring-boot-starter（由 MyBatis 提供）
@@ -206,6 +208,10 @@
 4. **开始 MyBatis**
 
    略。
+
+### 4.2 重要说明
+
+- 在 mybatis-spring 中，sqlSession 由 template 控制。每次访问数据时，spring 会申请一个新的 sqlSession，所以此处**一级缓存失效**。
 
 
 
