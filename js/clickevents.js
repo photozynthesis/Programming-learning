@@ -13,6 +13,7 @@ function changeWallpaper() {
 function showPage(id) {
     if (id == page) {
         document.getElementById("content").innerHTML = '<object type="text/html" data="html/' + id + '.html" width="100%" height="100%"></object>';
+        // $('#content').load('html/' + id + '.html');
         return;
     }
     if (page != null) {
@@ -23,6 +24,7 @@ function showPage(id) {
     document.getElementById(id).style.backgroundColor = '#333333';
     document.getElementById(id).getElementsByTagName("a")[0].style.color = '#dddddd';
     document.getElementById("content").innerHTML = '<object type="text/html" data="html/' + id + '.html" width="100%" height="100%"></object>';
+    // $('#content').load('html/' + id + '.html');
 }
 
 function toTop() {
