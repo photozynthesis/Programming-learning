@@ -92,7 +92,7 @@ Java源代码首先会被编译成平台无关的字节码，而字节码可以�
 
       位于try {...} catch (...) {...} finally {...}之中。
       被finally控制的语句体一定会执行。
-      	存在例外：在执行finally之前jvm推出了，将不会执行finally中的语句。比如System.exit(0)。
+      ​	存在例外：在执行finally之前jvm推出了，将不会执行finally中的语句。比如System.exit(0)。
 
       用于释放资源，在io流操作和数据库操作中会见到。
 
@@ -100,11 +100,11 @@ Java源代码首先会被编译成平台无关的字节码，而字节码可以�
 
       1. **final、finally、finalize的区别？**
          final：是用于修饰类名、成员变量、成员方法的修饰符。
-         	final修饰类，该类不能被继承；
-         	final修饰成员变量，该变量为常量不能重新赋值；
-         	final修饰成员方法，该方法不能被重写。
+         ​	final修饰类，该类不能被继承；
+         ​	final修饰成员变量，该变量为常量不能重新赋值；
+         ​	final修饰成员方法，该方法不能被重写。
          finally：是异常处理的一部分，用于释放资源。
-         	一般来说finally中的语句一定会执行，
+         ​	一般来说finally中的语句一定会执行，
 
          	不过如果在finally之前退出了虚拟机，就不会执行。
 
@@ -1450,7 +1450,7 @@ Java语言最基本的单位是类，类是一组相关的属性和行为的集�
   - **链表：**
 
     概述：
-    	由一个“链子”把多个结点连起组成的数据。
+    ​	由一个“链子”把多个结点连起组成的数据。
 
     	结点：由数据和地址组成（数据域和指针域）。
 			
@@ -1847,9 +1847,9 @@ int[][] arr = {{...},{...},...};				//简化的写法
     - Iterator<E> **iterator**()				//Iterator it = c.iterator()，Iterator是一个接口，这里返回的是一个子类对象
 
       迭代器的最终实现，是通过各集合最终实现类（如ArrayList）中的内部类。
-      	Iterator的功能：
-      		boolean **hasNext**()	//it.hasNext()，如果仍有元素可以迭代，返回true
-      		Object **next**()		//it.next()，获取元素，并移动到下一位置
+      ​	Iterator的功能：
+      ​		boolean **hasNext**()	//it.hasNext()，如果仍有元素可以迭代，返回true
+      ​		Object **next**()		//it.next()，获取元素，并移动到下一位置
 
   - **长度&交集&转换：**
 
@@ -1891,10 +1891,10 @@ int[][] arr = {{...},{...},...};				//简化的写法
   - **列表迭代器：**
 
     ListIterator **listIterator**()				//list.listIterator()，返回List集合特有的迭代器ListIterator（同为子类对象实现）
-    	ListIterator：一个接口，List集合特有的迭代器，继承了Iterator（可以直接使用hasNext()和next()），部分特有功能：
-    		Object **previous**()			//lit.previous()，返回上一个元素
-    		boolean **hasPrevious**()	//lit.hasPrevious()，判断是否有上一个元素
-    		void **add**(E e)				//lit.add(元素)，将指定元素添加到List（注意不是添加到迭代器），添加的位置为当前迭代器迭代指针的位置
+    ​	ListIterator：一个接口，List集合特有的迭代器，继承了Iterator（可以直接使用hasNext()和next()），部分特有功能：
+    ​		Object **previous**()			//lit.previous()，返回上一个元素
+    ​		boolean **hasPrevious**()	//lit.hasPrevious()，判断是否有上一个元素
+    ​		void **add**(E e)				//lit.add(元素)，将指定元素添加到List（注意不是添加到迭代器），添加的位置为当前迭代器迭代指针的位置
 
 - **三个重要子类ArrayList、Vector和LinkedList：**
 
@@ -1979,8 +1979,8 @@ int[][] arr = {{...},{...},...};				//简化的写法
 
       		public boolean add(E e)方法底层依赖hashCode()和equals()。
       	比较基于hashCode()的值是否相同，
-      		相同：继续比较equals()，若也相同就不添加，否则就添加；
-      		不同：添加。
+      	​	相同：继续比较equals()，若也相同就不添加，否则就添加；
+      	​	不同：添加。
 
       2. JDK1.8后，HashSet的数据结构为`数组`+`链表`+`红黑树`。
 
@@ -2006,7 +2006,7 @@ int[][] arr = {{...},{...},...};				//简化的写法
 
           使用public TreeSet()构造方法。
           元素所属类需要实现Comparable<T>接口并重写int comparaTo(T o)，自行定义比较规则：
-          	若返回值大于0则认为`元素`大于`参数`，
+          ​	若返回值大于0则认为`元素`大于`参数`，
 
           	返回值小于0认为`元素`小于`参数`，
 						
@@ -2039,7 +2039,7 @@ int[][] arr = {{...},{...},...};				//简化的写法
           	若返回值大于0则认为`o1`大于`o2`，
 
           	返回值小于0认为`o1`小于`o2`，
-						
+				​		
           	返回值等于0认为`o1`等于`o2` (不添加到集合)
 
         - **简记：**
@@ -2086,7 +2086,7 @@ int[][] arr = {{...},{...},...};				//简化的写法
   - **获取功能：**
 
     Set<Map.Entry<K, V>> **entrySet**()		//m.entrySet()，返回该map中所有键值对对象的Set集合
-    	*需结合Map.Entry接口的K getKey()和V getValue()来获取键值对对象中的键和值。
+    ​	*需结合Map.Entry接口的K getKey()和V getValue()来获取键值对对象中的键和值。
     V **get**(Object key)				//m.get(key)，根据键获取值。若键不存在返回null。
     Set<V> **keySet**()				//m.keySet()，获取map中所有键的Set集合
     Collection<V> **values**()		//m.values()，获取map中所有值的Collection集合

@@ -1,9 +1,9 @@
-html, body{
+html, body {
 	margin: 0px;
 	border: 0px;
 	height: 100%;
 }
-body{
+body {
 	background: url("../img/5-min.jpg") center no-repeat;
 	background-size: cover;
 	background-attachment: fixed;
@@ -15,7 +15,7 @@ body{
 	padding-top: 15px;
 	font-family: "Comic Sans MS", "Microsoft YaHei UI", sans-serif;
 }*/
-div#container{
+div#container {
 	height: 100%;
 	width: 1000px;
 	margin: 0 auto;
@@ -37,20 +37,26 @@ div#container{
 	box-shadow: 8px 8px 10px #333333;
 	border-radius: 9px;
 }*/
-div#main{
+
+/* 主窗口 */
+div#main {
 	height: 98%;
 	overflow: hidden;
 	box-shadow: 0px 0px 10px 3px #333333;
 	background-color: #ffffff;
 	/*border-radius: 15px;*/
 }
-div#content{
+
+/* 左侧文章区域 */
+div#content {
 	height: 100%;
 	width: 800px;
 	float: left;
 	background-color: #bbbbbb;
 }
-div#navigator{
+
+/* 右侧导航区域 */
+div#navigator {
 	height: 100%;
 	width: 200px;
 	float: left;
@@ -68,21 +74,29 @@ div#navigator{
 	margin-bottom: 20px;
 	border-radius: 9px;
 }*/
-#navTitle{
+
+/* 目录标题 */
+#navTitle {
 	position: absolute;
 	width: 100%;
 	display: block;
 	background-color: #333333;
-	padding: 8px;
+	padding: 8px 0px;
 	border-bottom: solid 1px #888888;
 	text-align: center;
+	/*align-items: center;*/
 	user-select: none;
 }
-#navTitle b{
+
+/* 目录标题文字 */
+#navTitle b {
 	font-size: 30px;
 	color: #eeeeee;
+	/*border: 1px solid white;*/
 }
-#navItems{
+
+/* 目录列表整体 */
+#navItems {
 	top: 59px;
 	bottom: 77px;
 	position: absolute;
@@ -90,16 +104,54 @@ div#navigator{
 	overflow: auto;
 	user-select: none;
 }
-#navItems ul{
+
+/* 列表条目（文件夹）标题 */
+.navItem-title {
+	/*border: 1px solid black;*/
+}
+
+/* 列表条目（文件夹）标题前方箭头 */
+.navItem-title-arrow {
+	display: inline-block;
+	/*text-align: left;*/
+	width: fit-content;
+	/*border: 1px solid black;*/
+	/*float: left;*/
+	/*text-align: left !important;*/
+	transition: all 0.5s;
+}
+
+/* 列表条目（文件夹）标题文本 */
+.navItem-title-content {
+	display: inline-block;
+	text-align: center;
+	width: 168px;
+	/*margin-left: : 30px;*/
+	/*border: 1px solid black;*/
+	/*float: left;*/
+}
+
+/* 目录列表下方的所有 ul */
+#navItems ul {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
 	width: 200px;
 }
-#navItems li{
+/* 列表单个条目 */
+#navItems li {
 	cursor: pointer;
 }
-#navItems li a{
+/*#navItems > ul > li > ul {
+	display: none;
+	transition: display 2s;
+}
+#navItems > ul > li > a:hover + ul {
+	display: block;
+}*/
+
+/* 所有条目（父级条目与子级条目公共样式） */
+.navItem-title, .navItem-subList-item {
 	font-size: 23px;
 	text-decoration: none;
 	display: block;
@@ -107,23 +159,37 @@ div#navigator{
 	padding: 5px;
 	text-align: center;
 }
-#navItems li a:hover{
-	color: #000;
-	background-color: #aaaaaa;
-	/*box-shadow: 0px 0px 8px #cccccc inset;*/
+
+/* 子列表整体 */
+.navItem-subList {
+	height: 0px;
+	overflow: hidden;
+	transition: all 0.5s;
 }
-#navItems li a:active{
-	color: #000;
-	background-color: #aaaaaa;
-	box-shadow: 0px 0px 5px 4px #666 inset;
+
+/* 所有条目 hover */
+.navItem-title:hover, .navItem-subList-item:hover {
+	color: #cccccc;
+	background-color: #444444;
+	box-shadow: 0px 0px 8px #cccccc inset;
 }
-div#navButtons{
+
+/* 所有条目 active */
+.navItem-title:active, .navItem-subList-item:active {
+	color: #ffffff;
+	background-color: #000000;
+}
+
+/* 右侧下方按钮整体 */
+#navButtons {
 	position: absolute;
 	width: 100%;
 	bottom: 0px;
 	user-select: none;
 }
-#navButton-1:after{
+
+/* 右侧下方按钮之间横线 */
+#navButton-1:after {
 	position: absolute;
 	left: 5%;
 	top: 37px;
@@ -136,7 +202,7 @@ div#navButtons{
 div.navButton {
 	cursor: pointer;
 }
-div.navButton a{
+div.navButton a {
 	font-size: 22px;
 	text-decoration: none;
 	padding: 4px;
@@ -145,7 +211,7 @@ div.navButton a{
 	background-color: #aaaaaa;
 	text-align: center;
 }
-div.navButton a:hover{
+div.navButton a:hover {
 	color: #dddddd;
 	background-color: #333333;
 }
