@@ -1,6 +1,4 @@
 let wallpaperIndex = 5;
-let page = null;
-
 // 更换壁纸
 function changeWallpaper() {
     if (wallpaperIndex === 6) {
@@ -11,38 +9,30 @@ function changeWallpaper() {
     document.getElementById('bodyE').style.backgroundImage = 'url(img/' + wallpaperIndex + '-min.jpg)';
 }
 
+let lastActiveNode = null;
 // 点击目录按钮后执行的方法
-function showPage(id) {
-    if (id === page) {
-        // document.getElementById("content").innerHTML = '<object type="text/html" data="html/' + id + '.html" width="100%" height="100%"></object>';
-        // $('#content').load('html/' + id + '.html');
-        document.getElementById('iframe-content').src = 'html/' + id + '.html';
-        return;
+function showPage(element) {
+    // 若当前点击元素与上次点击元素相同不改变颜色，否则清除上个元素的颜色并设置新元素的颜色
+    if (element !== lastActiveNode) {
+        if (lastActiveNode !== null) {
+            // 清除上个元素的颜色
+            lastActiveNode.style.backgroundColor = null;
+            lastActiveNode.style.color = null;
+        }
+        // 改变颜色
+        element.style.backgroundColor = '#888888';
+        element.style.color = '#eeeeee';
     }
-    if (page !== null) {
-        document.getElementById(page).style.backgroundColor = null;
-        document.getElementById(page).getElementsByTagName("a")[0].style.color = null;
-    }
-    page = id;
-    document.getElementById(id).style.backgroundColor = '#333333';
-    document.getElementById(id).getElementsByTagName("a")[0].style.color = '#dddddd';
-    // document.getElementById("content").innerHTML = '<object type="text/html" data="html/' + id + '.html" width="100%" height="100%"></object>';
-    document.getElementById('iframe-content').src = 'html/' + id + '.html';
-    // $('#content').load('html/' + id + '.html');
+    // 显示内容
+    document.getElementById('iframe-content').src = 'html/' + element.id + '.html';
+    // 设置 lastActive
+    lastActiveNode = element;
 }
 
 // 回到当前页面顶部的方法
 function toTop() {
-    showPage(page);
+    showPage(lastActiveNode);
 }
-
-// 当鼠标移动到目录项上执行的方法（改变目录项的颜色）
-
-
-
-// 当鼠标移出目录项后止执行的方法（恢复目录项颜色）
-
-
 
 // 页面加载完毕
 window.onload = function() {
@@ -56,10 +46,12 @@ window.onload = function() {
         navItemTitles[i].onclick = function() {
             if (navItemTitles[i]['expand'] === 0) {
                 subLists[i].style.height = subLists[i].getElementsByTagName('li').length * 40 + 'px';
+                // navItemTitles[i].style.backgroundColor = '#bbbbbb';
                 arrows[i].style.transform = 'rotate(90deg)';
                 navItemTitles[i]['expand'] = 1;
             } else {
                 subLists[i].style.height = '0px';
+                // navItemTitles[i].style.backgroundColor = null;
                 arrows[i].style.transform = null;
                 navItemTitles[i]['expand'] = 0;
             }
@@ -67,6 +59,22 @@ window.onload = function() {
             // alert(subLists[i].getElementsByTagName('li').length);
         }
     }
+
+    // 给所有文章条目按钮绑定点击显示文章事件
+    let subListItems = document.querySelectorAll('.navItem-subList-item');
+    // let lastActiveNode = null;
+    for(let i = 0; i < subListItems.length; i ++) {
+        subListItems[i].onclick = function() {
+            showPage(this);
+        }
+    }
+
+    // 给背景按钮绑定事件
+    document.getElementById('navButton-changeImage').onclick = changeWallpaper;
+
+    // 给回到顶部按钮绑定事件
+    document.getElementById('navButton-toTop').onclick = toTop;
+
     
 
 }

@@ -7,6 +7,7 @@ body {
 	background: url("../img/5-min.jpg") center no-repeat;
 	background-size: cover;
 	background-attachment: fixed;
+	transition: background 1.2s;
 }
 /*p#Title{
 	font-size: 80px;
@@ -126,6 +127,7 @@ div#navigator {
 	display: inline-block;
 	text-align: center;
 	width: 168px;
+	font-weight: 700;
 	/*margin-left: : 30px;*/
 	/*border: 1px solid black;*/
 	/*float: left;*/
@@ -150,6 +152,28 @@ div#navigator {
 	display: block;
 }*/
 
+/* 子列表整体 */
+.navItem-subList {
+	height: 0px;
+	overflow: hidden;
+	transition: all 0.5s;
+}
+
+/* 根目录下的文章列表 */
+#navItems > ul > .navItem-subList {
+	height: auto !important;
+}
+
+/* 条目前缀 */
+.navItem-subList-item > a:before {
+	content: '- ';
+}
+
+/* 根目录下的条目前缀 */
+#navItems > ul > .navItem-subList > .navItem-subList-item > a:before {
+	content: '' !important;
+}
+
 /* 所有条目（父级条目与子级条目公共样式） */
 .navItem-title, .navItem-subList-item {
 	font-size: 23px;
@@ -158,13 +182,6 @@ div#navigator {
 	color:#333333;
 	padding: 5px;
 	text-align: center;
-}
-
-/* 子列表整体 */
-.navItem-subList {
-	height: 0px;
-	overflow: hidden;
-	transition: all 0.5s;
 }
 
 /* 所有条目 hover */
@@ -189,7 +206,7 @@ div#navigator {
 }
 
 /* 右侧下方按钮之间横线 */
-#navButton-1:after {
+#navButton-changeImage:after {
 	position: absolute;
 	left: 5%;
 	top: 37px;

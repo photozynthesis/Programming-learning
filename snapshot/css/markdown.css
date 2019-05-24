@@ -1,10 +1,11 @@
 body{
-    margin: 0 auto;
+    margin: 0 auto 50px auto;
+    padding: 0px 5%;
+    /*width: 900px;*/
     font-family: "Microsoft YaHei", arial,sans-serif;
     color: #444444;
     background-color: #ffffff;
     line-height: 1;
-    padding: 0px 5%;
 }
 @media screen and (max-width: 768px) {
     body {
