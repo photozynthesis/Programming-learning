@@ -2,6 +2,10 @@
 .idea
 .idea/
 .idea/*
+.iml
+target
+target/
+target/*
 
 # other files
 .directory

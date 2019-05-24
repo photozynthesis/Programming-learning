@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>Vue.js</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="vuejs">Vue.js</h1>
+<ul>
+<li><a href="#1-vuejs-概述">1. Vue.js 概述</a>
+<ul>
+<li><a href="#11-mvvm-模式概述">1.1 MVVM 模式概述</a></li>
+<li><a href="#12-vuejs-概述">1.2 Vue.js 概述</a></li>
+</ul>
+</li>
+<li><a href="#2-vuejs-入门">2. Vue.js 入门</a></li>
+<li><a href="#3-vuejs-插值表达式">3. Vue.js 插值表达式</a>
+<ul>
+<li><a href="#31-概述">3.1 概述</a></li>
+<li><a href="#32-注意事项">3.2 注意事项</a></li>
+<li><a href="#33-实例">3.3 实例</a></li>
+</ul>
+</li>
+<li><a href="#4-vuejs-指令">4. Vue.js 指令</a>
+<ul>
+<li><a href="#41-v-on">4.1 v-on</a></li>
+<li><a href="#42">4.2</a></li>
+</ul>
+</li>
+<li><a href="#5-vuejs-ajax">5. Vue.js AJAX</a></li>
+<li><a href="#6-vue-生命周期与钩子">6. Vue 生命周期与钩子</a></li>
+</ul>
+<h2 id="1-vuejs-概述">1. Vue.js 概述</h2>
+<h3 id="11-mvvm-模式概述">1.1 MVVM 模式概述</h3>
+<ul>
+<li>MVVM（Model-View-ViewModel），是 MVC 的一个改进版，主要达到分离模型和视图/业务的目的。</li>
+</ul>
+<h3 id="12-vuejs-概述">1.2 Vue.js 概述</h3>
+<ul>
+<li>Vue 是一个构建数据驱动的 web 界面的渐进式框架。</li>
+<li>Vue 专注于 View 层，提供了 MVVM 风格的双向数据绑定的 JavaScript 库。</li>
+<li>Vue 的 ViewModel 负责连接 View 和 Model，保证视图和数据的一致性，让前端开发更加高效、便捷。</li>
+</ul>
+<h2 id="2-vuejs-入门">2. Vue.js 入门</h2>
+<ul>
+<li>
+<p>Html 中引入 Vue.js 库。</p>
+<ul>
+<li>https://vuejs.org/js/vue.min.js</li>
+</ul>
+</li>
+<li>
+<p>在文档加载完处新建 Vue 对象，绑定到某个 dom。</p>
+</li>
+<li>
+<p>示例：</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+      &lt;title&gt;Test&lt;/title&gt;
+      &lt;script src=&quot;https://cdn.staticfile.org/vue/2.2.2/vue.min.js&quot;&gt;&lt;/script&gt;
+      &lt;script&gt;
+          window.onload = function() {
+              let vm = new Vue({
+                  el: '#test',
+                  data: {
+                      message: 'Hello Vue'
+                  },
+                  methods: {
+                      sayHello: function() {
+                          alert('Hello');
+                      }
+                  }
+              });
+          }
+      &lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+      &lt;div id=&quot;test&quot;&gt;
+          {{message}}
+          &lt;button v-on:click=&quot;sayHello&quot;&gt;click&lt;/button&gt;
+      &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+</li>
+</ul>
+<h2 id="3-vuejs-插值表达式">3. Vue.js 插值表达式</h2>
+<h3 id="31-概述">3.1 概述</h3>
+<ul>
+<li>Vue 将数据绑定到 View 的形式就是使用&quot;Mustache&quot;（双大括号）语法。</li>
+<li>双大括号中可以写任意 js 表达式。</li>
+</ul>
+<h3 id="32-注意事项">3.2 注意事项</h3>
+<ul>
+<li>双大括号中只能写“表达式”，而不能写完整的 js 语句。</li>
+<li>&quot;Mustache&quot;表达式不能作用于 html 特性，例如设置标签的属性。这种需求下只能使用指令。</li>
+<li>基本任何绑定的数据对象上的属性值发生了改变，插值处的内容都会更新。不过也有例外，例如绑定的数据对象调用了 Object.freeze() 。</li>
+</ul>
+<h3 id="33-实例">3.3 实例</h3>
+<pre><code class="language-javascript">{{num + 1}}
+{{flag ? 'pass' : 'fail'}}
+</code></pre>
+<h2 id="4-vuejs-指令">4. Vue.js 指令</h2>
+<h3 id="41-v-on">4.1 v-on</h3>
+<p>监听 dom 事件，在触发时执行一些 js 代码（特指已在 vue 对象中定义的函数）。</p>
+<ul>
+<li>
+<p>示例：</p>
+<pre><code class="language-html">&lt;div id='container'&gt;
+  &lt;button v-on:click=&quot;myFunc('hello')&quot;&gt;say hello&lt;/button&gt;
+&lt;/div&gt;
+&lt;script&gt;
+  new Vue({
+      el: '#container',
+      data: {},
+      methods: {
+          myFunc: function(toSay) {
+              alert(toSay);
+          }
+      }
+  })
+&lt;/script&gt;
+</code></pre>
+</li>
+<li>
+<p>其他说明：</p>
+<ul>
+<li>
+<p>v-on 可以使用事件修饰符来处理 dom 事件细节，例如终止事件等。可使用的修饰符如下：</p>
+</li>
+<li>
+<p><code>.stop</code>：event.preventDefault()</p>
+</li>
+<li><code>.prevent</code>：event.stopPropagation()</li>
+<li><code>.capture</code></li>
+<li><code>.self</code></li>
+<li><code>.once</code></li>
+</ul>
+<p>示例：</p>
+<pre><code class="language-html">&lt;form @submit.prevent action='https://baidu.com'&gt;&lt;/form&gt;
+&lt;a @click.stop href='https://baidu.com'&gt;&lt;/a&gt;
+</code></pre>
+<ul>
+<li>
+<p>v-on 可以使用按键修饰符来监听某个特定按键。可以使用的修饰符如下：</p>
+</li>
+<li>
+<p><code>.enter</code></p>
+</li>
+<li><code>.delete</code></li>
+<li><code>.tab</code></li>
+<li><code>.esc</code></li>
+<li><code>.space</code></li>
+<li><code>.up</code></li>
+<li><code>.down</code></li>
+<li><code>.left</code></li>
+<li><code>.right</code></li>
+<li><code>.ctrl</code></li>
+<li><code>.alt</code></li>
+<li><code>.shift</code></li>
+<li><code>.meta</code></li>
+</ul>
+<p>示例：</p>
+<pre><code class="language-html">
+</code></pre>
+</li>
+</ul>
+<h3 id="42">4.2</h3>
+<h2 id="5-vuejs-ajax">5. Vue.js AJAX</h2>
+<h2 id="6-vue-生命周期与钩子">6. Vue 生命周期与钩子</h2>
+
+
+</body>
+</html>

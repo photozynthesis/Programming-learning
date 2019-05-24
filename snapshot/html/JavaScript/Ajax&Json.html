@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>Ajax&Json</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="ajax--json">Ajax &amp; Json</h1>
+<ul>
+<li><a href="#1-ajax概述">1. Ajax概述</a></li>
+<li><a href="#2-ajax原生js实现">2. Ajax：原生JS实现</a></li>
+<li><a href="#3-ajaxjquery实现">3. Ajax：jQuery实现</a>
+<ul>
+<li><a href="#31-ajax">3.1 $.ajax()</a></li>
+<li><a href="#32-get--post">3.2 $.get() &amp; $.post()</a></li>
+</ul>
+</li>
+<li><a href="#4-json概述">4. JSON概述</a>
+<ul>
+<li><a href="#41-概述">4.1 概述</a></li>
+<li><a href="#42-语法规则">4.2 语法规则</a></li>
+<li><a href="#43-获取数据的方式">4.3 获取数据的方式</a></li>
+</ul>
+</li>
+<li><a href="#5-json解析器jackson">5. JSON解析器：jackson</a>
+<ul>
+<li><a href="#50-常见的java-json解析器">5.0 常见的Java JSON解析器</a></li>
+<li><a href="#51-jackson使用准备">5.1 Jackson：使用准备</a></li>
+<li><a href="#52-jacksonjson转java对象">5.2 Jackson：JSON转Java对象</a></li>
+<li><a href="#53-jacksonjava对象转json">5.3 Jackson：Java对象转JSON</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="1-ajax概述">1. Ajax概述</h2>
+<p>Asynchronous Javascript And Xml，即异步的Javascript和XML，是一种无需刷新整个页面即可更新页面部分内容的技术。</p>
+<p>异步是指客户端在发送请求后，无需一直等待服务端的响应，可以同时进行其他操作；而同步则必须一直等待服务端响应。</p>
+<h2 id="2-ajax原生js实现">2. Ajax：原生JS实现</h2>
+<p>*仅需了解</p>
+<pre><code class="language-javascript"> //1.创建核心对象
+var xmlhttp;
+if (window.XMLHttpRequest){
+    // code for IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp = new XMLHttpRequest();
+}else{
+    // code for IE6, IE5
+    xmlhttp = new ActiveXObject(&quot;Microsoft.XMLHTTP&quot;);
+}
+
+//2. 建立连接
+/*
+    参数：
+    1. 请求方式：GET、POST
+    	* get方式，请求参数在URL后边拼接。send方法为空参
+    	* post方式，请求参数在send方法中定义
+    2. 请求的URL：
+    3. 同步或异步请求：true（异步）或 false（同步）
+*/
+xmlhttp.open(&quot;GET&quot;,&quot;ajaxServlet?username=tom&quot;,true);
+
+//3.发送请求
+xmlhttp.send();
+
+//4.接受并处理来自服务器的响应结果
+//		获取方式 ：xmlhttp.responseText
+//		什么时候获取？当服务器响应成功后再获取
+
+//当xmlhttp对象的就绪状态改变时，触发事件onreadystatechange。
+xmlhttp.onreadystatechange = function () {
+    //判断readyState就绪状态是否为4，判断status响应状态码是否为200
+    if (xmlhttp.readyState==4 &amp;&amp; xmlhttp.status==200) {
+        //获取服务器的响应结果
+        var responseText = xmlhttp.responseText;
+        alert(responseText);
+    }
+}
+</code></pre>
+<h2 id="3-ajaxjquery实现">3. Ajax：jQuery实现</h2>
+<h3 id="31-ajax">3.1 $.ajax()</h3>
+<p>*不常用，常用get()和post()。</p>
+<p>实例如下：</p>
+<pre><code class="language-javascript">// 键是否使用引号皆可
+$.ajax({
+    url: &quot;demoServlet&quot;,
+    type: &quot;POST&quot;,
+    // data: &quot;username=jack&amp;age=23&quot;,
+    data: {
+        &quot;username&quot;: &quot;jack&quot;,
+        &quot;age&quot;: 23
+    },
+    // 成功相应后的回调函数
+    success: function (data) {
+        alert(data);
+    },
+    // 请求响应出现错误执行的回调函数
+    error: function () {
+        alert(&quot;error&quot;);
+    },
+    // 接收到的响应的数据格式
+    dataType: &quot;text&quot;
+});
+</code></pre>
+<h3 id="32-get--post">3.2 $.get() &amp; $.post()</h3>
+<ul>
+<li>
+<p>发送get请求：</p>
+<pre><code class="language-javascript">$.get(url, [data], [callback], [type]);
+
+// 示例
+$.get(&quot;/demoPath/demoServlet&quot;, {'username':'Jack','password':123}, function (data, status) {
+  // 此处的data若为JSON格式，可直接通过.获取属性值
+  ...
+}, &quot;json&quot;);
+</code></pre>
+<p>说明：</p>
+<ul>
+<li>[data]处除使用JSON外，也可以使用键值对的字符串表示：</li>
+</ul>
+<blockquote>
+<p>username=jack&amp;password=123</p>
+</blockquote>
+</li>
+<li>
+<p>发送post请求：</p>
+<p>与get完全相同。</p>
+</li>
+</ul>
+<h2 id="4-json概述">4. JSON概述</h2>
+<h3 id="41-概述">4.1 概述</h3>
+<ul>
+<li>JSON（JavaScript Object Notation），是一个轻量级的，用于存储和交换数据的语言。</li>
+<li>JSON比XML更小、更快、更易解析。</li>
+</ul>
+<h3 id="42-语法规则">4.2 语法规则</h3>
+<p>JSON示例如下：</p>
+<pre><code class="language-json">{
+    'name': 'jack',
+    'age': '22',
+    'hobby': ['game','music'],
+    'sleep': function () {
+        alert('sleeping...zzz');
+    }
+}
+</code></pre>
+<p>重要说明：</p>
+<ul>
+<li>键<strong>可以</strong>也<strong>可以不</strong>使用引号引起来</li>
+<li>多个键值对用<code>,</code>分隔，不过最后一个键值对后不需要<code>,</code></li>
+<li>使用<code>{}</code>保存对象，使用<code>[]</code>保存数组</li>
+<li>值的可选类型有：
+<ul>
+<li>数字</li>
+<li>字符串（<code>'xxx'</code>）</li>
+<li>布尔值</li>
+<li>数组（<code>[xx,xx]</code>）</li>
+<li>对象（<code>{...}</code>）</li>
+<li>null</li>
+</ul>
+</li>
+</ul>
+<h3 id="43-获取数据的方式">4.3 获取数据的方式</h3>
+<ol>
+<li>
+<p>JSON对象.键名</p>
+<pre><code class="language-javascript">xiaoming.name;
+</code></pre>
+</li>
+<li>
+<p>JSON对象['键名']</p>
+<pre><code class="language-javascript">// 字符串中的内容可以替换为变量
+xiaoming['name'];
+</code></pre>
+</li>
+<li>
+<p>数组对象.索引</p>
+</li>
+<li>
+<p>for in 循环遍历：</p>
+<pre><code class="language-javascript">for (var key in xiaoming) {
+   alert(key + xiaoming[key]);
+}
+</code></pre>
+</li>
+</ol>
+<h2 id="5-json解析器jackson">5. JSON解析器：jackson</h2>
+<h3 id="50-常见的java-json解析器">5.0 常见的Java JSON解析器</h3>
+<ul>
+<li>Jsonlib</li>
+<li>Gson</li>
+<li>fastjson</li>
+<li>jackson</li>
+</ul>
+<h3 id="51-jackson使用准备">5.1 Jackson：使用准备</h3>
+<p>Jackson使用需要三个包：</p>
+<ul>
+<li>jackson-core</li>
+<li>jackson-annotations</li>
+<li>jackson-databind</li>
+</ul>
+<p>可以使用添加Maven依赖的方式导入：</p>
+<pre><code class="language-xml">&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;
+        &lt;artifactId&gt;jackson-core&lt;/artifactId&gt;
+        &lt;version&gt;2.9.6&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;
+        &lt;artifactId&gt;jackson-annotations&lt;/artifactId&gt;
+        &lt;version&gt;2.9.6&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.fasterxml.jackson.core&lt;/groupId&gt;
+        &lt;artifactId&gt;jackson-databind&lt;/artifactId&gt;
+        &lt;version&gt;2.9.6&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+</code></pre>
+<h3 id="52-jacksonjson转java对象">5.2 Jackson：JSON转Java对象</h3>
+<ol>
+<li>
+<p>创建ObjectMapper对象；</p>
+</li>
+<li>
+<p>调用ObjectMapper的<code>T readValue(JSON字符串, Class&lt;T&gt;)</code>进行转换：</p>
+<pre><code class="language-java">ObjectMapper mapper = new ObjectMapper();
+Student stu = new Student();
+try {
+   stu = mapper.readValue(new File(&quot;C:\\Users\\Photo\\Desktop\\xiaoming.json&quot;), Student.class);
+} catch (IOException e) {
+   e.printStackTrace();
+}
+System.out.println(stu);
+</code></pre>
+</li>
+</ol>
+<h3 id="53-jacksonjava对象转json">5.3 Jackson：Java对象转JSON</h3>
+<ol>
+<li>
+<p>创建ObjectMapper对象；</p>
+</li>
+<li>
+<p>使用以下方法转换：</p>
+<table>
+<thead>
+<tr><th>方法</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>void <strong>writeValue</strong>(File, Object)</td><td>将obj对象转换为JSON字符串，并保存到指定的文件中</td></tr>
+<tr><td>void <strong>writeValue</strong>(Writer, Object)</td><td>将obj对象转换为JSON字符串，并将json数据填充到字符输出流中</td></tr>
+<tr><td>void <strong>writeValue</strong>(OutputStream, Object)</td><td>将obj对象转换为JSON字符串，并将json数据填充到字节输出流中</td></tr>
+<tr><td>String <strong>writeValueAsString</strong>(Object)</td><td>将对象转为JSON字符串</td></tr>
+</tbody>
+</table>
+</li>
+</ol>
+<p>相关说明：</p>
+<ul>
+<li>
+<p>可以在JavaBean中的某属性上使用注解，来获得转换过程中的一些效果：</p>
+<ul>
+<li>
+<p><code>@JsonIgnore</code>：排除属性，转换为JSON时不转换该属性。</p>
+</li>
+<li>
+<p><code>@JsonFormat</code>：属性值格式化后转换，例如：</p>
+</li>
+</ul>
+<pre><code class="language-java">// 格式化后转换日期
+@JsonFormat(pattern = &quot;yyyy-MM-dd&quot;)
+private Date date;
+</code></pre>
+</li>
+<li>
+<p>可以转换List为JSON，不过会转成JS数组。</p>
+</li>
+<li>
+<p>可以转换Map为JSON。</p>
+</li>
+</ul>
+
+
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>JDBC</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="jdbc">JDBC</h1>
+<h2 id="目录">目录</h2>
+<ul>
+<li><a href="#目录">目录</a></li>
+<li><a href="#1-jdbc概述">1. JDBC概述</a></li>
+<li><a href="#2-jdbc中常用对象">2. JDBC中常用对象</a>
+<ul>
+<li><a href="#21-drivermanager">2.1 DriverManager</a></li>
+<li><a href="#22-connection">2.2 Connection</a></li>
+<li><a href="#23-statement">2.3 Statement</a></li>
+<li><a href="#24-resultset">2.4 ResultSet</a></li>
+<li><a href="#25-preparedstatement">2.5 PreparedStatement</a></li>
+</ul>
+</li>
+<li><a href="#3-数据库连接池">3. 数据库连接池</a>
+<ul>
+<li><a href="#31-连接池技术概述">3.1 连接池技术概述</a></li>
+<li><a href="#32-c3p0连接池的使用">3.2 C3P0连接池的使用</a></li>
+<li><a href="#33-druid连接池的使用">3.3 Druid连接池的使用</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="1-jdbc概述">1. JDBC概述</h2>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>JDBC（Java Database Connectivity） API，Java数据库连接，是一个Java编程中用于与数据库连接的API。</p>
+<p>JDBC是一套规范，提供一整套接口，允许一种可移植的访问底层数据库的API ，定义了操作所有关系型数据库的规则。</p>
+<p>各个数据库厂商会实现这套接口，导入厂商提供的实现后，调用JDBC提供的接口实际会调用厂商的实现来操作数据库。</p>
+<p>JDBC库包括数据库使用相关的功能：</p>
+<ul>
+<li>连接到数据库</li>
+<li>创建SQL或MySQL语句</li>
+<li>在数据库中执行SQL或MySQL查询</li>
+<li>查看和修改结果记录</li>
+</ul>
+</li>
+<li>
+<p><strong>使用步骤：</strong></p>
+<ol>
+<li>导入驱动jar包</li>
+<li>注册驱动</li>
+<li>获取数据库连接对象</li>
+<li>定义sql</li>
+<li>获取执行sql语句的对象statement</li>
+<li>执行sql，接收返回结果</li>
+<li>处理结果</li>
+<li>释放资源</li>
+</ol>
+</li>
+<li>
+<p><strong>简单的样板：</strong></p>
+<pre><code class="language-java">package io.github.photozynthesis;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+//import com.mysql.jdbc.Driver;
+
+public class Test {
+
+public static String USER = &quot;root&quot;;
+public static String PASSWORD = &quot;rootzxcvbnm&quot;;
+
+public static void main(String[] args) {
+
+	Connection connection = null;
+	Statement statement = null;
+
+	try {
+		// 加载驱动
+		// Class.forName(&quot;com.mysql.cj.jdbc.Driver&quot;);
+
+		// 连接数据库
+		connection = DriverManager.getConnection(&quot;jdbc:mysql://localhost:3306/test?useSSL=false&amp;serverTimezone=UTC&quot;,
+				USER, PASSWORD);
+
+		// 执行查询
+		statement = connection.createStatement();
+		String sql = &quot;select * from emp;&quot;;
+		ResultSet rs = statement.executeQuery(sql);
+
+		// 输出结果
+		while (rs.next()) {
+			int id = rs.getInt(&quot;id&quot;);
+			String name = rs.getString(&quot;name&quot;);
+			String job = rs.getString(&quot;job&quot;);
+			double salary = rs.getDouble(&quot;salary&quot;);
+
+			System.out.println(id + &quot;===&quot; + name + &quot;===&quot; + job + &quot;===&quot; + salary);
+		}
+
+		// 释放资源
+		rs.close();
+		statement.close();
+		connection.close();
+
+	} catch (SQLException e) {
+		e.printStackTrace();
+	}
+}
+}
+</code></pre>
+</li>
+</ul>
+<h2 id="2-jdbc中常用对象">2. JDBC中常用对象</h2>
+<h3 id="21-drivermanager">2.1 DriverManager</h3>
+<p><strong>概述</strong>：</p>
+<p>​	class DriverManager，驱动管理器对象</p>
+<p><strong>功能</strong>：</p>
+<table>
+<thead>
+<tr><th align="center">重要方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">static void <strong>registerDriver</strong> (Driver driver)</td><td align="center">注册给定的驱动程序，一般使用Class.forName(&quot;com.mysql.jdbc.Driver&quot;)，各版本可能不同</td></tr>
+<tr><td align="center">static Connection <strong>getConnection</strong> (String url, String user, String password)</td><td align="center">获取数据库连接，参数说明见下方。</td></tr>
+</tbody>
+</table>
+<p><strong>相关说明</strong>：</p>
+<ol>
+<li>
+<p>getConnection方法参数的说明：</p>
+<ul>
+<li>
+<p>String url：指定连接的路径，MySQL的语法如下：</p>
+<p>jdbc:mysql://&lt;ip...&gt;:&lt;port...&gt;/&lt;databaseName...&gt;</p>
+</li>
+<li>
+<p>String user：数据库用户名</p>
+</li>
+<li>
+<p>String password：数据库该用户的密码</p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="22-connection">2.2 Connection</h3>
+<p><strong>概述</strong>：</p>
+<p>​	interface Connection，数据库连接对象。</p>
+<p><strong>功能</strong>：</p>
+<table>
+<thead>
+<tr><th align="center">重要方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">Statement <strong>createStatement</strong> ()</td><td align="center">获取执行sql的对象</td></tr>
+<tr><td align="center">PreparedStatement <strong>prepareStatement</strong> (String sql)</td><td align="center">获取执行sql的对象</td></tr>
+<tr><td align="center">void <strong>setAutoCommit</strong> (boolean autoCommit)</td><td align="center">设置是否自动提交事务</td></tr>
+<tr><td align="center">void <strong>commit</strong> ()</td><td align="center">提交事务</td></tr>
+<tr><td align="center">void <strong>rollback</strong> ()</td><td align="center">回滚事务</td></tr>
+</tbody>
+</table>
+<h3 id="23-statement">2.3 Statement</h3>
+<p><strong>概述</strong>：</p>
+<p>​	interface Statement，执行SQL语句的对象。</p>
+<p><strong>功能</strong>：</p>
+<table>
+<thead>
+<tr><th align="center">重要方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">boolean <strong>execute</strong> (String sql)</td><td align="center">可以执行任意SQL语句</td></tr>
+<tr><td align="center">int <strong>executeUpdate</strong> (String sql)</td><td align="center">执行DML（增删改表中的数据）和DDL（增删改表结构）语句，返回值为受影响的行数</td></tr>
+<tr><td align="center">ResultSet <strong>executeQuery</strong> (String sql)</td><td align="center">执行DQL（查询）语句</td></tr>
+</tbody>
+</table>
+<p><strong>相关说明</strong>：</p>
+<ol>
+<li>executeUpdate (String sql) 的返回值可用于判断语句是否执行成功。</li>
+</ol>
+<h3 id="24-resultset">2.4 ResultSet</h3>
+<p><strong>概述</strong>：</p>
+<p>​	interface ResultSet，结果集对象。</p>
+<p><strong>功能</strong>：</p>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">boolean <strong>next</strong> ()</td><td align="center">游标向下移动一行</td></tr>
+<tr><td align="center">xxx <strong>getXxx</strong> (String columnLabel)</td><td align="center">根据字段名获取指定类型的数据</td></tr>
+<tr><td align="center">xxx <strong>getXxx</strong> (int columnIndex)</td><td align="center">根据列的编号获取指定类型的数据，编号从1开始</td></tr>
+</tbody>
+</table>
+<h3 id="25-preparedstatement">2.5 PreparedStatement</h3>
+<p><strong>概述</strong>：</p>
+<p>​	interface PreparedStatement，预编译的SQL语句对象。</p>
+<p>​	该对象SQL的参数使用<code>?</code>作为占位符，可以解决SQL注入问题。</p>
+<p><strong>使用步骤</strong>：</p>
+<ol>
+<li>
+<p>...</p>
+</li>
+<li>
+<p>获取connection</p>
+</li>
+<li>
+<p>定义SQL语句，使用<code>?</code>作为参数占位符，如：</p>
+<pre><code class="language-sql">SELECT * FROM user WHERE username = ? and password = ?;
+</code></pre>
+</li>
+<li>
+<p>根据connection得到PreparedStatement对象</p>
+</li>
+<li>
+<p>给<code>?</code>赋值：</p>
+<pre><code>pstmt.setString(1, &lt;username...&gt;);
+pstmt.setString(2, &lt;password...&gt;);
+</code></pre>
+</li>
+<li>
+<p>执行查询</p>
+</li>
+<li>
+<p>...</p>
+</li>
+</ol>
+<p><strong>特殊方法</strong>：</p>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">void <strong>setXxx</strong> (int paramIndex, Xxx xxx)</td><td align="center">根据编号给<code>?</code>赋值，编号从1开始</td></tr>
+</tbody>
+</table>
+<h2 id="3-数据库连接池">3. 数据库连接池</h2>
+<h3 id="31-连接池技术概述">3.1 连接池技术概述</h3>
+<p><strong>概述</strong>：</p>
+<p>​	数据库连接池是一个存放数据库连接的容器（集合）。</p>
+<p>​	系统初始化后，创建容器并申请一些连接对象放入集合。当需要连接时，从池子中获取连接对象；使用完毕后，将连接对象归还给连接池。</p>
+<p><strong>好处</strong>：</p>
+<ul>
+<li>节省系统资源</li>
+<li>访问高效</li>
+</ul>
+<p><strong>数据库连接池的使用</strong>：</p>
+<ul>
+<li>Java提供了一个标准接口：javax.sql.DataSource，方法如下：</li>
+</ul>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">Connection <strong>getConnection</strong> ()</td><td align="center">获取一个到此DataSource表示的数据源的连接</td></tr>
+<tr><td align="center">Connection.close ()</td><td align="center">不是DataSource中的方法，而若该Connection是从连接池获取的，该close方法不会关闭连接而是归还连接到连接池</td></tr>
+</tbody>
+</table>
+<p>​	一般数据库厂商会提供接口的实现。</p>
+<ul>
+<li>常用的实现：
+<ul>
+<li>C3P0，数据库连接池技术，Hibernate和Spring都在使用</li>
+<li>Druid，Alibaba提供的数据库连接池技术</li>
+</ul>
+</li>
+</ul>
+<h3 id="32-c3p0连接池的使用">3.2 C3P0连接池的使用</h3>
+<ol>
+<li>
+<p>导入jar包：</p>
+<ul>
+<li>c3p0-0.9.5.2.jar</li>
+<li>mchange-commons-java-0.2.12.jar</li>
+</ul>
+<p>以上内容可从 <a href="https://sourceforge.net/projects/c3p0/">https://sourceforge.net/projects/c3p0/</a> 下载。</p>
+</li>
+<li>
+<p>写配置文件：</p>
+<p>在src目录下创建c3p0-config.xml文件，<strong>注意需要将文件添加到.classpath</strong>。 内容如下：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;c3p0-config&gt;
+   &lt;default-config&gt; 
+       &lt;property name=&quot;jdbcUrl&quot;&gt;jdbc:mysql://localhost:3306/test?allowPublicKeyRetrieval=true&amp;amp;useSSL=false&amp;amp;serverTimezone=UTC&lt;/property&gt;
+       &lt;property name=&quot;driverClass&quot;&gt;com.mysql.jdbc.Driver&lt;/property&gt;
+       &lt;property name=&quot;user&quot;&gt;root&lt;/property&gt;
+       &lt;property name=&quot;password&quot;&gt;123&lt;/property&gt; 
+
+　　     &lt;!--当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。Default: 3 --&gt;
+       &lt;property name=&quot;acquireIncrement&quot;&gt;3&lt;/property&gt;
+
+　　     &lt;!-- 初始化数据库连接池时连接的数量 --&gt;
+       &lt;property name=&quot;initialPoolSize&quot;&gt;10&lt;/property&gt;
+
+       &lt;!-- 数据库连接池中的最小的数据库连接数 --&gt;
+       &lt;property name=&quot;minPoolSize&quot;&gt;2&lt;/property&gt;
+
+       &lt;!-- 数据库连接池中的最大的数据库连接数 --&gt;
+       &lt;property name=&quot;maxPoolSize&quot;&gt;10&lt;/property&gt;
+   &lt;/default-config&gt;
+&lt;/c3p0-config&gt;
+</code></pre>
+<p>更多内容详见官网 <a href="https://www.mchange.com/projects/c3p0/">https://www.mchange.com/projects/c3p0/</a> 。</p>
+</li>
+<li>
+<p>使用：</p>
+</li>
+</ol>
+<pre><code class="language-java">import ...;
+
+public class JDBCUtils {
+    private static Connection conn;
+    private static ComboPooledDataSource ds = new ComboPooledDataSource();
+    
+    public static Connection getConnection(){
+        try {
+            conn = ds.getConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return conn;
+    }
+}
+</code></pre>
+<h3 id="33-druid连接池的使用">3.3 Druid连接池的使用</h3>
+<p><strong>官方文档</strong>：</p>
+<p>​	<a href="https://github.com/alibaba/druid/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98">https://github.com/alibaba/druid/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98</a></p>
+<p><strong>基本使用步骤</strong>：</p>
+<ol>
+<li>
+<p>导入jar包/添加Maven依赖</p>
+<p>jar包地址：</p>
+<p>​	<a href="http://central.maven.org/maven2/com/alibaba/druid/">http://central.maven.org/maven2/com/alibaba/druid/</a></p>
+<p>Maven添加格式：</p>
+<pre><code class="language-xml">...
+&lt;dependency&gt;
+   &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+   &lt;artifactId&gt;druid&lt;/artifactId&gt;
+   &lt;version&gt;${druid-version}&lt;/version&gt;
+&lt;/dependency&gt;
+...
+</code></pre>
+</li>
+<li>
+<p>定义配置文件</p>
+<pre><code class="language-properties">url: jdbc:mysql://localhost:3306/test
+driverClassName: com.mysql.jdbc.Driver
+username: root
+password: rootzxcvbnm
+
+filters: stat
+maxActive: 20
+initialSize: 1
+maxWait: 60000
+minIdle: 10
+maxIdle: 15
+timeBetweenEvictionRunsMillis: 60000
+minEvictableIdleTimeMillis: 300000
+validationQuery: SELECT 'x'
+testWhileIdle: true
+testOnBorrow: false
+testOnReturn: false
+maxOpenPreparedStatements: 20
+removeAbandoned: true
+removeAbandonedTimeout: 1800
+logAbandoned: true
+</code></pre>
+</li>
+<li>
+<p>加载配置文件</p>
+</li>
+<li>
+<p>通过DruidDataSourceFactory工厂来获取DataSource对象</p>
+<pre><code class="language-java">ds = DruidDataSourceFactory.createDataSource(properties);
+</code></pre>
+</li>
+<li>
+<p>获取连接</p>
+<pre><code class="language-java">ds.getConnection();
+</code></pre>
+</li>
+</ol>
+
+
+</body>
+</html>

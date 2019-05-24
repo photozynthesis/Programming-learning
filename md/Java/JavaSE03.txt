@@ -1,0 +1,1282 @@
+﻿Java笔记03（Day19-Day27）
+
+目录
+	1.异常
+	2.throw关键字
+	3.Throwable类重要方法
+	4.finally关键字
+	5.自定义异常
+	6.异常中涉及到继承的注意事项
+	7.File类
+
+1.异常
+	概述：
+		程序出现了不正常的情况。
+	Java异常体系概述：
+		类Throwable：程序的异常
+			类Error：严重问题。不做处理，因为一般是难以/无法处理的问题，比如内存溢出。
+			类Exception：异常。
+				类RuntimeException：运行时异常。不做处理，因为此种异常问题在于代码不够严谨，需要修正代码。
+				除RuntimeException以外Exception：编译期异常。必须进行处理，否则代码不能通过编译。
+	异常的处理：
+		1）默认处理：
+				如果程序出现问题，并没有做任何处理，Jvm最终会做出默认处理。
+				默认处理方式：
+					把异常的名称、原因，及出现异常的位置输出在控制台，并结束程序。
+		2）手动处理方式一：																可简化为：												可以出现多个catch：
+				try {																				try {															try {
+					...(可能会出现问题的代码)												...																...
+				} catch (异常类名 变量名) {												} catch (异常类名 变量名) {							} catch (异常类名 变量名) {
+					...(出现异常后的处理)														...																...
+				} finally {																		}																} catch (异常类名 变量名) {
+					...																																					...
+				}																																					}
+				原理：
+					在try里面发现问题后，jvm会生成一个异常对象，然后把这个对象抛出，和catch中的类进行匹配。
+					如果该对象是某个类型的，就会执行该catch里的处理信息。
+				注意事项：
+					A.能明确的尽量明确，不要用大的异常类名来处理；
+					B.一旦try中出现了匹配的异常，就会执行对应的处理，并结束try...catch执行后面的代码;
+					C.平级关系的异常谁先catch无所谓，如果出现了父子关系的异常，父异常必须在后面。
+			手动处理方式二（JDK7新的处理方式）：
+				try {
+					...(可能出现问题的代码)
+				} catch (异常名1 | 异常名2 | ... 变量) {
+					...(处理)
+				}
+				注意事项：
+					A.该方法不管是哪种异常，处理方式都是一致的；
+					B.多个异常间必须是同级关系。
+		3）抛出：
+				有些时候我们没有权限处理/处理不了/不想处理，就不处理了。为了解决此时的出错问题，提供了抛出解决方案。
+				格式：
+					修饰符 返回值类型 方法名(参数) throws 异常类名1,异常类名2,... { }
+					注意throws跟在括号后面。
+					throws后面可跟多个异常类名，用逗号隔开。
+				说明：
+					方法抛出了异常，将交给调用者处理。
+					编译期异常抛出，调用者必须处理（否则报错）；运行期异常抛出，调用者可以不处理。
+					尽量不要在main方法上抛出异常。
+	异常处理方式的选择：
+		1）如果该功能内部可以将问题处理，用try；如果处理不了，就交给调用者处理，用throws；
+		2）后续程序如果需要继续运行就用try；不用继续运行就用throws。
+
+2.throw关键字
+	概述：
+		如果出现了异常情况，我们可以手动把异常抛出（生成一个异常对象）。
+		此关键字后面应该跟一个异常对象（throw new Exception()）。
+	throw和throws的区别：
+		throws																									throw
+			1）用在方法声明后面，后跟异常类名；													1）用在方法体内，后跟异常对象；
+			2）可以跟多个异常类名，用逗号隔开；													2）只能抛出一个异常对象；
+			3）表示抛出异常，由该方法的调用者来处理；											3）表示抛出异常，由方法体内的语句处理；
+			4）throws表示可能出现异常，可能不会出现。											4）throw表示抛出了异常，执行throw一定抛出了某种异常。
+
+3.Throwable类重要方法：
+	public String getMessage()																		//e.getMessage()，返回异常消息的字符串
+	public String toString()																				//e.toString()，返回异常信息的简单描述，按照如下的格式：
+		此对象的全路径完整类名	+ ": "(冒号+空格) + 调用此对象getLocalizedMessage()方法的结果（默认返回的是getMessage()的结果）
+	void printStackTrace()																				//e.printStackTrace()，获取异常类名和异常信息，以及异常在程序中的位置，把结果输出在控制台
+
+4.finally关键字
+	概述：
+		位于try {...} catch (...) {...} finally {...}之中。
+		被finally控制的语句体一定会执行。
+		存在例外：在执行finally之前jvm推出了，将不会执行finally中的语句。比如System.exit(0)。
+	作用：
+		用于释放资源，在io流操作和数据库操作中会见到。
+	相关重要问题：
+		1）final、finally、finalize的区别？
+			final：是用于修饰类名、成员变量、成员方法的修饰符。
+				final修饰类，该类不能被继承；
+				final修饰成员变量，该变量为常量不能重新赋值；
+				final修饰成员方法，该方法不能被重写。
+			finally：是异常处理的一部分，用于释放资源。
+				一般来说finally中的语句一定会执行，不过如果在finally之前退出了虚拟机，就不会执行。
+			finalize：是Object中的一个方法，用于垃圾回收。
+		2）如果catch里面有return语句，finally中的语句还会执行吗？
+			会，并且会在return之前执行。
+			准确来说，走到return语句时会生成一个返回路径，然后接着走finally中的代码，finally走完后再回到返回路径。
+			举例：
+				catch (Exception e) {
+					a = 30;
+					return a;
+				} finally {
+					a = 40;
+				}									//将返回30
+				
+5.自定义异常
+	概述：
+		Java不可能所有异常都考虑到（比如需要分数在0-100之间），所以在实际开发中，可能需要自己定义异常。
+		若要让一个类成为异常类，必须继承自Exception类或者RuntimeException类。
+	注意事项：
+		1）自定义的异常类不用写任何成员方法；
+		2）可以通过写一个构造方法传一个字符串参数覆盖Exception类的构造方法，实现错误信息的输出，举例如下：
+			class MyException extends Exception {
+				public MyException () {}
+				public MyException (String message) {
+					super(message);
+				}
+			}										//只需要throw new MyException("错误信息")即可
+		3）如果自定义的异常继承自Exception，则为编译期异常；继承自RuntimeException，则为运行期异常。
+		
+6.异常中涉及到继承的注意事项：
+	1）子类重写父类方法时，子方法不能抛出比父方法级别更大的异常；
+	2）如果父方法抛出了多个异常，子方法不能抛出比父方法更多的异常，也不能抛出父方法没有抛出的异常；
+	3）如果父方法没有抛出异常，子方法不能抛出异常，只能try...catch，不能throws。
+	
+7.File类
+	概述：
+		要想实现IO的操作，就需要知道硬盘上文件的表现形式，Java提供了一个File类供我们使用。
+		File类是文件和目录的抽象表现形式。
+	重要构造方法：
+		File(String pathname)																			//根据一个路径得到File对象<目录/文件>
+		File(String parent, String child)																//根据parent<目录>和child<目录/文件>得到File对象
+		File(File parent, String child)																	//根据一个父File对象<目录>和一个子文件/目录得到File对象
+	重要方法：
+		创建功能：
+			public boolean createNewFile()															//file1.createNewFile()，创建文件。如果存在这样的文件就不创建了，并返回false。
+			public boolean mkdir()																		//file1.mkdir()，创建文件夹。如果存在这样的文件夹就不创建了，并返回false。
+			public boolean mkdirs()																	//file1.mkdirs()，创建文件夹。如果父文件夹不存在，会自动创建。
+		删除功能：
+			public boolean delete()																		//file1.delete()，删除文件或文件夹，如果没有删除返回false。
+		重命名功能：
+			public boolean renameTo(File dest)													//file1.renameTo(file2)，如果路径名相同就是改名，如果路径名不同则为改名+剪切粘贴。
+		判断功能：
+			public boolean isDirectory()																//file1.isDirectory()，判断是否为目录
+			public boolean isFile()																		//file1.isDirectory()，判断是否为文件
+			public boolean exists()																		//file1.exists()，判断是否存在
+			public boolean canRead()																	//file1.canRead()，判断是否可读
+			public boolean canWrite()																	//file1.canWrite()，判断是否可写
+			public boolean isHidden()																	//file1.isHidden()，判断是否隐藏
+		获取功能：
+			public String getAbsolutePath()														//file1.getAbsolutePath()，获取绝对路径
+			public String getPath()																		//file1.getPath()，获取路径
+			public String getName()																	//file1.getName()，获取名称
+			public long length()																			//file1.length()，获取长度（字节数）
+			public long lastModified()																	//file1.lastModified()，获取最后一次修改时间（毫秒值）
+			public String[] list()																			//file1.list()，获取指定目录下所有文件/文件夹的名称数组
+			public String[] list(FilenameFilter filter)												//file1.list(filter)，根据一个文件名称过滤器的实现类对象，获取指定目录下满足要求的所有文件/文件夹的名称数组
+			public File[] listFiles()																			//file1.listFiles()，获取指定目录下所有文件/文件夹的File数组
+			public File[] listFiles(FilenameFilter filter)											//file1.listFiles(filter)，根据一个文件名称过滤器的实现类对象，获取指定目录下满足要求的所有文件/文件夹的File数组
+	接口FilenameFilter概述：
+		文件名称过滤器，包含一个方法boolean accept(File dir, String name)。
+		dir为被找到的文件所在目录，name为文件的名称。
+		文件满足要求时返回true，否则返回false。
+		通常以匿名内部类的方式实现。
+	注意事项：
+		1）创建文件或者文件夹时，如果没有写盘符路径，会创建在默认路径下；
+		2）删除功能中，如果要删除一个文件夹 ，该文件夹内不能包含文件或文件夹；
+		3）Windows系统下，Java的删除不会走系统回收站；
+		4）如果File的路径以盘符开始，则为绝对路径，否则为相对路径
+		
+8.递归
+	概述：
+		方法定义中调用方法本身的现象。
+		举例：public void method () {
+					method();
+				}
+		递归方法需要：规律和出口条件。
+	注意事项：
+		1）递归一定要有出口，否则就是死递归；
+		2）递归次数不能太多，否则会不断加载方法到栈内存导致内存溢出；
+		3）构造方法不能递归使用。
+		
+9.IO流
+	概述：
+		IO流用来处理设备间的数据传输（上传文件和下载文件）。
+		Java对数据的操作是通过流的方式，用于操作流的对象都在IO包中。
+	分类：
+		按流向分：
+			输入流（读取数据）
+			输出流（写出数据）
+		按数据类型分：
+			字节流：
+				用记事本打开文件，如果不能读懂，就用字节流。
+				如果什么都不知道，就用字节流。
+			字符流
+				用记事本打开文件，如果可以读懂，就用字符流。
+		所有分类：
+			字节输入流：InputStream
+			字节输出流：OutputStream
+			字符输入流：Reader
+			字符输出流：Writer
+			以上基类都是抽象类，需要具体实现。
+			每种基类的子类都以父类名结尾，如：
+			
+10.FileOutputStream文件字节输出流
+	概述：
+		用于将数据写入File的文件字节输出流。
+	构造方法：
+		FileOutputStream(File file)																	//创建一个向给定File所表示的文件中写入数据的文件字节输出流，从内容开头写入（如果文件存在会先删除所有原有内容）
+		FileOutputStream(File file, boolean append)											//创建一个向给定File所表示的文件中写入数据的文件字节输出流，如果第二参数为true，从内容末尾写入
+		FileOutputStream(String name)																//会根据给定String造一个File，并创建指向该File的fos对象，从内容开头写入（如果文件存在会先删除所有原有内容）
+		FileOutputStream(String name, boolean append)									//会根据给定String造一个File，并创建指向该File的fos对象，如果第二参数为true，从内容末尾写入
+	重要方法：
+		public void write(int b)																			//fos.write(int)，输入一个ASCII数字表示的字节
+		public void write(byte[] b)																		//fos.write(byte[])，输入一个字节数组的所有字节
+		public void write(byte[] b, int off, int len)												//fos.write(byte[],起始索引,长度)，从一个字节数组的off开始，输入len个字节
+	重要问题：
+		创建字节输出流到底做了哪些事情？
+			a.调用系统功能创建文件；
+			b.创建fos对象；
+			c.把fos对象指向这个文件。
+		数据写成功后，为何要close()？
+			a.把fos对象变成垃圾，这样就可以被系统回收了；
+			b.通知系统回收跟该文件相关的资源。
+		如何实现数据的换行？
+			写入换行符号即可。
+			一般来说，换行符号是"\n"，然而不同操作系统对换行符号的识别不同，Windows自带记事本可以识别的换行符号为"\r\n"。
+			一些常见的高级记事本，是可以识别任意换行符号的。
+		如何实现数据的追加写入？
+			使用带有第二参数boolean append的构造方法即可，append为true。
+			
+11.FileInputStream文件字节输入流
+	概述：
+		从文件系统的某个文件中获得输入字节。
+	构造方法：
+		FileInputStream(File file)																		//从File表示的文件创建文件字节输入流
+		FileInputStream(String name)																//从String表示的文件创建文件字节输入流
+	重要方法：
+		int read()																								//fis.read()，读取下一个字节，返回该字节的int表示。读完后指针会移动到已读字节后方，读完了还read()则会返回-1。
+		int read(byte[] bys)																				//fis.read(byte[])，一次读取一个字节数组，返回实际读取到的字节个数
+		
+12.缓冲区类
+	概述：
+		测试发现一次读取一个数组的方式比一次读取一个字节的方式要快上很多，所以Java提供了带缓冲区的字节类（为了高效）。
+		构造方法需要传一个基本的输入/输出流对象。
+	构造方法：
+		BufferedInputStream(InputStream in)													//创建具有默认缓冲区大小的缓冲区输入流
+		BufferedOutputStream(OutputStream out)											//创建具有默认缓冲区大小的缓冲区输出流
+		BufferedInputStream(InputStream in, int size)										//创建具有指定缓冲区大小的缓冲区输入流
+		BufferedOutputStream(OutputStream out, int size)								//创建具有指定缓冲区大小的缓冲区输出流
+		//一般不用指定缓冲区大小，默认就够用了
+		
+13.编码表
+	概述：
+		由现实世界的字符和对应的数值组成的一张表。
+	常见编码表：
+		ASCII码表：最高位为符号位，其余位为数值位。
+		ISO-8859-1：拉丁码表，八位表示一个数据。
+		GB2312：中国的中文码表。
+		GBK：中国的中文码表升级，融合了更多的中文文字符号。
+		GB18030：GBK的取代版本。
+		BIG-5码：通行于台湾、香港等地的一个繁体字编码方案，俗称大五码。
+		Unicode：国际标准码，融合了多种文字。所有文字都用两个字节来表示，Java语言用的就是Unicode。
+		UTF-8：最多用三个字节来表示一个字符。
+	String类相关方法：
+		String(byte[] bys, String charsetName)													//通过指定字符集（编码表）解码给定字节数组，创建字符串对象
+		byte[] getBytes(String charsetName)														//s.getBytes(编码表名)，使用给定字符集（编码表）将字符串编码为字节数组
+		
+14.字符流OutputStreamWriter/InputStreamReader
+	重要构造方法：
+		OutputStreamWriter(OutputStream out)												//根据默认编码把字节流的数据转换为字符流
+		OutputStreamWriter(OutputStream out, String charsetName)				//根据给定编码把字节流的数据转换为字符流
+		InputStreamReader(InputStream in)														//根据默认编码读取数据
+		InputStreamReader(InputStream in, String charsetName)						//根据指定编码读取数据
+	OutputStreamWriter的重要方法：
+		public void write(int c)																			//osw.write(int)，写一个字符
+		public void write(char[] cbuf)																//osw.write(char[])，写一个字符数组
+		public void write(char[] cbuf, int off, int len)											//osw.write(char[], 开始索引, 长度)，写一个字符数组的一部分
+		public void write(String str)																	//osw.write(String)，写一个字符串
+		public void write(String str, int off, int len)											//osw.write(String, 开始索引, 长度)，写一个字符串的一部分
+	InputStreamReader的重要方法：
+		int read()																								//isr.read()，一次读取一个字符
+		int read(char[] chs)																				//isr.read(char[])，一次读取一个字符数组
+		
+15.flush()方法相关
+	概述：
+		该方法是IO流根类OutputStream和Writer都有的方法，作用是刷新该流的缓冲，将流的缓冲中所有write()方法保存的内容写入到文件中。
+	相关重要问题：
+		close()和flush()的区别？
+			A.close()关闭流对象，在关闭之前会刷新一次缓冲区。关闭之后流对象就不能继续使用了；
+			B.flush()仅仅刷新缓冲区，刷新之后流对象还可以继续使用。
+			
+16.字符缓冲流BufferedWriter/BufferedReader
+	概述：
+		字符流为了高效读写，也提供了对应的字符缓冲流。
+		BufferedWriter：字符缓冲输出流
+			将文本写入字符输出流，缓冲各个字符，从而提供单个字符，数组和字符串的高效写入。
+			可以指定缓冲区的大小，然而在大多数情况下，默认值就足够大了。
+		BufferedReader：字符缓冲输入流
+			从字符输入流中读取文本，缓冲各个字符，从而实现字符、数组和行的高效读取。
+			可以指定缓冲区大小，然而在大多数情况下，默认值就足够大了。
+	重要构造方法：
+		BufferedWriter(Writer out)																	//创建一个具有默认大小缓冲区的缓冲字符输出流
+		BufferedReader(Reader in)																	//创建一个具有默认大小缓冲区的缓冲字符输入流
+	重要特殊方法：
+		BufferedWriter：
+			public void newLine()																		//bw.newLine()，根据系统来写入换行符
+		BufferedReader：
+			public String readLine()																		//br.readLine()，一次读取一行数据。结束依据为任何换行符，返回的字符串不包含任何换行符。如果已达流末尾，返回null。
+		
+17.数据输入/输出流DataInputStream/DataOutputStream
+	概述：
+		操作基本数据类型的流。
+	重要构造方法：
+		DataInputStream(InputStream in)															//传一个InputStream构造DataInputStream对象
+		DataOutputStream(OutputStream out)													//传一个OutputStream构造DataOutputStream对象
+	重要方法：
+		DataOutputStream：
+			public final void write基本数据类型(基本数据类型对象)							//dos.writeInt(0)
+		DataInputStream：
+			public final 基本数据类型 read基本数据类型()										//dis.readInt()
+			
+18.内存操作流
+	概述：
+		用于临时存储信息，程序结束，临时存储的信息就从内存中消失。
+		此种流的close()方法没有意义，因为其源码中没有任何内容，是空实现。
+		此处将概述：
+			字节数组内存操作流ByteArrayInputStream和ByteArrayOutputStream；
+			字符数组内存操作流CharArrayReader和CharArrayWriter；
+			字符串内存操作流StringReader和StringWriter。
+	构造方法：
+		输入流一般传入一个对应数据类型对象构造输入流对象。
+		输出流一般使用空参构造，缓冲区会随着写入数据的增加自动扩充。
+		也可以传一个size指定缓冲区大小，不过一般没有必要。
+	字节数组内存操作流的使用举例（另外两个流类似）：
+		// 写数据
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		baos.write("abc".getBytes());
+		byte[] bys = baos.toByteArray();
+		// 读数据
+		ByteArrayInputStream bais = new ByteArrayInputStream(bys);
+		int len = 0;
+		byte[] arr = new byte[1024];
+		while((len = bais.read(arr)) != -1) {
+			System.out.println(new String(arr, 0, len));
+		}
+		
+19.打印流
+	概述：
+		打印流包括字节打印流PrintStream和字符打印流PrintWriter
+	打印流的特点：
+		1）只有写数据的，没有读取数据的。只能操作目的地，不能操作数据源；
+		2）可以操作任意类型的数据；
+		3）如果启用了自动刷新，可以自动进行刷新无需手动flush()；
+		4）该流可以直接操作文本文件（不像缓冲流需要传一个操作文件的基本流）。
+			所以，常用的可以直接操作文本文件的流有：
+				FileInputStream，FileOutputStream，FileReader，FileWriter，PrintStream，PrintWriter
+	PrintWriter概述：
+		重要构造方法：
+			可以传一个File或文件名字符串构造打印输出流，不过这样将不能自动刷新。
+			也可以传一个字节输出流OutputStream或字符输出流Writer，这种方式若想要自动刷新，需第二参数boolean autoFlush。
+			public PrintWriter(OutputStream out, boolean autoFlush)					//需注意print()方法不能自动刷新，println()才可以
+			public PrintWriter(Writer out, boolean autoFlush)
+		使用举例：
+			PrintWriter pw = new PrintWriter(new FileWriter("demo.txt"), true);
+			pw.println("hello");
+			pw.println("100");
+			//此处println()一个方法相当于BufferedWriter的bw.write()，bw.newLine()，bw.flush()三者的组合。
+			
+20.标准输入/输出流
+	概述：
+		System类中的字段in和out。
+		分别代表了系统标准的输入和输出设备，默认输入设备是键盘，默认输出设备是显示器。
+		System.in的类型为InputStream，System.out的类型为PrintStream（字节打印流，OutputStream的子类FilterOutputStream的子类）。
+	相关问题：
+		键盘录入数据的三种方式：
+			1）main方法的参数String[] args数组接收参数，举例：
+				java HelloWorld hello world java
+			2）Scanner（JDK5后），举例：
+				Scanner sc = new Scanner(System.in);
+				sc.nextInt();
+			3）通过字符缓冲输入流BufferedReader包装标准输入流实现（BufferedReader需要一个Reader，通过InputStreamReader包装System.in实现）,举例：
+				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+				String line = br.readLine();
+				
+21.随机访问流RandomAccessFile
+	概述：
+		（可以在文件指定位置进行读写操作）
+		支持对文件的随机访问和写入。
+		RandomAccessFile包含了一个记录指针以标识当前独写的位置。当新创建对象时，指针位于文件开头；读/写了n个字节后，指针也会向后移动n个字节。
+		RandomAccessFile在io包下，不过不属于任何一个io流根类，其继承自Object。
+		融合了InputStream和OutputStream的功能。
+		RandomAccessFile不能向指针位置（除末尾）插入内容（将会覆盖原本存在的内容）。若想插入内容，可以先将指针后的内容存储到临时文件，追加内容，最后追加临时文件中的内容。
+	重要构造方法：
+		public RandomAccessFile(String name, String mode)							//第一个参数可以是文件或文件名，第二个参数为操作文件的模式，有"r"，"rw"，"rws"，"rwd"可选。常用"rw"进行读写。
+	重要方法：
+		public long getFilePointer()																	//raf.getFilePointer()，返回文件记录指针的当前位置
+		public long seek(long pos)																	//raf.seek(偏移量)，将文件记录指针设置到pos位置
+		InputStream具有的三个read()方法															//单个字节，字节数组，字节数组的一部分
+		OutputStream具有的三个write()方法														//单个字节，字节数组，字节数组的一部分
+		
+22.合并流SequenceInputStream
+	概述：
+		（将多个字节输入流合并为一个）
+		表示其他输入流的逻辑串联。将会从第一个（输入流的有序集合第一个）开始，读完了读第二个，直到最后一个读完为止。
+		继承自InputStream。
+	重要构造方法：
+		public SequenceInputStream(InputStream s1, InputStream s2)				//创建包含两个InputStream的合并流，先读s1后读s2
+		public SequenceInputStream(Enumeration<? extends InputStream> e)//可以进行多个流的合并，具体说明如下：
+	Enumeration构造方法的具体说明：
+		Enumeration是有序集合Vector中public Enumeration<E> elements()方法的返回值，有序包含Vector中所有元素。
+		使用该种构造方法，需要先创建Vector集合对象，然后将多个InputStream添加到集合，最后调用集合的elements方法得到Enumeration对象，以构造合并流对象。
+		
+23.序列化流ObjectInputStream/ObjectOutputStream
+	概述：
+		（把对象存入文件/从文件读出对象）
+		把对象按照流一样的方式存入文本文件或者在网络中传输/把文本文件或网络中的流对象数据还原成对象。
+		注意，写入和读取的对象需要实现Serializable接口，否则在操作的时候会抛出NotSerializableException。
+		Serializable为标记接口，内部没有任何方法。
+	重要构造方法：
+		public ObjectInputStream(InputStream in)											//创建从指定InputStream读取的ObjectInputStream
+		public ObjectOutputStream(OutputStream out)									//创建用指定OutputStream输出的ObjectOutputStream
+	重要方法：
+		public final Object readObject()															//ois.readObject()，从ObjectInputStream中读取Object对象
+		public final void writeObject(Object o)													//oos.writeObject(Object)，将指定对象写入ObjectOutputStream
+	注意事项：
+		1）如果写入一个已序列化类的对象，之后对该类的Java文件进行了改动，再执行读取的时候会报错。
+			要解决该问题，可以点击IDE中黄色叹号，自动生成成员变量序列化ID值。
+			该方式同时也可以去除黄色警告线。
+		2）若不想实例化某成员变量，可以用关键字transient修饰。
+		
+24.属性集合类Properties
+	概述：
+		（可以和IO流相结合使用的Map集合类）
+		该类的对象可以保存在流中或从流中加载，属性列表中每一个键及其对应值都是一个字符串。
+		是Hashtable的子类，是一个map集合。
+	重要构造方法：
+		public Properties()																				//创建一个无默认值的空属性列表
+	重要特殊方法：
+		public Object setProperty(String key, String value)								//p.setProperty(str1, str2)，添加元素（原理为调用父类Hashtable的put()）
+		public String getProperty(String key)														//p.getProperty(key)，根据键找值
+		public Set<String> stringPropertyNames()											//p.stringPropertyNames()，获取所有键的集合
+		public void load(Reader reader)															//p.load(Reader)，把文件中的数据读取到集合中
+		public void store(Writer writer, String comments)									//p.store(Writer, 注释)，把集合中的数据和注释存储到文件，注释可以为null
+	存储到文件中的格式：
+		#comments
+		#时间
+		键1=值1
+		键2=值2
+		...
+		
+25.nio（新IO）
+	概述：
+		于JDK4出现nio，其和传统io有着相同的目的，都是用于输入和输出。不过新io采用了不同的处理方式，其原理是将文件或文件的一段区域映射到内存，像访问内存一样访问文件，效率更高。
+		目前旧io使用较多，此处内容仅需了解。
+	了解内容：
+		Path（1.7）：
+			为java.nio.file包下一个接口，表示路径。
+		Paths（1.7）：
+			一个最终类，其中有一个静态方法static Path get(URI uri)，根据给定URI确定文件路径。
+		Files（1.7）：
+			操作文件的工具类，方法全部为静态。
+			需要了解的方法：
+				public static long copy(Path source, OutputStream out)				//Files.copy(Path, OutputStream)，将一个文件中的全部字节复制到一个OutputStream
+				public static Path write(Path path, Iterable<? extends CharSequence> lines, Charset cs, OpenOption... options)
+					//把集合的元素写到文件
+		使用举例：
+			Files.copy(Paths.get("Demo.java"), new FileOutputStream("Copy.java"));		//复制文件
+			File.write(Paths.get("List.txt"), new ArrayList<String>(...), Charset.forName("GBK"));		//将集合的元素写到文件
+			
+26.多线程概述
+	由于线程是依赖于进程而存在，所以先了解进程。
+	进程：
+		就是正在运行的程序。
+		进程是系统进行资源分配和调用的独立单位，没一个进程都有它自己的内存空间和系统资源。
+	多进程的意义：
+		1）可以在一个时间段内执行多个任务；
+		2）可以提高CPU的使用率。
+	线程：
+		同一个进程内又可能包含多个任务，这每一个任务就可以看成是一个线程。
+		线程是程序的执行单元/执行路径，是程序使用CPU的基本单位。
+		如果程序只有一条执行路径即为单线程，如果程序有多条执行路径即为多线程。
+	多线程的意义：
+		提高应用程序的使用率。
+		如果一个进程有多个线程，将会有更高的几率获得更多系统资源。
+	并发和并行：
+		并发：是指逻辑上同时发生，在某一个时间段内同时运行多个程序。
+		并行：是指物理上同时发生，在某一个时间点上同时运行多个程序。
+	Java程序的运行原理：
+		java命令会先启动Java虚拟机（JVM），也就是启动了一个程序（启动了一个进程）。该程序会启动一个主线程，然后该线程去调用某个类的main方法。
+	相关问题：
+		多个进程在单CPU上是同时进行的吗？
+			不是，因为单CPU在某一个时间点上只能做一件事情。
+			我们感觉到的同时进行，是因为CPU在做着进程间的高效切换。
+		Java虚拟机的启动是单线程的还是多线程的？
+			是多线程的。
+			因为至少启动了主线程和垃圾回收器线程。
+			
+27.多线程程序的实现
+	如何实现：
+		由于线程是依赖进程存在的，所以首先应创建一个进程。
+		进程是由系统创建的，所以我们需要调用系统功能去创建一个进程。
+		Java不能直接调用系统功能，没有办法直接实现多线程程序，不过可以通过调用C/C++写好的程序来实现。
+		将C/C++写好的程序功能封装成Java类，就可以实现Java多线程程序了。
+	Java提供的线程类是：
+		Thread
+	实现Java多线程程序的两种方法：
+		方式一：
+			（继承Thread类）
+			1）自定义类MyThread继承自Thread类；
+			2）MyThread类里面重写run()方法；
+			3）创建对象；
+			4）启动线程。
+			实例：
+				public class MyThread extends Thread{
+					public void run() {
+						...(线程中要执行的内容)
+					}
+				}
+				public class Demo{
+					public static void main(String[] args){
+						MyThread tr1 = new MyThread();
+						MyThread tr2 = new MyThread();
+						
+						// tr1.setName("线程1")；
+						// tr2.setName("线程2")；
+						
+						tr1.start();									//启动线程，如果调用run()方法，只是相当于走了一遍run()中的代码
+						tr2.start();
+					}
+				}
+		方式二：
+			（实现Runnable）
+			1）自定义类MyRunnable实现接口Runnable；
+			2）重写run()方法；
+			3）创建MyRunnable类的对象；
+			4）创建Thread类的对象，并把C步骤的对象当成参数传递；
+			5）启动线程。
+			实例：
+				public class MyRunnable implements Runnable{
+					public void run(){
+						...(线程中要执行的内容)
+					}
+				}
+				public class Demo{
+					public static void main(String[] args){
+						MyRunnable mr = new MyRunnable();
+						
+						Thread th1 = new Thread(mr, "线程1")；
+						Thread th2 = new Thread(mr)；
+						
+						th1.start();
+						th2.start();
+					}
+				}
+			方式三（了解）：
+				（使用ExecutorService（线程池）、Callable和Future实现有返回值的多线程）
+				1）自定义类实现Callable<V>；
+				2）重写<V> call()方法，返回值为V；
+				3）创建线程池；
+				4）创建Callable<V>实现类对象；
+				5）将对象submit到常量池，用Future<V>对象接收；
+				6）Future<V>对象调用get()方法得到返回值；
+				7）关闭线程池。
+				实例（两个线程计算从1到number求和）：
+					class MyCallable implements Callable<Integer>{
+						private int number;
+						
+						public MyCallable(int number){
+							this.number = number;
+						}
+						public void call() throws Exception{
+							int sum = 0;
+							for(int x = 1; x <= number; x ++){
+								sum += x;
+							}
+							return sum;
+						}
+					}
+					class Demo{
+						public static void main(String[] args) throws Exception{
+							ExecutorService pool = Executors.newFixedThreadPool(2);
+							
+							Future<Integer> f1 = pool.submit(new MyCallable(100));
+							Future<Integer> f2 = pool.submit(new MyCallable(200));
+							
+							Integer i1 = f1.get();			//如有必要，等待计算完成，然后获取结果（API）
+							Integer i2 = f2.get();
+							
+							System.out.println(i1);
+							System.out.println(i2);
+							
+							pool.shutdown();
+						}
+					}
+					
+	相关重要问题：
+		1）为什么要重写run()方法？
+			不是类中所有代码都要被线程执行的。
+			为了区分哪些代码需要被线程执行，Java提供了Thread中的run()方法来包含被线程执行的代码。
+		2）调用run()方法为什么是单线程的呢？
+			因为run()方法的调用其实就相当于普通的方法调用，看到的自然是单线程的效果。
+		3）run()和start()的区别？
+			run()：仅仅是封装需要被线程执行的代码，直接调用仅相当于普通方法调用。
+			start()：启动线程，然后Java虚拟机调用该线程的run()方法。
+		4）线程能不能多次启动？
+			不能。
+			不过可以创建不同的线程对象分别启动。
+		5）多线程实现方式二的好处？
+			1）若一个类已经继承了其他类就无法使用方式一了，使用接口可以避免Java单继承带来的局限性；
+			2）方式二可以实现多个相同线程处理同一份资源。
+				把线程同程序的代码、数据有效分离，较好地体现了面向对象的设计思想。
+		
+28.Thread类
+	概述：
+		Thread是程序中的执行线程。
+	重要构造方法：
+		public Thread()										//分配新的Thread对象，自动生成的名称的形式为"Thread-" + n
+		public Thread(String name)					//使用给定的名称构造新的Thread对象
+		public Thread(Runable target)				//传一个Runnable实现类，构造Thread对象
+		public Thread(Runable target, String name)		//传一个Runnable实现类和线程名称，构造Thread对象
+		public Thread(ThreadGroup tg, Runnable target, String name)		//根据线程组，Runnable和名称构建Thread对象
+	重要方法：
+		public final void setName(String name)		//th.setName("线程名")，设置线程名称
+		public final String getName()						//th.getName()，返回线程名称
+		public void run()											//th.run()，Thread的子类应该重写该方法
+		public void start()											//th.start()，使该线程开始执行，Java虚拟机调用该线程的run()方法
+		public static Thread currentThread()				//Thread.currentThread()，返回当前正在执行的Thread对象
+		public final int getPriority()							//th.getPriority()，返回线程对象的优先级
+		public final void setPriority(int newPriority)	//th.setPriority()，更改线程的优先级
+		public static void sleep(long millis)				//Thread.sleep(毫秒数)，在指定的毫秒数内让正在执行的线程休眠（暂停执行），此操作受系统计时器、调度精度等因素影响
+		public final void join()									//th.join()，等待该线程终止
+		public static void yield()								//Thread.yield()，暂停当前正在执行的线程对象，并执行其他线程
+		public final void setDaemon(boolean on)		//th.setDaemon()，将该线程标记为守护线程/用户线程/后台线程。当正在运行的线程都是守护线程时，Java虚拟机退出。必须在启动线程前调用
+		public void interrupt()									//th.interrupt()，中断线程。把线程的状态终止，并抛出一个InterruptedException
+		public final void stop()									//th.stop()，已过时，强迫线程终止执行。
+		
+29.线程调度
+	概述：
+		线程只有得到CPU的使用权，才可以执行指令。
+		线程有两种调度模型：
+			1）分时调度模型
+				所有线程轮流获得CPU的使用权，平均分配每个线程占用CPU的时间片。
+			2）抢占式调度模型：
+				优先让优先级高的线程使用CPU。
+				如果线程的优先级相同，会随机选择一个。
+				优先级高的线程获得的CPU时间片会多一些。
+		Java使用的是抢占式调度模型。
+	Java线程优先级：
+		线程默认优先级是：5
+		线程优先级的范围是：1 - 10
+		线程优先级高表示线程获取CPU时间片的几率高，调用次数越多将越能体现这一点，次数少会更多的表现出随机性。
+	相关异常：
+		IllegalArgumentException：非法参数异常
+			抛出此异常表明向方法传递了一个不合法或不正确的参数。
+			
+30.线程控制
+	线程休眠：
+		在线程的run()方法内静态调用sleep(long millis)方法，可将当前实例休眠指定的毫秒数。
+	线程加入：
+		th.join()，将等待该线程终止才会去执行其他线程/执行后面的代码。
+	线程礼让：
+		在线程的run()方法内静态调用yield()方法，暂停当前正在执行的线程对象，并执行其他线程。
+	后台线程/守护线程：
+		（必须）在启动线程前调用th.setDaemon(boolean on)方法，可以将该线程标记为守护线程/后台线程。
+		当所有正在运行的线程都是守护线程时，Java虚拟机退出。
+	线程终止：
+		th.interrupt()，把线程的状态终止，并抛出一个InterruptedException。
+		
+31.线程生命周期
+	1）新建
+		创建线程对象。
+		调用start()方法可进入就绪状态。
+	2）就绪
+		有执行资格，没有执行权。
+		若得到了CPU的执行权即进入运行状态。
+	3）运行
+		有执行资格，有执行权。
+		若被别的线程得到了CPU执行权，则回到就绪状态。
+		若运行了sleep()或wait()等方法，则进入阻塞状态。
+		若run()方法执行结束或中断了线程，进入死亡状态。
+	4）阻塞
+		没有执行资格，没有执行权。
+		若sleep()时间到或运行了notify()等方法，可恢复到就绪状态。
+	5）死亡
+		线程对象变成垃圾，等待被回收。
+		
+32.线程安全问题/线程同步
+	是否存在线程安全问题的标准：
+		1）是否多线程环境；
+		2）是否有共享数据
+		3）是否有多条语句操作共享数据。
+	解决方案（同步代码块）：
+		格式：
+			synchronized (对象) {
+				...需要同步的代码
+			}
+		小括号内所传的对象是重点，该对象相当于“锁”的功能，多个线程对象需要同一把锁（相同的对象）。
+	同步的前提：
+		1）要有多个线程；
+		2）多个线程使用的是同一个锁对象。
+	同步的好处：
+		同步的出现解决了多线程的安全问题。
+	同步的弊端：
+		1）当线程很多时，每个线程都会去判断同步上的锁。这将会耗费更多资源，降低程序运行效率。
+		2）容易产生死锁。
+	相关问题：
+		1）同步代码块的锁对象是什么？
+			是任意对象。
+		2）同步方法的格式及锁对象问题：
+			同步方法格式：synchronized关键字作为方法修饰符，如：
+				public synchronized method ( ) { }
+			同步方法的锁对象是什么？
+				是this。
+		3）静态方法的锁对象是什么？
+			是类的字节码文件对象（demo.class）。
+			
+33.Lock锁（JDK5新特性）
+	概述：
+		（为了更清晰的表达如何加锁和释放锁）
+		java.util.concurrent.locks下的接口Lock，提供了比使用synchronized方法和语句可获得的更广泛的锁定操作。
+		允许更灵活的结构。
+	重要方法：
+		void lock()				//lock.lock()，获取锁
+		void unlock()			//lock.unlock()，释放锁
+	常用实现类：
+		ReentrantLock
+		
+34.线程死锁问题
+	概述：
+		两个或两个以上的线程在争夺资源的过程中，发生的一种互相等待的现象。
+	举例：
+		如下的程序在创建两个对象并分别传入0和1时，极有可能出现线程死锁现象。
+		public class DeadlockThread implements Runnable{
+		
+			private Object lockA = new Object();
+			private Object lockB = new Object();
+			private int x;
+			
+			public DeadlockThread (int x) {
+				this.x = x;
+			}
+			
+			public void run () {
+				while (true) {
+					if (x%2 == 0) {
+						synchronized (lockA) {
+							System.out.println("已经进入lockA，正在等待lockB");
+							synchronized (lockB) {
+								System.out.println("成功进入lockB")
+							}
+						}
+					} else {
+						synchronized (lockB) {
+							System.out.println("已经进入lockB，正在等待lockA");
+							synchronized (lockA) {
+								System.out.println("成功进入lockA")
+							}
+						}
+					}
+					x ++;
+				}
+			}
+		}
+		
+35.等待唤醒机制
+	概述：
+		Object类中提供了多个等待和唤醒方法。
+		这些方法定义在Object中的原因是，锁的对象可以是任意对象。
+	方法（位于Object）：
+		public final void wait()			//lock.wait()，让当前线程等待
+		public final void notify()		//lock.notify()，唤醒在此对象监视器上等待的单个线程
+		public final void notifyAll()		//lock.notifyAll()，唤醒在此对象监视器上等待的所有线程
+		
+36.线程组
+	概述：
+		（把多个线程合并到一起）
+		它可以对一批线程进行分类管理，Java允许程序直接对线程组进行控制。
+		默认情况下，所有线程都属于主线程组（main）。
+		通过Thread类的构造方法public Thread(ThreadGroup tg, Runnable target, String name)，可将Thread在创建时就加入某一线程组。
+	重要构造方法：
+		public ThreadGroup(String name)			//构建一个新线程组，名字为name
+		
+37.线程池
+	概述：
+		程序启动一个新线程的成本是比较高的，因为要涉及到与操作系统的交互。
+		使用线程池可以很好地提高性能，尤其是需要创建大量生存期很短地线程时。
+		线程池中每一个线程代码结束后，不会死亡，而是回到线程池中成为空闲状态，等待下一个对象来使用。
+		此处将使用Executors类。
+	固定大小的线程池newFixedThreadPool：
+		public static ExecutorService newFixedThreadPool(int nThreads)			//Executors.newFixedThreadPool(线程数)，创建一个固定大小的线程池
+		使用举例：
+			ExecutorService pool = Executors.newFixedThreadPool(2);
+			pool.submit(new MyRunnable());
+			pool.submit(new MyRunnable());
+			pool.shutdown();
+	此外还有：
+		单任务线程池：
+			public static ExecutorService newSingleThreadExecutor()
+		可变尺寸的线程池：
+			public static ExecutorService newCachedThreadPool()
+		
+38.定时器
+	概述：
+		可以让我们在指定时间做某件事情，还可以重复做某件事情。
+		主要依赖Timer和TimerTask这两个类。
+	Timer定时器类：
+		重要构造方法：
+			public Timer()
+		重要方法：
+			public void schedule(TimerTask, Date time)				//t.schedule(TimerTask, Date)，安排在指定时间执行指定任务
+			public void schedule(TimerTask, Date firstTime, long period)				//t.schedule(TimerTask, Date, period)，安排任务在指定时间开始固定延迟地执行
+			public void schedule(TimerTask task, long delay)				//t.schedule(TimerTask, delay)，安排在指定延迟后执行指定任务
+			public void schedule(TimerTask task, long delay, long period)				//t.schedule(TimerTask, delay, period)，安排任务在指定延迟后开始固定延迟地执行
+			public void cancel()				//t.cancel()，终止此计时器，并丢弃所有已安排的任务
+	TimerTask任务类：
+		为抽象类，实现了Runnable。
+		需要创建子类，并重写run()方法，run()方法中的内容就是要执行的任务。
+		
+39.设计模式
+	设计模式是经验的总结。
+	概述：
+		设计模式是一种思想，和具体的语言无关。
+		学习设计模式，可以和面向对象思想的理解相辅相成。
+		学习设计模式的目的在于建立面向对象的思想，尽可能地面向接口编程，高内聚，低耦合，使设计的程序可复用。
+		设计模式总体分为三种类型：
+			1）创建型		创建对象
+			2）结构型		对象的组成
+			3）行为型		对象的功能
+
+40.简单工厂模式
+	概述：
+		又叫静态工厂模式，特点是定义一些具体的工厂类负责创建一些类的实例（例如提供工厂类，专门造猫和狗，这样就不用手动new了）。
+	优点：
+		明确了各个类的职责，客户端不再需要负责对象的创建。
+	缺点：
+		若有新的对象增加，或某些对象创建方法不同，需要后期不断修改工厂类，不利于后期维护。
+		
+41.工厂方法模式
+	概述：
+		工厂方法模式会有抽象工厂类，负责定义创建对象的接口。
+		当增加一个需要创建的类的时候，就需要造一个小工厂继承抽象工厂，专门负责造这种类的对象。
+	优点：
+		解决了简单工厂模式的一些缺陷，后期维护不再需要修改工厂类。
+		当增加了需要创建的对象的时候，只需要增加一个具体的工厂即可。
+		增加了可维护性和系统的扩展性。
+	缺点：
+		需要编写额外的代码，增加了工作量。
+		
+42.单例模式
+	概述：
+		单例模式就是确保类在内存中只有一个对象，该实例必须自动创建，并对外提供。
+		单例模式分为饿汉式和懒汉式。
+	实现过程：
+		1）私有类的构造方法；
+		2）设置一个类型为本类的成员变量，使用以下修饰：
+			private：防止外界访问和修改
+			static：随着类的加载而加载，同时也是由于 提供对象的方法也是静态修饰
+			synchronized：用于懒汉式，因为懒汉式存在线程安全问题（多条语句操作同一变量）
+		3）提供公共访问的方式（静态方法）
+	饿汉式与懒汉式的区别：
+		饿汉式：
+			开始时就造好对象，举例：
+				private static Student s = new Sdudent();
+			这种方式一般不存在线程安全问题。
+		懒汉式：
+			在需要时再造对象，举例：
+				private static Student s = null;
+				public synchronized static Student getStudent() {
+					if(s == null){
+						s = new Student();
+					}
+					return s;
+				}
+	优点：
+		由于在系统中只存在一个对象，所以可以节约系统资源。
+		对于需要频繁创建和销毁对象的操作，单例模式可以提高系统性能。
+	缺点：
+		没有抽象层，扩展很难。
+		职责过重，一定程度上违背了单一职责。
+		
+43.Runtime类
+	概述：
+		该类属于单例模式饿汉式。
+		每个Java程序都有一个Runtime类实例，使应用程序能够与其运行的环境相连接，可以通过getRuntime()获取当前的运行时。
+	重要方法：
+		public Process exec(String command)			//rt.exec(DOS命令)
+		
+44.GUI
+	概述：
+		Graphical User Interface(图形用户接口)，用图形的方式显示操作界面，相比于CLI(Command line User Interface)命令行用户接口，更加方便直观。
+	GUI体系框架：
+		Component(组件)
+			Container(容器)
+				Window
+					Frame
+					Dialog
+						FileDialog
+				Panel
+			Button
+			Label(标签)
+			Checkbox
+			TextComponent(文本组件)
+				TextArea(文本域)
+				TextField(文本框)
+				
+45.Frame
+	重要构造方法：
+		Frame()			//构造一个初始不可见的窗体
+		Frame(String name)			//构造一个给定标题初始不可见的窗体
+	重要方法：
+		public void setTitle(String title)			//f.setTitle(标题)，设置标题
+		(继承自Window) public void setSize(int width, int height)			//f.setSize(宽，高)，设置窗体宽和高
+		(继承自Component) public void setLocation(int x, int y)			//f.setLocation(x, y)，将组件移动到新位置，x、y为父级坐标空间中x和y的参数
+		(继承自Window) public void setVisible(boolean b)			//f.setVisible(boolean)，显示或隐藏此Window
+	使用摘要：
+		可以用f.setSize(new Dimension(int width, int height))传一个Dimension直接决定窗体大小。
+		可以用f.setLocation(new Point(int x, int y))传一个Point直接决定窗体位置。
+		可以用f.setBounds(int x, int y, int width, int height)直接决定窗体的位置和大小。
+	添加监听以实现关闭窗口：
+		f.addWindowListener(WindowListener l)，向Frame添加监听器。WindowListener是接口，所以采用匿名内部类的方式实现。
+		在WindowListener的windowClosing(WindowEvent e)方法中添加System.exit(0)即可。
+		可以使用适配器模式，来避免对接口中所有方法的一一实现，只需实现需要的方法即可。
+	添加按钮：
+		Button b = new Button("按钮")，添加按钮。
+		f.setLayout(new FlowLayout())，设置布局为流式布局。
+		f.add(b)，像窗口添加按钮。
+	向按钮添加监听器：
+		b.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("控制台输出内容");
+			}
+		})		该监听器接口只有一个方法，所以没必要使用adapter。
+	添加文本框和文本域：
+		TextField tf = new TextField(20)，构造指定列数的文本框。
+		TextArea ta = new TextArea(10, 40)，构造指定行数和列数的文本域。
+		f.add(tf);	f.add(ta)，将文本框和文本域添加到Frame。
+	向按钮添加监听器操作文本框和文本域：
+		b.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String tf_str = tf.getText().trim();		//获取文本框中的字符串并去除字符串前后的空格
+				tf.setText("");		//清空文本框
+				ta.setText(tf_str + "\n");		//设置文本域的内容并换行
+				tf.requestFocus();			//文本框获得光标
+			}
+		})
+	向按钮添加鼠标监听器实现更改背景色：
+		b.addMouseListener(new MouseAdapter() {
+			public void mouseEntered(MouseEvent e) {
+				f.setBackground(Color.RED);		//设置Frame的背景色，参数为Color。
+			}
+		})
+		MouseListener共有五个方法：点击、进入、离开、按下和释放。
+	添加标签：
+		Label label = new Label("标签内容");		//构造标签对象
+		f.add(label);			//将标签添加到Frame
+	向文本框添加键盘监听器实现只能输入指定字符：
+		tf.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				char ch = e.getKeyChar();		//在按下时得到键入的字符
+				if(!(ch >= '0' && ch <= '9')) {			//判断输入的字符是否符合要求
+					e.consume();			//不按照默认方式由产生此事件的源代码来处理此事件（取消事件）
+				}
+			}
+		})			//最终文本框将只能输入数字
+		KeyListener共有三个方法：按下、释放和键入某个键。
+	创建菜单栏：
+		MenuBar mb = new MenuBar();			//创建菜单栏
+		Menu m = new Menu("文件");			//创建标签为文件的菜单
+		MenuItem mi = new MenuItem("新建");			//创建名为新建的菜单项
+		m.add(mi);			//将菜单项添加到菜单
+		mb.add(m);			//将菜单添加到菜单栏
+		f.setMenuBar(mb);			//设置菜单栏
+	创建二级菜单并添加事件：
+		Menu m1 = new Menu("文件");
+		Menu m2 = new Menu("打开");
+		MenuItem mi1 = new MenuItem("记事本");
+		MenuItem mi2 = new MenuItem("计算器");		//构建菜单和菜单项
+		m2.add(mi1);
+		m2.add(mi2);
+		m1.add(m2);			//将含有二级菜单项的菜单m2添加到m1
+		mi1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Runtime r = Runtime.getRuntime();
+				r.exec("notepad");			//使用Runtime执行DOS命令启动记事本
+			}
+		})
+	更改窗体图标：
+		Toolkit tk = Toolkit.getDefaultToolkit();			//抽象类Toolkit的静态方法获取默认工具包
+		Image i = tk.getImage("abc.jpg");				//通过工具包获得图片对象
+		jf.setIconImage(i);			//设置图标
+	设置窗体居中：
+		Toolkit tk = Toolkit.getDefaultToolkit();			//抽象类Toolkit的静态方法获取默认工具包
+		Dimension d = tk.getScreenSize();			//通过工具包获取包含屏幕宽高的Dimension对象
+		double screenWidth = d.getWidth();			//获取屏幕的宽
+		double screenHeight = d.getHeight();			//获取屏幕的高
+		int frameWidth = jf.getWidth();			//获取窗口的宽
+		int frameHeight = jf.getHeight();			//获取窗口的高
+		int width = (int) (screenWidth - frameWidth)/2;			//获取居中后的横坐标
+		int height = (int) (screenHeight - frameHeight)/2;		//获取居中后的纵坐标
+		jf.setLocation(width, height);			//设置窗体坐标
+	设置皮肤：
+		UIManager.setLookAndFeel(...);
+	显示消息弹窗：
+		JOptionPane.showMessageDialoge(this, "输入的内容有误");
+	
+46.适配器设计模式
+	概述：
+		适配器(Adapter)模式，可以在需要实现一个有众多方法的接口（或难以实现的接口）时，做到只实现需要的方法，不用实现全部。
+	使用方法：
+		写一个抽象的适配器类实现需要实现的接口，将所有方法空实现。
+		然后提供具体类重写需要实现的方法即可。
+		
+47.界面布局
+	概述：
+		LayoutManager是定义如何布置Container类的接口。
+	常用布局：
+		流式布局FlowLayout
+		边界布局
+		网格布局
+		网格包布局
+		卡片布局
+		
+48.网络编程
+	概述：
+		网络编程就是用来实现网络互联的不同计算机上运行的程序之间可以进行数据交换。
+		计算机网络之间以何种规则进行通信，就是网络模型研究的问题。
+	网络模型：
+		OSI(Open System Interconnection 开放系统互连)参考模型
+		TCP/IP参考模型
+	网络编程三要素：
+		1）IP地址 ：
+			网络中计算机的唯一标识。
+			IP地址的组成为网络号段+主机号段
+			A类IP地址：第一号段为网络号段 + 后三号段为主机号段
+				1.0.0.1 - 127.255.255.254 (10.x.x.x是私有地址)
+			B类IP地址：前二号段为网络号段 + 后二号段为主机号段
+				128.0.0.1 - 191.255.255.254(172.16.0.0 - 172.31.255.255是私有地址，169.254.x.x是保留地址)
+			C类IP地址：前三号段为网络号段 + 后一号段为主机号段
+				192.0.0.1 - 223.255.255.254(192.168.x.x是私有地址)
+			D类...
+			E类...
+			特殊IP地址：
+				127.0.0.1 (回环地址，表示本机)
+				x.x.x.255 (广播地址)
+				x.x.x.0 (网络地址)
+		2）端口
+			正在运行的程序的标识。
+			端口分为物理端口、网卡口和逻辑端口，这里指的是逻辑端口。
+			说明：
+				1）每个程序都至少会有一个逻辑端口；
+				2）有效端口：0 - 65535，其中0 - 1024为系统使用或保留端口。
+		3）协议
+			通信的规则。
+			分为UDP协议和TCP协议：
+				1）UDP特点：
+					把数据打包
+					数据有限制(64K)
+					不建立连接
+					速度快
+					不可靠
+				2）TCP特点：
+					建立连接通道
+					数据无限制
+					速度慢
+					可靠
+		
+49.InetAddress类
+	概述：
+		为了方便我们对IP地址的获取和操作，Java提供了InetAddress类供使用。
+	获取对象：
+		public static InetAddress getByName(String host)			//根据主机名或ip地址的字符串表示得到InetAddress对象
+	重要方法：
+		public String getHostName()				//address.getHostName()，获取主机名
+		public String getHostAddress()			//address.getHostAddress()，获取主机IP地址
+	相关问题：
+		如果一个类没有构造方法，是为什么？
+			1）成员全部是静态的(如Math, Arrays, Collections)；
+			2）单例设计模式(如Runtime)；
+			3）类中有静态方法返回该类的对象(如InetAddress)。
+			
+50.Socket(UDP)
+	概述：
+		网络套接字。
+		Socket编程，就是套接字编程/网络编程。
+		Socket包含了IP地址+端口。
+		这里使用类DatagramSocket。
+	Socket原理：
+		通信的两端都有Socket，网络通信其实就是Socket间的通信，数据在两个Socket间通过IO传输。
+	使用概要：
+		A.Socket发送数据
+			1）创建发送端Socket对象：
+				DatagramSocket ds = new DatagramSocket();
+			2）创建数据，并把数据打包
+				byte[] bys = "Hello, Socket, UDP".getBytes();
+				int length = bys.length();
+				InetAddress address = InetAddress.getByName("192.168.1.102");
+				int port = 10086;
+				DatagramPacket dp = new DatagramPacket(bys, length, address, port);			//使用数据（字节数组）、长度、目标IP地址和端口构建DatagramPacket数据包
+			3）发送数据
+				ds.send(dp);			//发送数据包
+			4）释放资源
+				ds.close();
+		B.Socket接收数据
+			1）创建接收端Socket对象：
+				DatagramSocket ds = new DatagramSocket(10086);				//因为不用发送数据包，所以在构造里指定接收端口
+			2）创建一个数据包（接收容器）
+				byte[] bys = new byte[1024];
+				int length = bys.length;
+				DatagramPacket dp = new DatagramPacket(bys, length);
+			3）调用Socket的接收方法接收数据包
+				ds.receive(dp);				//该方法在接收到数据包之前一直阻塞
+			4）解析数据包，并显示数据在控制台
+				InetAddress address = dp.getAddress();
+				String ip = address.getHostAddress();				//获取发送方的ip地址
+				byte[] bys2 = dp.getData();
+				int len = dp.getLength();
+				String s = new String(bys2, 0, len);					//将获取到的数据转成字符串
+				System.out.println(s);
+			5）释放资源
+				ds.close();
+				
+51.Socket(TCP)
+	概述：
+		这里使用类Socket和类ServerSocket。
+	Socket类的特殊功能：
+		public void shutdownInput()			//s.shutdownInput()，将此套接字的流置于"流的末尾"。调用此方法后若继续从输入流读取数据，则将返回EOF（文件结束符）
+		public void shutdownOutput()			//s.shutdownOutput()，禁用此套接字的输出流，任何之前写入的数据都将被发送，并后跟TCP正常连接终止序列。
+	使用概要：
+		A.Socket发送数据：
+			1）创建发送端的Socket对象
+				Socket s = new Socket("192.168.1.114", 12306);
+			2）获取输出流，写数据
+				OutputStream os = s.getOutputStream();
+				os.write("Hello,TCP".getBytes());
+			3）释放资源
+				s.close();
+		B.Socket接收数据
+			1）创建接收端的Socket对象
+				ServerSocket ss = new ServerSocket(12306);
+			2）监听客户端连接，返回一个对应的Socket对象
+				Socket s = ss.accept();					//监听并接收此套接字的连接，此方法在连接传入之前一直阻塞
+			3）获取输入流，读取数据显示在控制台
+				InputStream is = s.getInputStream();					//得到套接字连接的InputStream
+				
+				byte[] bys = new byte[1024];
+				int len = is.read(bys);				//收到数据之前一直阻塞
+				String str = new String(bys, 0, len);					//得到数据
+				
+				String ip = s.getInetAddress().getHostAddress();				//获取发送端的ip地址
+				
+				System.out.println(ip + "：" + str);					//输出发送端的ip地址和发送的数据
+			4）释放资源
+				s.close();				//注意ServerSocket（连接监听器）不应关闭，只需关闭Socket（本次连接）
+				
+52.反射
+	概述：
+		就是通过class文件对象，去使用该文件中的成员变量、构造方法和成员方法。
+	Class文件对象：
+		获取Class文件对象的方式：
+			A：Object类的getClass()方法；
+			B：数据类型的静态属性class；
+			C：Class类中的静态方法public static Class forName(String className)
+		重要方法：
+			（1）获取构造方法：
+					B.获取单个
+						public Constructor<T> getDeclaredConstructor(Class<?>... parameterTypes)			//c.getDeclaredConstructor(要获取的构造方法的参数个数及数据类型的class字节码文件对象)
+						public Constructor<T> getConstructor(Class<?>... parameterTypes)			//c.getConstructor(要获取的构造方法的参数个数及数据类型的class字节码文件对象)，根据参数获取指定构造方法
+					A.获取所有
+						public Constructor[] getConstructors()						//c.getConstructors()，获取该类所有公共（public修饰）构造方法
+						public Constructor[] getDeclaredConstructors()			//c.getDeclaredConstructors()，获取该类所有声明的构造方法
+			（2）获取成员变量：
+					A.获取单个
+						public Field getField(String name)						//c.getField(成员变量名)，获取指定的公共字段
+						public Field getDeclaredField(String name)			//c.getDeclaredField(字段名)，获取指定的声明的字段
+					B.获取所有
+						public Field[] getFields()						//c.getFields()，返回所有公共字段的数组
+						public Field[] getDeclaredFields()		//c.getDeclaredFields()，获取所有声明的字段的数组
+			（3）获取成员方法：
+					A.获取单个
+						pubilc Method getMethod(String name, class<?>... parameterTypes)						//c.getMethod(方法名, 参数.class数组)，获取指定公共成员方法
+						public Method getDeclaredMethod(String name, class<?>... parameterTypes)			//c.getDeclaredMethod(方法名, 参数.class数组)，获取指定本类声明的成员方法
+					B.获取所有
+						public Method[] getMethods()							//c.getMethods()，获取本类包括父亲的公共方法
+						public Method[] getDeclaredMethods()				//c.getDeclaredMethods()，获取本类声明的所有方法
+	Constructor<T>构造方法对象：
+		重要方法：
+			public T newInstance(Object... initargs)				//cons.newInstance(参数)，使用该构造方法构造一个新对象
+			public void setAccessible(boolean flag)				//cons.setAccessible(true)，设置为true则对象在使用时取消Java的访问检查（无视权限修饰符）
+	Field成员变量(域)对象：
+		重要方法：
+			public void set(Object obj, Object value)					//nameField.set(s1, "周树人")，将obj的该变量设置值为value
+			public void setAccessible(boolean flag)					//nameField.setAccessible(true)，设置为true则对象在使用时取消Java的访问检查（无视权限修饰符）
+	Method成员方法对象：
+		重要方法：
+			pubilc Object invoke(Object obj, Object... args)				//method1.invoke(s1, 参数...)，用obj调用方法
+			public void setAccessible(boolean flag)							//method1.setAccessible(true)，设置为true则对象在使用时取消Java的访问检查（无视权限修饰符）
+			
+53.动态代理
+	概述：
+		利用反射机制实现方法的增强，在不修改源码仅仅扩展的情况下，在方法执行前后做你想做的事情（例如权限校验、日志记录等）。
+		这里指Java提供的，使用接口辅助的动态代理，使用Proxy类和InvocationHandler接口。
+	使用步骤：
+		1）创建接口和实现类；
+		2）新建类实现InvocationHandler接口，重写其中的方法：
+			Object invoke(Object proxy, Method method, Object[] args)					//在方法中写Object result = method.invoke(target, args[])，并在前后加上需要做的事情（例如权限校验、日志记录等），返回值为invoke产生的Object
+			举例：
+				public class MyInvocationHandler implments InvocationHandler {
+					private Object target;
+					public MyInvocationHandler (Object target) {
+						this.target = target;
+					}
+					public Object invoke (Object proxy, Method method, Object[] args) throws Throwable {
+						System.out.println("日志记录");
+						Object result = method.invoke(target, args);
+						System.out.println("权限校验");
+						return result;
+					}
+				}
+		3）创建上述类的对象；
+		4）通过Proxy类的静态方法newProxyInstance得到代理对象：
+			public static Object newProxyInstance(ClassLoader loader, Class<?>[] interfaces, InvocationHandler handler)
+				//loader：接口实现类.getClass().getClassLoader()即可；interfaces：接口实现类.getClass().getInterfaces()即可；handler：刚才创建的MyInvocationHandler。
+				//返回值类型为Object，强转为接口实现类接收
+		5）使用得到的代理对象来调用方法，即可实现在方法前后添加功能。
+		
+54.模板设计模式
+	概述：
+		定义一个算法的框架，而将具体算法推迟到具体子类中实现
+		例如计算一段代码的执行时间，将两个System.currentTimeMillis()之间的代码定义为一个抽象方法，方法中的内容在具体子类中实现。
+	优点：
+		在定义骨架算法的同时，可以灵活地实现具体算法，满足不同的需求。
+	缺点：
+		如果算法骨架有修改的话，则需要修改抽象类。
+		
+55.装饰设计模式
+	概述：
+		使用被装饰类的子类的一个实例，在客户端将这个实例交给装饰类，以扩展类的功能。
+		是继承的一个替代方案。
+	举例：
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	优点：
+		相比于继承，装饰模式可以更为灵活地扩展对象的功能。
+		装饰模式甚至可以动态添加、随意组合添加的功能。
+	缺点：
+		随意组合中可能会出现一些不合理的逻辑。
+		
+56.枚举
+	枚举类的概述：
+		1）一种特殊的类，用关键字enum定义，与class、interface平级；
+		2）与单例模式类似又有所不同，当一个类的对象有且只有有限个时（例如一个星期只有七天，一年只有十二个月），这样的类被称为枚举类。
+	枚举类的重要特征：
+		1）枚举类的首行必须是枚举值的列表，各个枚举值用逗号隔开。若枚举值之后还有内容，则需在最后一个枚举值后加上分号；
+		2）枚举类默认继承了Enum类，并实现了Serializable和Comparable<E>接口；
+		3）所有的枚举值都是public static final的，非抽象的枚举类不能再派生子类。
+	枚举类的重要方法：
+		static values()				//WeekEnum.values()，返回包含所有枚举值的数组，返回的数组类型是当前枚举类（WeekEnum[]）
+		public final int comparaTo(E o)		//WeekEnum.MONDAY.comparaTo(WeekEnum.TUESDAY)，同一个枚举实例只能和同类型的枚举实例比较，返回两实例“位置编号之差”（-1）
+		pubilc final String name()				//WeekEnum.SUNDAY.name()，返回枚举实例的名称
+		public String toString()					//WeekEnum.SUNDAY.toString()，返回枚举实例的名称，可重写
+		public static <T extends Enum<T>> T valueOf(Class<T> enumType, String name)			//WeekEnum.valueOf(WeekEnum.class, MONDAY)，返回带指定名称的指定枚举类型的枚举常量
+	举例：
+		public enum WeekEnum {
+			MONDAY, TUESDAY, WENDSDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
+		}
+		
+		public enum WeekEnum {
+			MONDAY("周一"),  TUESDAY("周二"),  WENDSDAY("周三"),  THURSDAY("周四"),  FRIDAY("周五"),  SATURDAY("周六"),  SUNDAY("周日");
+			
+			private String date;
+			
+			private WeekEnum (String date) {
+				this.date = date;
+			}
+			
+			public String toString () {
+				return "这是一个日子";
+			}
+		}
+-----------------------------------------------

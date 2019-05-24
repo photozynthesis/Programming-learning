@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>Bootstrap</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="bootstrap-3-学习笔记">Bootstrap 3 学习笔记</h1>
+<ul>
+<li><a href="#1-bootstrap概述">1. Bootstrap概述</a></li>
+<li><a href="#2-bootstrap的安装引入">2. Bootstrap的安装/引入</a></li>
+<li><a href="#3-bootstrap栅格系统">3. Bootstrap栅格系统</a></li>
+</ul>
+<h2 id="1-bootstrap概述">1. Bootstrap概述</h2>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<ul>
+<li>Bootstrap 是一个用于快速开发 Web 应用程序和网站的<strong>前端框架</strong>。Bootstrap 是基于 HTML、CSS、JAVASCRIPT 的。</li>
+<li>Bootstrap 是由 <em>Twitter</em> 的 <em>Mark Otto</em> 和 <em>Jacob Thornton</em> 开发的。Bootstrap 是 2011 年八月在 GitHub 上发布的开源产品。</li>
+</ul>
+</li>
+<li>
+<p><strong>优点</strong>：</p>
+<ul>
+<li><strong>移动设备优先</strong>：自 Bootstrap 3 起，框架包含了贯穿于整个库的移动设备优先的样式。</li>
+<li><strong>浏览器支持</strong>：所有的主流浏览器都支持 Bootstrap。</li>
+<li><strong>响应式设计</strong>：Bootstrap 的响应式 CSS 能够自适应于台式机、平板电脑和手机。</li>
+</ul>
+</li>
+<li><strong>内容</strong>：
+<ul>
+<li><strong>基本结构</strong>：Bootstrap 提供了一个带有网格系统、链接样式、背景的基本结构。</li>
+<li><strong>CSS</strong>：Bootstrap 自带以下特性：全局的 CSS 设置、定义基本的 HTML 元素样式、可扩展的 class，以及一个先进的网格系统。</li>
+<li><strong>组件</strong>：Bootstrap 包含了十几个可重用的组件，用于创建图像、下拉菜单、导航、警告框、弹出框等等。</li>
+<li><strong>JavaScript 插件</strong>：Bootstrap 包含了十几个自定义的 jQuery 插件。您可以直接包含所有的插件，也可以逐个包含这些插件。</li>
+<li><strong>定制</strong>：您可以定制 Bootstrap 的组件、LESS 变量和 jQuery 插件来得到您自己的版本。</li>
+</ul>
+</li>
+</ul>
+<p>(above from <a href="www.runoob.com">www.runoob.com</a> )</p>
+<h2 id="2-bootstrap的安装引入">2. Bootstrap的安装/引入</h2>
+<p>BootStrap需要的基本文件如下（按引入顺序）：</p>
+<ol>
+<li>Bootstrap.min.css</li>
+<li>JQuery.min.js</li>
+<li>Bootstrap.min.js</li>
+</ol>
+<p>部署Bootstrap环境的方法如下：</p>
+<ul>
+<li>
+<p><strong>从官网下载预编译的js和css</strong></p>
+<p>官网地址：</p>
+<ul>
+<li>Bootstrap 3：<a href="https://getbootstrap.com/docs/3.3/">https://getbootstrap.com/docs/3.3/</a></li>
+<li>Bootstrap 4：<a href="https://getbootstrap.com/">https://getbootstrap.com/</a></li>
+</ul>
+<p>下载<code>Compiled JS and CSS</code>并解压，将需要需要的文件复制到工作空间，最后使用<code>link</code>和<code>script</code>标签引入。</p>
+</li>
+<li>
+<p><strong>引入CDN链接</strong></p>
+<ul>
+<li>官网CDN</li>
+</ul>
+<pre><code class="language-html">&lt;!-- Latest compiled and minified CSS --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css&quot; integrity=&quot;sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u&quot; crossorigin=&quot;anonymous&quot;&gt;
+
+&lt;!-- Optional theme --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css&quot; integrity=&quot;sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp&quot; crossorigin=&quot;anonymous&quot;&gt;
+
+&lt;!-- Latest compiled and minified JavaScript --&gt;
+&lt;script src=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js&quot; integrity=&quot;sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+</code></pre>
+<ul>
+<li>BootCDN国内CDN</li>
+</ul>
+<pre><code class="language-html">&lt;!-- 最新版本的 Bootstrap 核心 CSS 文件 --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css&quot; integrity=&quot;sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u&quot; crossorigin=&quot;anonymous&quot;&gt;
+
+&lt;!-- 可选的 Bootstrap 主题文件（一般不用引入） --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css&quot; integrity=&quot;sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp&quot; crossorigin=&quot;anonymous&quot;&gt;
+
+&lt;!-- 最新的 Bootstrap 核心 JavaScript 文件 --&gt;
+&lt;script src=&quot;https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js&quot; integrity=&quot;sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+</code></pre>
+</li>
+</ul>
+<h2 id="3-bootstrap栅格系统">3. Bootstrap栅格系统</h2>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<p>Bootstrap 提供了一套<strong>响应式</strong>、<strong>移动设备优先</strong>的流式栅格系统，随着屏幕或视口（viewport）尺寸的增加，系统会自动分为<strong>最多12列</strong>。它包含了易于使用的<a href="https://v3.bootcss.com/css/#grid-example-basic">预定义类</a>，还有强大的<a href="https://v3.bootcss.com/css/#grid-less">mixin 用于生成更具语义的布局</a>。</p>
+<p>栅格系统用于通过一系列的**行（row）<strong>与</strong>列（column）**的组合来创建页面布局，你的内容就可以放入这些创建好的布局中。</p>
+</li>
+<li></li>
+</ul>
+
+
+</body>
+</html>

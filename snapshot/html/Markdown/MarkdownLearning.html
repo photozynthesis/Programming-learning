@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>MarkdownLearning</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="markdown语法学习笔记">Markdown语法学习笔记</h1>
+<h2 id="前言">前言</h2>
+<p>Markdown写出来的文本具有多级标题，段落，列表等记事本不具有的特性，目前看来更加美观和方便阅读。</p>
+<h2 id="目录仅供本地查阅github未提供该功能">目录(仅供本地查阅，GitHub未提供该功能)</h2>
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#目录仅供本地查阅github未提供该功能">目录(仅供本地查阅，GitHub未提供该功能)</a></li>
+<li><a href="#1标题">1.标题</a></li>
+<li><a href="#二级标题">二级标题</a>
+<ul>
+<li><a href="#三级标题">三级标题</a></li>
+</ul>
+</li>
+<li><a href="#2目录">2.目录</a></li>
+<li><a href="#3区块">3.区块</a>
+<ul>
+<li><a href="#21-引用区块">2.1 引用区块</a></li>
+<li><a href="#22-代码区块">2.2 代码区块</a></li>
+</ul>
+</li>
+<li><a href="#4语义标记">4.语义标记</a></li>
+<li><a href="#表格">表格</a></li>
+</ul>
+<h2 id="1标题">1.标题</h2>
+<p>​	在一行的内容前面加上<code>#</code>即可将内容变为标题，可以加上1~6个。 加上1个<code>#</code>是最大的标题，加上6个<code>#</code>是最小的标题。 其中<strong>一级</strong>和<strong>二级</strong>标题会自动生成一条标线。</p>
+<p>​	举例：</p>
+<pre><code># 一级标题
+## 二级标题
+### 三级标题
+#### 四级标题
+##### 五级标题
+###### 六级标题
+</code></pre>
+<p>​	效果：</p>
+<blockquote>
+<h1 id="一级标题">一级标题</h1>
+<h2 id="二级标题">二级标题</h2>
+<h3 id="三级标题">三级标题</h3>
+<h4 id="四级标题">四级标题</h4>
+<h5 id="五级标题">五级标题</h5>
+<h6 id="六级标题">六级标题</h6>
+</blockquote>
+<p>​	<strong>注意：如果想要在GitHub上正常显示，需要在<code>#</code>后加上一个空格再输入标题。</strong></p>
+<h2 id="2目录">2.目录</h2>
+<p>​	自动生成目录。</p>
+<p>​	使用举例：</p>
+<pre><code>[TOC]
+</code></pre>
+<h2 id="3区块">3.区块</h2>
+<h3 id="21-引用区块">2.1 引用区块</h3>
+<p>​		在段落的每行或者只在第一行使用符号<code>&gt;</code>。</p>
+<p>​		也可以通过多个<code>&gt;</code>来进行区块嵌套。</p>
+<p>​		举例：</p>
+<pre><code>&gt; 内容
+&gt; 内容
+&gt;&gt; 内容
+&gt;&gt; 内容
+</code></pre>
+<p>​		效果：</p>
+<blockquote>
+<p>内容</p>
+<p>内容</p>
+<blockquote>
+<p>内容</p>
+<p>内容</p>
+</blockquote>
+</blockquote>
+<h3 id="22-代码区块">2.2 代码区块</h3>
+<p>​		为了在本地和GitHub<strong>实现同样的效果</strong>，使用如下方法：</p>
+<p>​		在代码区块前一行和后一行使用<code>```</code>。</p>
+<p>​		举例：</p>
+<pre><code>​```
+	System.out.println(&quot;HelloWorld&quot;);
+​```
+</code></pre>
+<p>​		效果：</p>
+<pre><code>System.out.println(&quot;HelloWorld&quot;);
+</code></pre>
+<p>​		还有一种方法是代码的<strong>每行都进行一个<code>tab</code>缩进（或四个空格）</strong>，同时<strong>区块前一行和后一行留空</strong>。</p>
+<h2 id="4语义标记">4.语义标记</h2>
+<table>
+<thead>
+<tr><th align="center">描述</th><th align="center">效果</th><th align="center">使用方法</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">粗体</td><td align="center"><strong>粗体示例</strong></td><td align="center"><code>**粗体示例**</code></td></tr>
+<tr><td align="center">标签</td><td align="center"><code>标签</code></td><td align="center">左右加上`</td></tr>
+<tr><td align="center">斜体</td><td align="center"><em>斜体示例</em></td><td align="center"><code>*斜体示例*</code></td></tr>
+<tr><td align="center">删除线</td><td align="center">~~删除线示例~~</td><td align="center"><code>~~删除线示例~~</code></td></tr>
+</tbody>
+</table>
+<h2 id="表格">表格</h2>
+<p>​	暂时使用Typora提供的表格生成功能。</p>
+<p>​	效果如下：</p>
+<table>
+<thead>
+<tr><th> </th><th> </th><th> </th></tr>
+</thead>
+<tbody>
+<tr><td> </td><td> </td><td> </td></tr>
+<tr><td> </td><td> </td><td> </td></tr>
+<tr><td> </td><td> </td><td> </td></tr>
+</tbody>
+</table>
+<p>​	源码：</p>
+<pre><code>|      |      |      |
+| ---- | ---- | ---- |
+|      |      |      |
+|      |      |      |
+|      |      |      |
+</code></pre>
+
+
+</body>
+</html>

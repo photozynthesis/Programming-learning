@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>Spring Boot</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="spring-boot">Spring Boot</h1>
+<ul>
+<li><a href="#1-spring-boot-概述">1. Spring Boot 概述</a>
+<ul>
+<li><a href="#11-概述">1.1 概述</a></li>
+<li><a href="#12-spring-boot-核心功能">1.2 Spring Boot 核心功能</a></li>
+</ul>
+</li>
+<li><a href="#2-spring-boot-快速入门">2. Spring Boot 快速入门</a></li>
+<li><a href="#3-spring-boot-配置文件">3. Spring Boot 配置文件</a>
+<ul>
+<li><a href="#31-概述">3.1 概述</a></li>
+<li><a href="#32-可用的配置方式及文件类型">3.2 可用的配置方式及文件类型</a></li>
+<li><a href="#33-存在多个配置文件时的问题">3.3 存在多个配置文件时的问题</a></li>
+<li><a href="#34-yml-配置文件的基本语法">3.4 yml 配置文件的基本语法</a></li>
+</ul>
+</li>
+<li><a href="#4-spring-boot-整合-mybatis">4. Spring Boot 整合 MyBatis</a>
+<ul>
+<li><a href="#41-一般步骤">4.1 一般步骤</a></li>
+<li><a href="#42-重要说明">4.2 重要说明</a></li>
+</ul>
+</li>
+<li><a href="#5-spring-boot-整合-junit">5. Spring Boot 整合 Junit</a></li>
+<li><a href="#6-spring-boot-整合-spring-data-jpa">6. Spring Boot 整合 Spring Data JPA</a></li>
+<li><a href="#7-spring-boot-整合-spring-data-redis">7. Spring Boot 整合 Spring Data Redis</a></li>
+<li><a href="#8-spring-boot-开启热部署">8. Spring Boot 开启热部署</a>
+<ul>
+<li><a href="#81-概述">8.1 概述</a></li>
+<li><a href="#82-使用步骤">8.2 使用步骤</a></li>
+</ul>
+</li>
+<li><a href="#9-spring-boot-部分源码解析">9. Spring Boot 部分源码解析</a>
+<ul>
+<li><a href="#91-起步依赖">9.1 起步依赖</a></li>
+<li><a href="#92-spring-boot-starter-web">9.2 spring-boot-starter-web</a></li>
+<li><a href="#93-自动配置">9.3 自动配置</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="1-spring-boot-概述">1. Spring Boot 概述</h2>
+<h3 id="11-概述">1.1 概述</h3>
+<ul>
+<li>Spring Boot 不是对 Spring 框架在功能上的增强，而是提供了一种快速使用 Spring 的方式。</li>
+<li>一定程度上解决了 Spring 配置文件过多的问题。</li>
+<li>提供了多个依赖间兼容性问题的解决方案。</li>
+</ul>
+<h3 id="12-spring-boot-核心功能">1.2 Spring Boot 核心功能</h3>
+<ul>
+<li>起步依赖：将具备某种功能的包的坐标打包到一起，并提供一些默认的功能。</li>
+<li>自动配置：在程序运行时，自动决定用哪个配置。</li>
+</ul>
+<h2 id="2-spring-boot-快速入门">2. Spring Boot 快速入门</h2>
+<ol>
+<li>
+<p><strong>创建普通 maven 工程</strong>。</p>
+<p>略。</p>
+</li>
+<li>
+<p><strong>使工程继承 Spring Boot 的起步依赖工程</strong>。</p>
+<ul>
+<li>spring-boot-starter-parent</li>
+</ul>
+<pre><code class="language-xml">&lt;parent&gt;
+&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+   &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+   &lt;version&gt;2.0.1.RELEASE&lt;/version&gt; 
+&lt;/parent&gt;
+</code></pre>
+</li>
+<li>
+<p><strong>引入对应功能的启动依赖</strong>，如这里引入 web 启动依赖。</p>
+<ul>
+<li>[demo] spring-boot-starter-web</li>
+</ul>
+<pre><code class="language-xml">&lt;dependencies&gt;
+&lt;dependency&gt;
+       &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+       &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt; 
+   &lt;/dependency&gt;
+&lt;/dependencies&gt;
+</code></pre>
+</li>
+<li>
+<p><strong>编写 Spring Boot 引导类</strong>。</p>
+<pre><code class="language-java">@SpringBootApplication
+public class MySpringBootApplication {
+   public static void main(String[] args) {
+       SpringApplication.run(MySpringBootApplication.class);
+   }
+}
+</code></pre>
+</li>
+<li>
+<p><strong>[demo] 编写控制器，并测试</strong>。</p>
+<ul>
+<li>编写 DemoController 。</li>
+</ul>
+<pre><code class="language-java">@Controller
+public class DemoController {
+   @RequestMapping(&quot;/demo&quot;)
+   @ResponseBody
+   public String demo() {
+       return &quot;hello&quot;;
+   }
+}
+</code></pre>
+<ul>
+<li>运行 MySpringBootApplication 中的 main 方法，并根据控制台提示通过浏览器访问给定路径。</li>
+</ul>
+</li>
+</ol>
+<h2 id="3-spring-boot-配置文件">3. Spring Boot 配置文件</h2>
+<h3 id="31-概述">3.1 概述</h3>
+<ul>
+<li>Spring Boot 是基于约定的，意味着很多配置都有默认值。</li>
+<li>可以使用配置文件，来更改默认配置。</li>
+<li>配置文件中的配置还可以在 java 文件中使用。</li>
+<li>参考配置地址：https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html#common-application-properties</li>
+</ul>
+<h3 id="32-可用的配置方式及文件类型">3.2 可用的配置方式及文件类型</h3>
+<ul>
+<li>
+<p>常用的配置方式（按照优先级）：</p>
+<ul>
+<li>命令行参数</li>
+</ul>
+<pre><code class="language-shell">java -jar xxx.jar --spring.datasource.name=root --spring.datasource.password=root
+</code></pre>
+<ul>
+<li>
+<p>./config 下的配置文件</p>
+</li>
+<li>
+<p>./ 下的配置文件</p>
+</li>
+<li>
+<p>classpath:/config 下的配置文件</p>
+</li>
+<li>
+<p>classpath:/ 下的配置文件</p>
+</li>
+</ul>
+</li>
+<li>
+<p>可用的配置文件类型：</p>
+<ul>
+<li>yml 配置文件：application.yml</li>
+<li>properties 配置文件：application.properties</li>
+</ul>
+</li>
+</ul>
+<h3 id="33-存在多个配置文件时的问题">3.3 存在多个配置文件时的问题</h3>
+<ul>
+<li>多个配置文件中不冲突的配置项会合并生效。</li>
+<li>有冲突的配置项，按照上述优先级进行覆盖。</li>
+<li>yml 配置文件与 properties 配置文件中配置项的冲突，yml 的优先覆盖 properties 的。</li>
+<li>更多可以参考源码。</li>
+</ul>
+<h3 id="34-yml-配置文件的基本语法">3.4 yml 配置文件的基本语法</h3>
+<ul>
+<li>
+<p>yml/yaml（YAML Aint Markup Language）</p>
+</li>
+<li>
+<p>格式：key: value</p>
+<pre><code class="language-yaml">name: zhangsan
+</code></pre>
+</li>
+<li>
+<p>对象/Map 数据：</p>
+<pre><code class="language-yaml"># 对应 properties 文件为如下格式
+# person.name = zhangsan
+# person.age = 20
+person:
+name: zhangsan
+age: 20
+</code></pre>
+</li>
+<li>
+<p>数组/集合 数据：</p>
+<pre><code class="language-yaml"># 注意空格不能少
+city:
+- beijing
+- nanjing
+- xiamen
+
+# 集合中存储了对象/Map
+student:
+- name: zhangsan
+  age: 20
+- name: lisi
+  age: 22
+</code></pre>
+</li>
+</ul>
+<h2 id="4-spring-boot-整合-mybatis">4. Spring Boot 整合 MyBatis</h2>
+<h3 id="41-一般步骤">4.1 一般步骤</h3>
+<ol>
+<li>
+<p><strong>引入启动依赖及数据库驱动坐标</strong></p>
+<ul>
+<li>mybatis-spring-boot-starter（由 MyBatis 提供）</li>
+<li>mysql-connector-java</li>
+</ul>
+<pre><code class="language-xml">&lt;dependency&gt;
+&lt;groupId&gt;org.mybatis.spring.boot&lt;/groupId&gt;
+   &lt;artifactId&gt;mybatis-spring-boot-starter&lt;/artifactId&gt;
+   &lt;version&gt;1.1.1&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+&lt;groupId&gt;mysql&lt;/groupId&gt;
+   &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre>
+</li>
+<li>
+<p><strong>配置文件添加数据库连接信息</strong></p>
+<p>application.yml</p>
+<pre><code class="language-yaml"># DB config
+spring:
+ datasource:
+   driverClassName: com.mysql.cj.jdbc.driver
+   url: jabc:mysql://localhost:3306/test?...
+   username: root
+   password: root
+</code></pre>
+</li>
+<li>
+<p><strong>配置 MyBatis 相关信息</strong></p>
+<p>application.yml</p>
+<pre><code class="language-yaml"># spring mybatis
+mybatis:
+ # pojo 别名扫描
+ type-aliases-package: io.github.photozynthesis.pojo
+ # 映射器扫描
+ mapper-locations: classpath:io.github.photozynthesis/*Mapper.xml
+</code></pre>
+</li>
+<li>
+<p><strong>开始 MyBatis</strong></p>
+<p>略。</p>
+</li>
+</ol>
+<h3 id="42-重要说明">4.2 重要说明</h3>
+<ul>
+<li>在 mybatis-spring 中，sqlSession 由 template 控制。每次访问数据时，spring 会申请一个新的 sqlSession，所以此处<strong>一级缓存失效</strong>。</li>
+</ul>
+<h2 id="5-spring-boot-整合-junit">5. Spring Boot 整合 Junit</h2>
+<ol>
+<li>
+<p><strong>添加启动依赖</strong></p>
+<ul>
+<li>spring-boot-starter-test</li>
+</ul>
+</li>
+<li>
+<p><strong>开始测试</strong></p>
+<pre><code class="language-java">@Runwith(SpringRunner.class)
+@SpringBootTest(classes = MySpringBootApplication.class)
+public class Test {
+   ...
+}
+</code></pre>
+<ul>
+<li>需要指定启动类</li>
+<li>@Runwith 用 SpringRunner 或之前的 SpringJunit4ClassRunner 皆可。</li>
+</ul>
+</li>
+</ol>
+<h2 id="6-spring-boot-整合-spring-data-jpa">6. Spring Boot 整合 Spring Data JPA</h2>
+<ol>
+<li>
+<p><strong>添加启动依赖及数据库驱动</strong></p>
+<ul>
+<li>spring-boot-starter-data-jpa</li>
+<li>mysql-connector-java</li>
+</ul>
+</li>
+<li>
+<p><strong>添加配置</strong></p>
+<p>application.yaml</p>
+<pre><code class="language-yaml">spring:
+ # DB config
+ datasource:
+   driverClassName: com.mysql.cj.jdbc.driver
+   url: jabc:mysql://localhost:3306/test?...
+   username: root
+   password: root
+ # JPA config
+ jpa:
+   database: MySQL
+   show-sql: true
+   generate-ddl: true
+   hibernate:
+     ddl-auto: update
+     naming_strategy: org.hibernate.cfg.ImprovedNamingStrategy
+</code></pre>
+</li>
+<li>
+<p><strong>开始使用</strong></p>
+<p>略。</p>
+</li>
+</ol>
+<h2 id="7-spring-boot-整合-spring-data-redis">7. Spring Boot 整合 Spring Data Redis</h2>
+<ol>
+<li>
+<p><strong>添加启动依赖</strong></p>
+<ul>
+<li>spring-boot-starter-data-redis</li>
+</ul>
+</li>
+<li>
+<p><strong>配置连接信息</strong></p>
+<pre><code class="language-yaml"># Redis config
+spring:
+ redis:
+   host: localhost
+   port: 6379
+</code></pre>
+</li>
+<li>
+<p><strong>开始使用</strong></p>
+<pre><code class="language-java">@RunWith(...)
+@SpringBootTest(...)
+public class Test {
+   @Autowired
+   private RedisTemplate&lt;String, String&gt; redisTemplate;
+}
+</code></pre>
+</li>
+</ol>
+<h2 id="8-spring-boot-开启热部署">8. Spring Boot 开启热部署</h2>
+<h3 id="81-概述">8.1 概述</h3>
+<ul>
+<li>修改代码后，不需要手动重新启动工程 代码即可生效。</li>
+</ul>
+<h3 id="82-使用步骤">8.2 使用步骤</h3>
+<ul>
+<li>
+<p>引入依赖</p>
+<ul>
+<li>spring-boot-devtools</li>
+</ul>
+</li>
+<li>
+<p>IntelliJ IDEA 设置</p>
+<ul>
+<li>settings - Compiler - Build poject automatically</li>
+<li>shift + ctrl + alt + / - Registry - compiler.automake.allow.when.app.running</li>
+</ul>
+</li>
+</ul>
+<h2 id="9-spring-boot-部分源码解析">9. Spring Boot 部分源码解析</h2>
+<h3 id="91-起步依赖">9.1 起步依赖</h3>
+<ul>
+<li>起步依赖 spring-boot-starter-parent 继承了父工程 spring-boot-dependencies 。</li>
+<li>Spring-boot-dependencies 的 pom 文件中定义了大量包的依赖，确定了其版本。</li>
+</ul>
+<h3 id="92-spring-boot-starter-web">9.2 spring-boot-starter-web</h3>
+<ul>
+<li>该工程的 pom 定义了大量跟 web 工程有关的依赖，确定了依赖版本。</li>
+</ul>
+<h3 id="93-自动配置">9.3 自动配置</h3>
+<ul>
+<li>@SpringBootApplication 注解的源码中包含 @SpringBootConfiguration、@EnableAutoConfiguration、@ComponentScan 注解。</li>
+<li>@SpringBootConfiguration 包含了 @Configuration，表名使用该注解的类为一个 Spring 配置类。</li>
+<li>
+<p>@EnableAutoConfiguration 中导入了 AutoConfigurationImportSelector 类，该类的代码中定义了从 META-INF/spring.factories 文件中读取指定类名称的列表。</p>
+</li>
+<li>
+<p>META-INF/spring.factories 文件中的类中通过 @EnableConfigurationProperties 引入了 xxxProperties 配置类。</p>
+</li>
+<li>xxxProperties 配置类中的 prefix 和 字段与之前的配置项相匹配。</li>
+</ul>
+
+
+</body>
+</html>

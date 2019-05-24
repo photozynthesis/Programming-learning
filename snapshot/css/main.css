@@ -18,7 +18,7 @@ body {
 }*/
 div#container {
 	height: 100%;
-	width: 1000px;
+	width: 1080px;
 	margin: 0 auto;
 	border: 0px;
 	padding: 0px;
@@ -59,7 +59,7 @@ div#content {
 /* 右侧导航区域 */
 div#navigator {
 	height: 100%;
-	width: 200px;
+	width: 280px;
 	float: left;
 	background-color: #dddddd;
 	position: relative;
@@ -106,11 +106,6 @@ div#navigator {
 	user-select: none;
 }
 
-/* 列表条目（文件夹）标题 */
-.navItem-title {
-	/*border: 1px solid black;*/
-}
-
 /* 列表条目（文件夹）标题前方箭头 */
 .navItem-title-arrow {
 	display: inline-block;
@@ -125,8 +120,9 @@ div#navigator {
 /* 列表条目（文件夹）标题文本 */
 .navItem-title-content {
 	display: inline-block;
-	text-align: center;
-	width: 168px;
+	padding-left: 8px;
+	text-align: left;
+	width: 244px;
 	font-weight: 700;
 	/*margin-left: : 30px;*/
 	/*border: 1px solid black;*/
@@ -138,7 +134,8 @@ div#navigator {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
-	width: 200px;
+	width: 280px;
+	/*width: 100%;*/
 }
 /* 列表单个条目 */
 #navItems li {
@@ -174,14 +171,25 @@ div#navigator {
 	content: '' !important;
 }
 
-/* 所有条目（父级条目与子级条目公共样式） */
-.navItem-title, .navItem-subList-item {
+/* 父级条目 */
+.navItem-title {
 	font-size: 23px;
 	text-decoration: none;
 	display: block;
+	/*color:#333333;*/
+	color: #544c06;
+	padding: 8px 5px;
+	text-align: left;
+}
+
+/* 二级条目 */
+.navItem-subList-item {
+	padding: 5px 4px 5px 30px;
+	font-size: 22px;
+	text-decoration: none;
+	display: block;
 	color:#333333;
-	padding: 5px;
-	text-align: center;
+	text-align: left;
 }
 
 /* 所有条目 hover */

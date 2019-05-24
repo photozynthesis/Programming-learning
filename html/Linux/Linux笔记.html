@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>Linux笔记</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="linux-学习笔记">Linux 学习笔记</h1>
+<ul>
+<li><a href="#1-linux概述">1. Linux概述</a>
+<ul>
+<li><a href="#11-概述">1.1 概述</a></li>
+<li><a href="#12-历史">1.2 历史</a></li>
+</ul>
+</li>
+<li><a href="#2-linux文件系统目录结构">2. Linux文件系统目录结构</a></li>
+<li><a href="#3-linux常用命令">3. Linux常用命令</a>
+<ul>
+<li><a href="#31-grep">3.1 grep</a></li>
+<li><a href="#32-网络通讯相关">3.2 网络通讯相关</a></li>
+<li><a href="#33-通用系统管理">3.3 通用系统管理</a></li>
+</ul>
+</li>
+<li><a href="#4-linux目录相关命令">4. Linux：目录相关命令</a>
+<ul>
+<li><a href="#41-切换当前目录">4.1 切换当前目录</a></li>
+<li><a href="#42-创建与移除目录">4.2 创建与移除目录</a></li>
+</ul>
+</li>
+<li><a href="#5-linux文件相关命令">5. Linux：文件相关命令</a>
+<ul>
+<li><a href="#51-创建文件">5.1 创建文件</a></li>
+<li><a href="#52-浏览文件内容">5.2 浏览文件内容</a></li>
+<li><a href="#53-复制--移动">5.3 复制 &amp; 移动</a></li>
+<li><a href="#54-删除">5.4 删除</a></li>
+</ul>
+</li>
+<li><a href="#6-linuxtar">6. Linux：tar</a>
+<ul>
+<li><a href="#61-targz文件概述">6.1 .tar.gz文件概述</a></li>
+<li><a href="#62-tar命令">6.2 tar命令</a></li>
+</ul>
+</li>
+<li><a href="#7-linuxvim">7. Linux：VIM</a>
+<ul>
+<li><a href="#71-概述">7.1 概述</a></li>
+<li><a href="#72-三种模式">7.2 三种模式</a></li>
+</ul>
+</li>
+<li><a href="#8-linux重定向输出--管道--命令执行控制">8. Linux：重定向输出 &amp; 管道 &amp; 命令执行控制</a>
+<ul>
+<li><a href="#81-重定向输出">8.1 重定向输出</a></li>
+<li><a href="#82-管道">8.2 管道</a></li>
+<li><a href="#83-命令执行控制">8.3 &amp;&amp;命令执行控制</a></li>
+</ul>
+</li>
+<li><a href="#9-linux用户与组">9. Linux：用户与组</a></li>
+<li><a href="#10-linux权限相关">10. Linux：权限相关</a></li>
+<li><a href="#11-linux常用文件说明">11. Linux：常用文件说明</a></li>
+</ul>
+<h2 id="1-linux概述">1. Linux概述</h2>
+<h3 id="11-概述">1.1 概述</h3>
+<ul>
+<li>Linux是一种自由和开放源码的操作系统，存在着许多不同的Linux版本，但它们都使用了Linux内核。</li>
+<li>Linux可安装在各种计算机硬件设备中，比如手机、平板电脑、路由器、台式计算机。</li>
+<li>Linux诞生于1991 年10 月5 日，是由芬兰赫尔辛基大学学生Linus Torvalds和后来加入的众多爱好者共同开发完成。</li>
+<li>Linux基于Unix。
+<ul>
+<li>Unix是一个强大的多用户、多任务操作系统。</li>
+<li>于1969年在AT&amp;T的贝尔实验室开发。</li>
+<li>UNIX的商标权由国际开放标准组织（The Open Group）所拥有。</li>
+<li>UNIX操作系统是商业版，需要收费，价格比Microsoft Windows正版要贵一些。</li>
+</ul>
+</li>
+</ul>
+<h3 id="12-历史">1.2 历史</h3>
+<p>Linux最初是由芬兰赫尔辛基大学学生Linus Torvalds由于自己不满意教学中使用的MINIX操作系统， 所以在1990年底由于个人爱好设计出了LINUX系统核心。</p>
+<p>后来发布于芬兰最大的ftp服务器上，用户可以免费下载，所以它的周边的程序越来越多，Linux本身也逐渐发展壮大起来，之后Linux在不到三年的时间里成为了一个功能完善，稳定可靠的操作系统。</p>
+<h2 id="2-linux文件系统目录结构">2. Linux文件系统目录结构</h2>
+<p><img src="Linux目录结构.png" alt="" /></p>
+<h2 id="3-linux常用命令">3. Linux常用命令</h2>
+<h3 id="31-grep">3.1 grep</h3>
+<h3 id="32-网络通讯相关">3.2 网络通讯相关</h3>
+<h3 id="33-通用系统管理">3.3 通用系统管理</h3>
+<h2 id="4-linux目录相关命令">4. Linux：目录相关命令</h2>
+<h3 id="41-切换当前目录">4.1 切换当前目录</h3>
+<table>
+<thead>
+<tr><th>命令</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>cd xxx</td><td>切换到指定目录</td></tr>
+<tr><td>cd ..</td><td>切换到上一层目录</td></tr>
+<tr><td>cd /</td><td>切换到系统根目录</td></tr>
+<tr><td>cd ~</td><td>切换到用户主目录</td></tr>
+<tr><td>cd -</td><td>切换到上一个所在目录</td></tr>
+</tbody>
+</table>
+<h3 id="42-创建与移除目录">4.2 创建与移除目录</h3>
+<table>
+<thead>
+<tr><th>命令</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>mkdir xxx</td><td>在当前路径下创建目录</td></tr>
+<tr><td>mkdir -p xxx/xxx</td><td>级联创建目录</td></tr>
+<tr><td>rmdir xxx</td><td>删除目录（只能删除空的目录）</td></tr>
+</tbody>
+</table>
+<h2 id="5-linux文件相关命令">5. Linux：文件相关命令</h2>
+<h3 id="51-创建文件">5.1 创建文件</h3>
+<p>Linux下创建文件有多种方法。举例如下：</p>
+<ul>
+<li>touch &lt;文件名&gt;，可以创建一个新的、空的文件。</li>
+<li>Vim &lt;文件名&gt;，编辑后保存即可自动创建。</li>
+</ul>
+<h3 id="52-浏览文件内容">5.2 浏览文件内容</h3>
+<ul>
+<li>
+<p><strong>cat</strong>:</p>
+<blockquote>
+<p>cat [参数] &lt;文件名&gt;</p>
+<p>cat /etc/profile</p>
+</blockquote>
+</li>
+<li>
+<p><strong>more</strong>：</p>
+<blockquote>
+<p>more yum.conf</p>
+</blockquote>
+<ul>
+<li>可以space显示下一页数据，enter显示下一行数据。</li>
+</ul>
+</li>
+<li>
+<p><strong>less</strong>：</p>
+<blockquote>
+<p>less yum.conf</p>
+</blockquote>
+<ul>
+<li>可以用PgUp和PgDn进行翻页显示。</li>
+</ul>
+</li>
+<li>
+<p><strong>tail</strong>：</p>
+<blockquote>
+<p>tail -10 /etc/passwd		# 查看后10行数据</p>
+<p>tail -f catalina.log			# 动态查看日志</p>
+</blockquote>
+</li>
+</ul>
+<p><strong>说明</strong>：</p>
+<p>​	若要结束查看，尝试ctrl + c、Esc、Q等。</p>
+<h3 id="53-复制--移动">5.3 复制 &amp; 移动</h3>
+<ul>
+<li>
+<p><strong>复制</strong>：</p>
+<blockquote>
+<p>cp a.txt b.txt			# 将a.txt复制为b.txt</p>
+<p>cp a.txt ../			# 将a.txt复制到上一级目录</p>
+</blockquote>
+</li>
+<li>
+<p><strong>移动</strong>：</p>
+<blockquote>
+<p>mv a.txt ../			# 将a.txt移动到上一级目录</p>
+<p>mv a.txt b.txt		# 将a.txt重命名为b.txt</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="54-删除">5.4 删除</h3>
+<blockquote>
+<p>rm [参数] 文件</p>
+</blockquote>
+<p>参数说明：</p>
+<ul>
+<li>-f：不询问，直接删除</li>
+<li>-r：递归删除</li>
+</ul>
+<h2 id="6-linuxtar">6. Linux：tar</h2>
+<h3 id="61-targz文件概述">6.1 .tar.gz文件概述</h3>
+<ul>
+<li>
+<p><strong>.tar</strong>：</p>
+<p>仅仅将多个文件打包成一个文件，不进行压缩。</p>
+</li>
+<li>
+<p><strong>.tar.gz</strong>：</p>
+<p>在.tar文件的基础上，使用gzip命令进行压缩的成果。</p>
+</li>
+</ul>
+<h3 id="62-tar命令">6.2 tar命令</h3>
+<p>tar命令位于/bin目录下。</p>
+<ul>
+<li>
+<p><strong>常用参数</strong>：</p>
+<ul>
+<li>-c：创建一个新的tar文件</li>
+<li>-v：显示运行过程的信息</li>
+<li>-f：指定文件名</li>
+<li>-z：调用gzip命令进行压缩</li>
+<li>-t：查看压缩文件的内容</li>
+<li>-x：解开tar文件</li>
+</ul>
+</li>
+<li>
+<p><strong>示例</strong>：</p>
+<pre><code class="language-shell"># 打包文件
+tar -cvf xxx.tar ./*
+
+# 打包并压缩
+tar -zcvf xxx.tar.gz ./*
+
+# 解压
+tar -xvf xxx.tar
+tar -xvf xxx.tar -C /usr/demo
+</code></pre>
+</li>
+</ul>
+<h2 id="7-linuxvim">7. Linux：VIM</h2>
+<h3 id="71-概述">7.1 概述</h3>
+<p>Vim编辑器，可以用于查看文件、创建文件、修改文件等。</p>
+<p>vim与vi命令的区别：对于某些文件，vim可以高亮显示关键字等，利于阅读。</p>
+<h3 id="72-三种模式">7.2 三种模式</h3>
+<ul>
+<li>
+<p><strong>命令行（普通）模式</strong>：</p>
+<ul>
+<li>切换：</li>
+</ul>
+<p>使用 Esc 键。</p>
+<ul>
+<li>
+<p>常用操作：</p>
+</li>
+<li>
+<p>dd：剪切一行</p>
+</li>
+<li>p：粘贴一行</li>
+<li>i：在当前光标位置进入插入模式</li>
+<li>I：在当前行首进入插入模式</li>
+<li>a：在当前光标后一个位置进入插入模式</li>
+<li>A：在当前行尾进入插入模式</li>
+<li>o：在当前行之后插入一行，并进入插入模式</li>
+<li>O：在当前行之前插入一行，并进入插入模式</li>
+</ul>
+</li>
+<li>
+<p><strong>插入模式</strong>：</p>
+<ul>
+<li>已经没什么可说的了。</li>
+</ul>
+</li>
+<li>
+<p><strong>底行模式</strong>：</p>
+<ul>
+<li>切换：</li>
+</ul>
+<p>输入<code>:</code>。</p>
+<ul>
+<li>
+<p>命令说明：</p>
+</li>
+<li>
+<p><code>:q</code>：退出，不保存修改。</p>
+</li>
+<li><code>:q!</code>：强制退出，不保存修改，跳过询问。</li>
+<li><code>:wq</code>：退出并保存修改。</li>
+<li><code>:wq!</code>：强制退出，保存修改。</li>
+</ul>
+</li>
+</ul>
+<h2 id="8-linux重定向输出--管道--命令执行控制">8. Linux：重定向输出 &amp; 管道 &amp; 命令执行控制</h2>
+<h3 id="81-重定向输出">8.1 重定向输出</h3>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<p>将命令的执行结果输出到指定文件中。</p>
+</li>
+<li>
+<p><strong>示例</strong>：</p>
+<pre><code class="language-shell">cat /etc/passwd &gt; a.txt			# 将查询结果输出到a.txt中（覆盖）
+cat /etc/passwd &gt;&gt; a.txt		# 将查询结果追加到a.txt之后（追加）
+</code></pre>
+</li>
+</ul>
+<h3 id="82-管道">8.2 管道</h3>
+<h3 id="83-命令执行控制">8.3 &amp;&amp;命令执行控制</h3>
+<h2 id="9-linux用户与组">9. Linux：用户与组</h2>
+<h2 id="10-linux权限相关">10. Linux：权限相关</h2>
+<h2 id="11-linux常用文件说明">11. Linux：常用文件说明</h2>
+
+
+</body>
+</html>

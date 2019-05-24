@@ -3,142 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <title>My Study Notebook</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
     <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
-    <script type="text/javascript" src="js/my-note-book-1.0.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
 </head>
 
 <body id="bodyE">
 <div id="container">
-    <!-- <div id="header">
-        <p id="Title">My Study Notebook</p>
-    </div> -->
-    <div id="main">
-        <div id="content">
-            <iframe id="iframe-content" src="http://cn.bing.com" width="100%" height="100%" frameborder="0">
-                <!-- <h1>&ensp;&nbsp;README</h1>
-                <hr />
-                <ul type="disc">
-                    <li><h3>查阅</h3>
-                        <ol style="line-height: 200%;">
-                            <li>打开项目根目录下的 <b>index.html</b></li>
-                            <li>点击右侧导航栏即可查看已导出的文章</li>
-                        </ol>
-                    </li>
-                    <li><h3>修改</h3>
-                        <ol style="line-height: 200%;">
-                            <li>项目的md文件夹下即为所有Markdown格式笔记</li>
-                            <li>使用 <b>Typora</b> 编辑后点击导出为HTML，放置在HTML文件夹下，文件名不要改动</li>
-                        </ol>
-                    </li>
-                    <li><h3>新增</h3>
-                        <ol style="line-height: 200%;">
-                            <li>在md文件夹下新增Markdown格式笔记</li>
-                            <li>编辑后导出HTML文件到HTML文件夹</li>
-                            <li>在 <b>index.html</b> 中的 <b>div#navigator ul</b> 中添加一行，格式如下：</li>
-                        </ol>
-                        <div style="
-                        width: 690px;
-                        height: 80px;
-                        text-align: center;
-                        padding-top: 0px;
-                        line-height: 0px;
-                        overflow: hidden;
-                        background-color: #444444;
-                        border: 3px solid #f0f0f0;
-                        box-shadow: 5px 5px 5px #444444;
-                        margin-top: 15px;
-                        margin-bottom: 25px;
-                        margin-left: 18px;
-                        ">
-                            <p style="font-size: 20px;color: #99ff99;line-height: 80%">
-                                &lt;!-- 将fileName替换为导出的HTML文件名(不包含后缀) --&gt;
-                            </p>
-                            <p style="font-size: 20px;color: #ffff99">
-                                &lt;li id="fileName"&gt;&lt;a onclick="showPage('fileName')"&gt;title&lt;/a&gt;&lt;/li&gt;
-                            </p>
-                        </div>
-                    </li>
-                    <li><h3>注意事项</h3>
-                        <ol style="line-height: 200%;">
-                            <li>已知IE浏览器打开笔记页面加载缓慢，请尽量使用 <b>Chrome</b></li>
-                            <li>在部分电脑上的其他浏览器偶尔也会发生加载缓慢的情况</li>
-                        </ol>
-                    </li>
-                </ul> -->
-            </iframe>
-        </div>
-        <div id="navigator">
-            <div id="navTitle">
-                <b>目&nbsp;&nbsp;&nbsp;&nbsp;录</b>
-            </div>
-            <div id="navItems">
-                <ul>
-                    <!-- <li class="navTitle"><b style="font-size: 30px;color: #eeeeee;">目&nbsp;&nbsp;&nbsp;&nbsp;录</b></li> -->
-                    <li id="JavaSE-01"><a onclick="showPage('JavaSE-01')">JavaSE-01</a></li>
-                    <li id="JavaSE-02"><a onclick="showPage('JavaSE-02')">JavaSE-02</a></li>
-                    <li id="JDBC"><a onclick="showPage('JDBC')">JDBC</a></li>
-                    <li id="MySQL"><a onclick="showPage('MySQL')">MySQL</a></li>
-                    <li id="Redis"><a onclick="showPage('Redis')">Redis</a></li>
-                    <li id="HTML&CSS笔记"><a onclick="showPage('HTML&CSS笔记')">HTML & CSS</a></li>
-                    <li id="JavaScript"><a onclick="showPage('JavaScript')">JavaScript</a></li>
-                    <li id="JQuery"><a onclick="showPage('JQuery')">JQuery</a></li>
-                    <li id="XML"><a onclick="showPage('XML')">XML</a></li>
-                    <li id="Servlet&Tomcat"><a onclick="showPage('Servlet&Tomcat')">Servlet&Tomcat</a></li>
-                    <li id="Ajax&Json"><a onclick="showPage('Ajax&Json')">Ajax&Json</a></li>
-                    <li id="Spring"><a onclick="showPage('Spring')">Spring</a></li>
-                    <li id="SpringMVC"><a onclick="showPage('SpringMVC')">SpringMVC</a></li>
-                    <li id="MyBatis"><a onclick="showPage('MyBatis')">MyBatis</a></li>
-                    <li id="Linux笔记"><a onclick="showPage('Linux笔记')">Linux</a></li>
-                    <li id="MarkdownLearning"><a onclick="showPage('MarkdownLearning')">Markdown</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
-                    <li id="部分软件常用操作"><a onclick="showPage('部分软件常用操作')">IDEs</a></li>
 
-                </ul>
-            </div>
-            <div id="navButtons">
-                <div class="navButton" id="navButton-1">
-                    <a onclick="changeWallpaper()">更换壁纸</a>
-                </div>
+<div id="main">
 
-                <div class="navButton">
-                    <a onclick="toTop()">回到顶部</a>
-                </div>
-            </div>
-        </div>
-        <!-- <ul type="disc"><h3>注意事项</h3>
+<div id="content">
+    <iframe id="iframe-content" src="http://cn.bing.com" width="100%" height="100%" frameborder="0">
+    </iframe>
+</div>
 
-        </ul> -->
+<div id="navigator">
+
+<div id="navTitle">
+    <b>文章目录</b>
+</div>
+
+<div id="navItems">
+<ul>
+<li class="navItem">
+<span class="navItem-title"><div class="navItem-title-arrow">&gt;</div><div class="navItem-title-content">HTML&CSS</div></span>
+<ul class="navItem-subList">
+<li class="navItem-subList-item" id="HTML&CSS/HTML&CSS笔记"><a>HTML&CSS笔记</a></li>
+</ul>
+</li>
+<li class="navItem">
+<span class="navItem-title"><div class="navItem-title-arrow">&gt;</div><div class="navItem-title-content">IDEs</div></span>
+<ul class="navItem-subList">
+<li class="navItem-subList-item" id="IDEs/部分软件常用操作"><a>部分软件常用操作</a></li>
+</ul>
+</li>
+<li class="navItem">
+<span class="navItem-title"><div class="navItem-title-arrow">&gt;</div><div class="navItem-title-content">Java</div></span>
+<ul class="navItem-subList">
+<li class="navItem-subList-item" id="Java/JavaSE-01"><a>JavaSE-01</a></li>
+<li class="navItem-subList-item" id="Java/JavaSE-02"><a>JavaSE-02</a></li>
+<li class="navItem-subList-item" id="Java/Java杂识"><a>Java杂识</a></li>
+<li class="navItem-subList-item" id="Java/JDBC"><a>JDBC</a></li>
+<li class="navItem-subList-item" id="Java/MyBatis"><a>MyBatis</a></li>
+<li class="navItem-subList-item" id="Java/Servlet&Tomcat"><a>Servlet&Tomcat</a></li>
+<li class="navItem-subList-item" id="Java/Spring Boot"><a>Spring Boot</a></li>
+<li class="navItem-subList-item" id="Java/Spring Data JPA"><a>Spring Data JPA</a></li>
+<li class="navItem-subList-item" id="Java/Spring"><a>Spring</a></li>
+<li class="navItem-subList-item" id="Java/SpringMVC"><a>SpringMVC</a></li>
+</ul>
+</li>
+<li class="navItem">
+<span class="navItem-title"><div class="navItem-title-arrow">&gt;</div><div class="navItem-title-content">JavaScript</div></span>
+<ul class="navItem-subList">
+<li class="navItem-subList-item" id="JavaScript/Ajax&Json"><a>Ajax&Json</a></li>
+<li class="navItem-subList-item" id="JavaScript/Bootstrap"><a>Bootstrap</a></li>
+<li class="navItem-subList-item" id="JavaScript/JavaScript"><a>JavaScript</a></li>
+<li class="navItem-subList-item" id="JavaScript/JQuery"><a>JQuery</a></li>
+<li class="navItem-subList-item" id="JavaScript/Vue.js"><a>Vue.js</a></li>
+</ul>
+</li>
+<li class="navItem">
+<span class="navItem-title"><div class="navItem-title-arrow">&gt;</div><div class="navItem-title-content">Linux</div></span>
+<ul class="navItem-subList">
+<li class="navItem-subList-item" id="Linux/Archlinux"><a>Archlinux</a></li>
+<li class="navItem-subList-item" id="Linux/Linux笔记"><a>Linux笔记</a></li>
+</ul>
+</li>
+<li class="navItem">
+<span class="navItem-title"><div class="navItem-title-arrow">&gt;</div><div class="navItem-title-content">Markdown</div></span>
+<ul class="navItem-subList">
+<li class="navItem-subList-item" id="Markdown/MarkdownLearning"><a>MarkdownLearning</a></li>
+</ul>
+</li>
+<li class="navItem">
+<span class="navItem-title"><div class="navItem-title-arrow">&gt;</div><div class="navItem-title-content">SQL</div></span>
+<ul class="navItem-subList">
+<li class="navItem-subList-item" id="SQL/MySQL"><a>MySQL</a></li>
+<li class="navItem-subList-item" id="SQL/Oracle"><a>Oracle</a></li>
+<li class="navItem-subList-item" id="SQL/Redis"><a>Redis</a></li>
+</ul>
+</li>
+<li class="navItem">
+<span class="navItem-title"><div class="navItem-title-arrow">&gt;</div><div class="navItem-title-content">杂识</div></span>
+<ul class="navItem-subList">
+<li class="navItem-subList-item" id="杂识/ActiveMQ"><a>ActiveMQ</a></li>
+<li class="navItem-subList-item" id="杂识/Docker"><a>Docker</a></li>
+<li class="navItem-subList-item" id="杂识/Freemarker"><a>Freemarker</a></li>
+<li class="navItem-subList-item" id="杂识/Git & SVN"><a>Git & SVN</a></li>
+<li class="navItem-subList-item" id="杂识/lucene"><a>lucene</a></li>
+<li class="navItem-subList-item" id="杂识/XML"><a>XML</a></li>
+</ul>
+</li>
+<ul class="navItem-subList">
+<li class="navItem-subList-item" id="Index"><a>Index</a></li>
+<li class="navItem-subList-item" id="Welcome"><a>Welcome</a></li>
+</ul>
+
+</ul>
+</div>
+
+<div id="navButtons">
+    <div class="navButton" id="navButton-changeImage">
+        <a>更换壁纸</a>
     </div>
-    <!-- <div id="footer">
-        <p id="end">Made by PhotoZynthesis with ❤</p>
-    </div> -->
+
+    <div class="navButton" id="navButton-toTop">
+        <a>回到顶部</a>
+    </div>
+</div>
+
+</div>
+
+</div>
+
 </div>
 </body>
 </html>

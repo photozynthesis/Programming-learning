@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>JavaScript</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="javascript学习笔记">JavaScript学习笔记</h1>
+<h2 id="目录">目录：</h2>
+<ul>
+<li><a href="#目录">目录：</a></li>
+<li><a href="#1-javascript的简介">1. JavaScript的简介</a></li>
+<li><a href="#2-js和html结合的两种方式">2. JS和HTML结合的两种方式</a></li>
+<li><a href="#3-常用方法">3. 常用方法</a></li>
+<li><a href="#4-原始类型和声明变量">4. 原始类型和声明变量</a></li>
+<li><a href="#5-运算符">5. 运算符</a></li>
+<li><a href="#6-函数">6. 函数</a></li>
+<li><a href="#7-js的全局变量和局部变量">7. JS的全局变量和局部变量</a></li>
+<li><a href="#8-事件">8. 事件</a></li>
+<li><a href="#9-常用对象">9. 常用对象</a>
+<ul>
+<li><a href="#91-array">9.1 Array</a></li>
+<li><a href="#92-date">9.2 Date</a></li>
+<li><a href="#93-math">9.3 Math</a></li>
+<li><a href="#94-regexp">9.4 RegExp</a></li>
+</ul>
+</li>
+<li><a href="#10-dom">10. DOM</a>
+<ul>
+<li><a href="#101-dom概述">10.1 DOM概述</a></li>
+<li><a href="#102-常用文档对象">10.2 常用文档对象</a></li>
+</ul>
+</li>
+<li><a href="#11-bom">11. BOM</a>
+<ul>
+<li><a href="#111-bom概述">11.1 BOM概述</a></li>
+<li><a href="#112-常用浏览器对象">11.2 常用浏览器对象</a></li>
+</ul>
+</li>
+<li><a href="#12-定时器">12. 定时器</a></li>
+</ul>
+<h2 id="1-javascript的简介">1. JavaScript的简介</h2>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>JS是一个脚本语言（无需编译），多运行在浏览器中。</p>
+<p>JS是基于对象和事件驱动的语言，应用于客户端：</p>
+<ul>
+<li>基于对象：指提供了好多对象，可以直接拿过来用。</li>
+<li>事件驱动：可以做动态效果。</li>
+<li>客户端：专指浏览器。</li>
+</ul>
+</li>
+<li>
+<p><strong>JS的特点：</strong></p>
+<ul>
+<li>交互性：</li>
+</ul>
+<p>信息的动态交互。</p>
+<ul>
+<li>安全性：</li>
+</ul>
+<p>JS不能访问本地磁盘文件。</p>
+<ul>
+<li>跨平台性：</li>
+</ul>
+<p>只要是支持JS的浏览器，都可以运行</p>
+</li>
+<li>
+<p><strong>JavaScript和Java的区别：</strong></p>
+<ol>
+<li>Java是Oracle公司的，JavaScript是网景公司的；</li>
+<li>JavaScript是基于对象的，Java是面向对象的；</li>
+<li>Java是强类型语言，JavaScript是弱类型语言；</li>
+<li>JavaScript只需解析就能执行，Java需要先编译成字节码文件，再执行。</li>
+</ol>
+</li>
+<li>
+<p><strong>JavaScript的组成：</strong></p>
+<ul>
+<li><strong>ECMAScript</strong>：</li>
+</ul>
+<p>ECMA是欧洲计算机协会，此处指由欧洲计算机协会制定的语法。</p>
+<ul>
+<li><strong>BOM</strong>：</li>
+</ul>
+<p>Browser Object Model，浏览器对象模型。</p>
+<ul>
+<li><strong>DOM</strong>：</li>
+</ul>
+<p>Document Object Model，文档对象模型。</p>
+</li>
+</ul>
+<h2 id="2-js和html结合的两种方式">2. JS和HTML结合的两种方式</h2>
+<ul>
+<li>
+<p>在<code>script</code>标签中写入代码：</p>
+<pre><code class="language-html">&lt;script type=&quot;text/javascript&quot;&gt;
+JavaScript代码...
+&lt;/script&gt;
+</code></pre>
+</li>
+<li>
+<p>使用<code>script</code>标签，引入一个外部JS文件：</p>
+<pre><code class="language-html">&lt;script type=&quot;text/javascript&quot; src=&quot;Demo.js&quot;&gt;
+&lt;/script&gt;
+</code></pre>
+</li>
+</ul>
+<p><strong>注意事项：</strong></p>
+<pre><code>1. 使用第二种方式（引入外部文件）的时候，就不用在标签内写代码了，因为不会执行。
+2. script标签的位置会影响执行时间。
+</code></pre>
+<h2 id="3-常用方法">3. 常用方法</h2>
+<ul>
+<li>
+<p><code>alert(参数);</code></p>
+<p>弹出消息提示框。</p>
+</li>
+<li>
+<p><code>document.write(内容);</code></p>
+<p>向页面中写入内容。</p>
+</li>
+</ul>
+<h2 id="4-原始类型和声明变量">4. 原始类型和声明变量</h2>
+<ul>
+<li>
+<p><strong>声明变量：</strong></p>
+<p>JavaScript使用<strong>var</strong>声明变量。</p>
+<p>注意：若不使用var关键字，定义的将是全局变量；使用则为局部变量。</p>
+</li>
+<li>
+<p><strong>原始类型：</strong></p>
+<p>JavaScript的原始数据类型有如下五种：</p>
+<ul>
+<li>
+<p>string（字符串）</p>
+</li>
+<li>
+<p>可以使用单引号或双引号。</p>
+</li>
+</ul>
+<pre><code class="language-javascript">var s = &quot;Hello&quot;;
+</code></pre>
+<ul>
+<li>number（数字）</li>
+</ul>
+<p>包含：</p>
+<ul>
+<li>整数</li>
+<li>小数</li>
+<li>NaN</li>
+</ul>
+<pre><code class="language-javascript">var n = 10;
+</code></pre>
+<ul>
+<li>boolean（布尔）</li>
+</ul>
+<pre><code class="language-javascript">var flag = false;
+</code></pre>
+<ul>
+<li>
+<p>null</p>
+</li>
+<li>
+<p>赋值为空占位符</p>
+</li>
+<li>
+<p>表示对象引用为空</p>
+</li>
+<li>
+<p>undefined</p>
+</li>
+<li>
+<p>定义了一个变量，不过并没有赋值，那么就是undefined。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>扩展：</strong></p>
+<p>**typeof()**函数可以返回当前变量的数据类型。</p>
+</li>
+</ul>
+<h2 id="5-运算符">5. 运算符</h2>
+<p>JavaScript运算符的使用方法<strong>基本与Java运算符的相同</strong>，此处仅列出一些常见的<strong>不同之处</strong>：</p>
+<ul>
+<li>
+<p>JavaScript的<strong>number类型不区分整数和小数</strong>，所以当进行如下运算时，会有不同结果：</p>
+<pre><code>int/var j = 123;
+j / 1000 * 1000;		//Java：0，JavaScript：123
+</code></pre>
+<p>JavaScript的数字型num包含整数和小数。</p>
+</li>
+<li>
+<p>当用<strong>一个字符串减去一个数字</strong>的时候，Java会报错，而JavaScript：</p>
+<ul>
+<li>若字符串是一个数字，会返回一个正确的计算结果</li>
+<li>若字符串不是一个数字，会返回NaN</li>
+</ul>
+</li>
+<li>
+<p><strong>其他类型作为boolean类变量</strong>参与计算的时候：</p>
+<ul>
+<li>number类型：NaN和0为false，其余为true</li>
+<li>string类型：空字符串和Null为false，其余为true</li>
+<li>Object类型：一般只要非空，就为true</li>
+</ul>
+</li>
+<li>
+<p><strong>==和===的区别</strong>：</p>
+<ul>
+<li>==比较的只是值</li>
+<li>===比较值和类型</li>
+</ul>
+</li>
+<li>
+<p><strong>typeof运算符</strong>：</p>
+<ul>
+<li>后跟变量，获得该变量的原始类型</li>
+</ul>
+</li>
+</ul>
+<h2 id="6-函数">6. 函数</h2>
+<ul>
+<li>
+<p><strong>定义函数的三种方式：</strong></p>
+<ol>
+<li>
+<p>正常定义</p>
+<pre><code class="language-javascript">function 方法名(参数列表){
+ 方法体;
+ return 返回值;		//根据需要可有可无
+}
+</code></pre>
+</li>
+<li>
+<p>匿名函数</p>
+<pre><code class="language-javascript">function(参数列表){
+ 方法体;
+ return 返回值;		//根据需要可有可无
+}
+</code></pre>
+<pre><code class="language-javascript">var 函数名 = function(参数列表){
+ 方法体;
+ return 返回值;		//根据需要可有可无
+}
+</code></pre>
+</li>
+<li>
+<p>动态函数（使用较少）：</p>
+<pre><code class="language-javascript">var 方法名 = new Function(&quot;参数列表&quot;, &quot;方法体和返回值&quot;);
+</code></pre>
+<p>举例：</p>
+<pre><code class="language-javascript">var add = new Function(&quot;a,b&quot;, &quot;var sum;sum = a + b;return sum;&quot;);
+</code></pre>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>注意事项</strong>：</p>
+<ol>
+<li>
+<p>JavaScript中<strong>不</strong>存在<strong>函数重载</strong>，若定义了两个重名的函数，后定义的将会<strong>覆盖</strong>先定义的，尽管参数不同。</p>
+</li>
+<li>
+<p>传递的参数可以通过<strong>arguments</strong>对象来遍历，以此可以模拟函数重载。</p>
+<pre><code class="language-javascript">function add(){
+ var sum = 0;
+ for(var i = 0;i &lt; arguments.length;i ++){
+     sum += arguments[i];
+ }
+ return sum;
+}
+</code></pre>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="7-js的全局变量和局部变量">7. JS的全局变量和局部变量</h2>
+<ul>
+<li>
+<p><strong>全局变量：</strong></p>
+<p>在script标签中（函数外）定义的变量，这个变量在任何JS部分都可以使用，包括：</p>
+<ul>
+<li>方法外部</li>
+<li>方法内部</li>
+<li>另一个script标签中</li>
+<li>在页面关闭后销毁</li>
+</ul>
+</li>
+<li>
+<p><strong>局部变量：</strong></p>
+<p>在方法内部定义一个变量，只能在方法内部使用。</p>
+<p>在函数执行完毕后销毁。</p>
+</li>
+</ul>
+<h2 id="8-事件">8. 事件</h2>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<p>HTML中的元素可以添加属性，来使当发生特定的事件时，执行一些JavaScript代码。</p>
+</li>
+<li>
+<p><strong>举例</strong>：</p>
+<pre><code class="language-javascript">&lt;button onclick=&quot;getElementById('demo').innerHTML=Date()&quot;&gt;
+&lt;button onclick=&quot;demoFunction()&quot;&gt;
+</code></pre>
+</li>
+<li>
+<p><strong>常见的HTML事件</strong>：</p>
+<ul>
+<li>鼠标相关事件：</li>
+<li>onclick：用户点击HTML元素</li>
+<li>onmouseover：用户在一个HTML元素上移动鼠标</li>
+<li>onmouseout：用户在一个HTML元素上移开鼠标</li>
+<li>onmouseup：鼠标按钮松开</li>
+<li>onmousedown：鼠标按钮按下
+<ul>
+<li>可接收一个event对象，通过event对象的button属性可以获得鼠标点击的按键（0、1、2）</li>
+</ul>
+</li>
+<li>键盘相关事件：</li>
+<li>onkeydown：按下键盘按键</li>
+<li>onkeyup：松开键盘按键</li>
+<li>加载相关事件：</li>
+<li>onload：浏览器已完成页面的加载</li>
+<li>表单相关事件：</li>
+<li>onsubmit：表单提交</li>
+<li>onreset：</li>
+<li>其他事件：</li>
+<li>onchange：HTML元素改变</li>
+<li>onfocus：获得焦点</li>
+<li>onblur：失去焦点</li>
+</ul>
+</li>
+</ul>
+<h2 id="9-常用对象">9. 常用对象</h2>
+<h3 id="91-array">9.1 Array</h3>
+<ul>
+<li>
+<p><strong>JS数组的定义方式：</strong></p>
+<ol>
+<li>
+<pre><code class="language-javascript">var arr = [1, 2, 3];
+var arr2 = [1, &quot;2&quot;, true]
+</code></pre>
+</li>
+<li>
+<pre><code class="language-javascript">var arr = new Array(5);		//定义一个数组，长度是5
+</code></pre>
+</li>
+<li>
+<pre><code class="language-javascript">var arr = new Array(1, &quot;2&quot;, false);
+</code></pre>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>常用方法</strong>：</p>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">concat()</td><td align="center">连接两个或更多的数组，并返回结果。</td></tr>
+<tr><td align="center">join()</td><td align="center">把数组的所有元素放入一个字符串。元素通过指定的分隔符进行分隔。</td></tr>
+<tr><td align="center">pop()</td><td align="center">删除并返回数组的最后一个元素</td></tr>
+<tr><td align="center">push()</td><td align="center">向数组的末尾添加一个或更多元素，并返回新的长度。</td></tr>
+<tr><td align="center">reverse()</td><td align="center">颠倒数组中元素的顺序。</td></tr>
+<tr><td align="center">shift()</td><td align="center">删除并返回数组的第一个元素</td></tr>
+<tr><td align="center">slice()</td><td align="center">从某个已有的数组返回选定的元素</td></tr>
+<tr><td align="center">sort()</td><td align="center">对数组的元素进行排序</td></tr>
+<tr><td align="center">splice()</td><td align="center">删除元素，并向数组添加新元素。</td></tr>
+<tr><td align="center">toSource()</td><td align="center">返回该对象的源代码。</td></tr>
+<tr><td align="center">toString()</td><td align="center">把数组转换为字符串，并返回结果。</td></tr>
+<tr><td align="center">toLocaleString()</td><td align="center">把数组转换为本地数组，并返回结果。</td></tr>
+<tr><td align="center">unshift()</td><td align="center">向数组的开头添加一个或更多元素，并返回新的长度。</td></tr>
+<tr><td align="center">valueOf()</td><td align="center">返回数组对象的原始值</td></tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><strong>重要事项：</strong></p>
+<ol>
+<li>数组可以通过<strong>属性length</strong>获取<strong>长度</strong>，和Java相同。</li>
+<li>JS数组的<strong>长度可变</strong>，若直接给索引为超出数组长度的元素赋值，会自动扩充数组，中间的元素被定义为<strong>undefined</strong>。</li>
+<li>数组中<strong>可以</strong>存放<strong>不同数据类型</strong>的数据。</li>
+</ol>
+</li>
+</ul>
+<h3 id="92-date">9.2 Date</h3>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<p>Date对象用于处理时间和日期。</p>
+</li>
+<li>
+<p><strong>定义</strong>：</p>
+<pre><code class="language-javascript">var myDate=new Date();
+</code></pre>
+</li>
+<li>
+<p><strong>常用方法</strong>：</p>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center"><a href="jsref_Date.asp">Date()</a></td><td align="center">返回当日的日期和时间。</td></tr>
+<tr><td align="center"><a href="jsref_getDate.asp">getDate()</a></td><td align="center">从 Date 对象返回一个月中的某一天 (1 ~ 31)。</td></tr>
+<tr><td align="center"><a href="jsref_getDay.asp">getDay()</a></td><td align="center">从 Date 对象返回一周中的某一天 (0 ~ 6)。</td></tr>
+<tr><td align="center"><a href="jsref_getMonth.asp">getMonth()</a></td><td align="center">从 Date 对象返回月份 (0 ~ 11)。</td></tr>
+<tr><td align="center"><a href="jsref_getFullYear.asp">getFullYear()</a></td><td align="center">从 Date 对象以四位数字返回年份。</td></tr>
+<tr><td align="center"><a href="jsref_getHours.asp">getHours()</a></td><td align="center">返回 Date 对象的小时 (0 ~ 23)。</td></tr>
+<tr><td align="center"><a href="jsref_getMinutes.asp">getMinutes()</a></td><td align="center">返回 Date 对象的分钟 (0 ~ 59)。</td></tr>
+<tr><td align="center"><a href="jsref_getSeconds.asp">getSeconds()</a></td><td align="center">返回 Date 对象的秒数 (0 ~ 59)。</td></tr>
+<tr><td align="center"><a href="jsref_getMilliseconds.asp">getMilliseconds()</a></td><td align="center">返回 Date 对象的毫秒(0 ~ 999)。</td></tr>
+<tr><td align="center"><a href="jsref_getTime.asp">getTime()</a></td><td align="center">返回 1970 年 1 月 1 日至今的毫秒数。</td></tr>
+<tr><td align="center">setXxx()</td><td align="center">以上所有<strong>get()<strong>方法的</strong>set()</strong></td></tr>
+<tr><td align="center"><strong>moreFunctions...</strong></td><td align="center"><strong>更多方法查看文档</strong></td></tr>
+</tbody>
+</table>
+</li>
+</ul>
+<h3 id="93-math">9.3 Math</h3>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<p>用于执行数学任务。</p>
+</li>
+<li>
+<p><strong>常用属性</strong>：</p>
+<table>
+<thead>
+<tr><th align="center">属性</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center"><a href="jsref_e.asp">E</a></td><td align="center">返回算术常量 e，即自然对数的底数（约等于2.718）</td></tr>
+<tr><td align="center"><a href="jsref_pi.asp">PI</a></td><td align="center">返回圆周率（约等于3.14159）</td></tr>
+<tr><td align="center"><strong>more...</strong></td><td align="center"><strong>更多属性查阅文档</strong></td></tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><strong>常用方法</strong>：</p>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">描述</th></tr>
+</thead>
+<tbody>
+<tr><td align="center"><a href="jsref_abs.asp">abs(x)</a></td><td align="center">返回数的绝对值。</td></tr>
+<tr><td align="center"><a href="jsref_acos.asp">acos(x)</a></td><td align="center">返回数的反余弦值。</td></tr>
+<tr><td align="center"><a href="jsref_asin.asp">asin(x)</a></td><td align="center">返回数的反正弦值。</td></tr>
+<tr><td align="center"><a href="jsref_atan.asp">atan(x)</a></td><td align="center">以介于 -PI/2 与 PI/2 弧度之间的数值来返回 x 的反正切值。</td></tr>
+<tr><td align="center"><a href="jsref_atan2.asp">atan2(y,x)</a></td><td align="center">返回从 x 轴到点 (x,y) 的角度（介于 -PI/2 与 PI/2 弧度之间）。</td></tr>
+<tr><td align="center"><a href="jsref_ceil.asp">ceil(x)</a></td><td align="center">对数进行上舍入。</td></tr>
+<tr><td align="center"><a href="jsref_cos.asp">cos(x)</a></td><td align="center">返回数的余弦。</td></tr>
+<tr><td align="center"><a href="jsref_exp.asp">exp(x)</a></td><td align="center">返回 e 的指数。</td></tr>
+<tr><td align="center"><a href="jsref_floor.asp">floor(x)</a></td><td align="center">对数进行下舍入。</td></tr>
+<tr><td align="center"><a href="jsref_log.asp">log(x)</a></td><td align="center">返回数的自然对数（底为e）。</td></tr>
+<tr><td align="center"><a href="jsref_max.asp">max(x,y)</a></td><td align="center">返回 x 和 y 中的最高值。</td></tr>
+<tr><td align="center"><a href="jsref_min.asp">min(x,y)</a></td><td align="center">返回 x 和 y 中的最低值。</td></tr>
+<tr><td align="center"><a href="jsref_pow.asp">pow(x,y)</a></td><td align="center">返回 x 的 y 次幂。</td></tr>
+<tr><td align="center"><a href="jsref_random.asp">random()</a></td><td align="center">返回 0 ~ 1 之间的随机数。</td></tr>
+<tr><td align="center"><a href="jsref_round.asp">round(x)</a></td><td align="center">把数四舍五入为最接近的整数。</td></tr>
+<tr><td align="center"><a href="jsref_sin.asp">sin(x)</a></td><td align="center">返回数的正弦。</td></tr>
+<tr><td align="center"><a href="jsref_sqrt.asp">sqrt(x)</a></td><td align="center">返回数的平方根。</td></tr>
+<tr><td align="center"><a href="jsref_tan.asp">tan(x)</a></td><td align="center">返回角的正切。</td></tr>
+<tr><td align="center"><a href="jsref_tosource_math.asp">toSource()</a></td><td align="center">返回该对象的源代码。</td></tr>
+<tr><td align="center"><a href="jsref_valueof_math.asp">valueOf()</a></td><td align="center">返回 Math 对象的原始值。</td></tr>
+</tbody>
+</table>
+</li>
+</ul>
+<h3 id="94-regexp">9.4 RegExp</h3>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<p>RegExp表示正则表达式对象。</p>
+</li>
+<li>
+<p><strong>创建</strong>：</p>
+<pre><code class="language-javascript">var reg = new RegExp('&lt;regex...&gt;');
+var reg = /&lt;regex...&gt;/;
+
+var reg = /^&lt;regex...&gt;$/;			// 完全匹配
+</code></pre>
+</li>
+<li>
+<p><strong>使用</strong>：</p>
+<pre><code class="language-javascript">// 测试给定字符串是否符合规则
+var flag = reg.test('&lt;stringToTest...&gt;');
+</code></pre>
+</li>
+<li>
+<p><strong>正则表达式的规则</strong>：</p>
+<table>
+<thead>
+<tr><th align="center">表达式</th><th align="center">含义</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">x</td><td align="center">字符x</td></tr>
+<tr><td align="center">\</td><td align="center">反斜线字符</td></tr>
+<tr><td align="center">\n</td><td align="center">换行符</td></tr>
+<tr><td align="center">\r</td><td align="center">回车符</td></tr>
+<tr><td align="center">[abc]</td><td align="center">a、b或者c</td></tr>
+<tr><td align="center">[^abc]</td><td align="center">除a、b、c外任何字符</td></tr>
+<tr><td align="center">[a-zA-Z]</td><td align="center">a到z或A到Z，两头字母包括在内</td></tr>
+<tr><td align="center">[0-9]</td><td align="center">0到9的字符都包括</td></tr>
+<tr><td align="center">.</td><td align="center">任何字符，若要表示'.'字符：<code>\.</code></td></tr>
+<tr><td align="center">\d</td><td align="center">数字</td></tr>
+<tr><td align="center">\w</td><td align="center">单词字符<code>[a-zA-Z0-9_]</code></td></tr>
+<tr><td align="center">x?</td><td align="center">X，一次或一次也没有</td></tr>
+<tr><td align="center">x*</td><td align="center">X，零次或多次</td></tr>
+<tr><td align="center">x+</td><td align="center">X，一次或多次</td></tr>
+<tr><td align="center">x{n}</td><td align="center">X，恰好n次</td></tr>
+<tr><td align="center">x{n,}</td><td align="center">X，至少n次</td></tr>
+<tr><td align="center">x{n,m}</td><td align="center">X，至少 n 次，但是不超过 m 次</td></tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><strong>遇到的坑</strong>：</p>
+<ul>
+<li>使用<code>/^&lt;regex...&gt;$/</code>会执行完全匹配，其他两种方式只要字符串中<strong>包含</strong>表达式的逻辑就会返回true。不要忽视开头和结尾的起始/结束符。</li>
+<li>若使用<code>new RegExp(&quot;...&quot;)</code>，<code>\w</code>等的反斜线需要再加上一层转义符：<code>\\w</code>，其他两种方式则不需要。</li>
+<li>使用<code>()</code>来包括多个内容。</li>
+</ul>
+</li>
+</ul>
+<h2 id="10-dom">10. DOM</h2>
+<h3 id="101-dom概述">10.1 DOM概述</h3>
+<ul>
+<li>DOM（Document Object Model）文档对象模型，定义了访问和处理访问文档的标准方法。</li>
+</ul>
+<h3 id="102-常用文档对象">10.2 常用文档对象</h3>
+<h4 id="1021-document">10.2.1 Document</h4>
+<ul>
+<li><strong>概述</strong>：
+<ul>
+<li>每个载入浏览器的 HTML 文档都会成为 Document 对象。</li>
+<li>Document 对象使我们可以从脚本中对 HTML 页面中的所有元素进行访问。</li>
+<li>可通过 window.document 或 document 直接获取。</li>
+</ul>
+</li>
+<li><strong>常用方法</strong>：</li>
+</ul>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">getElementById()</td><td align="center">返回对拥有指定 id 的第一个对象的引用。</td></tr>
+<tr><td align="center">getElementsByName()</td><td align="center">返回带有指定名称的对象集合。</td></tr>
+<tr><td align="center">getElementsByTagName()</td><td align="center">返回带有指定标签名的对象集合，可后跟<code>[&lt;index...&gt;]</code>来访问集合中的元素</td></tr>
+<tr><td align="center">getElementsByClassName()</td><td align="center">返回带有指定类名的对象集合，可后跟<code>[&lt;index...&gt;]</code>来访问集合中的元素</td></tr>
+<tr><td align="center">write()</td><td align="center">向文档写 HTML 表达式 或 JavaScript 代码。</td></tr>
+<tr><td align="center">writeln()</td><td align="center">等同于 write() 方法，不同的是在每个表达式之后写一个换行符。</td></tr>
+<tr><td align="center">createElement()</td><td align="center">创建新的元素，参数为一个节点名称</td></tr>
+<tr><td align="center">createTextNode()</td><td align="center">创建文本结点，传入字符串形式的文本内容</td></tr>
+<tr><td align="center"><strong>more...</strong></td><td align="center"><strong>更多方法需查阅文档</strong></td></tr>
+</tbody>
+</table>
+<h4 id="1022-element">10.2.2 Element</h4>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<ul>
+<li>
+<p>在 HTML DOM 中，Element 对象表示 HTML 元素。</p>
+</li>
+<li>
+<p>Element 对象可以拥有类型为元素节点、文本节点、注释节点的子节点。</p>
+</li>
+<li>
+<p>NodeList 对象表示节点列表，比如 HTML 元素的子节点集合。</p>
+</li>
+<li>
+<p>元素也可以拥有属性，属性是属性节点。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>常用属性和方法</strong>：</p>
+<table>
+<thead>
+<tr><th align="center">属性/方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">style</td><td align="center">设置或返回元素的 style 属性。</td></tr>
+<tr><td align="center">innerHTML</td><td align="center">设置或返回元素的内容。</td></tr>
+<tr><td align="center">appendChild()</td><td align="center">向元素添加新的子节点，作为最后一个子节点。</td></tr>
+<tr><td align="center">firstChild()</td><td align="center">返回元素的首个子。</td></tr>
+<tr><td align="center">setAttribute()</td><td align="center">设置属性，参数1为属性名，参数2为内容</td></tr>
+<tr><td align="center">removeAttribute()</td><td align="center">移除属性</td></tr>
+<tr><td align="center"><strong>more...</strong></td><td align="center"><strong>更多方法需查阅文档</strong></td></tr>
+</tbody>
+</table>
+</li>
+</ul>
+<h4 id="1023-node">10.2.3 Node</h4>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<ul>
+<li>所有DOM对象都可以认为是一个结点。</li>
+</ul>
+</li>
+</ul>
+<h2 id="11-bom">11. BOM</h2>
+<h3 id="111-bom概述">11.1 BOM概述</h3>
+<ul>
+<li>BOM（Browser Object Model）浏览器对象模型，使JavaScript有能力与浏览器&quot;对话&quot;。</li>
+<li>BOM尚无正式标准 。</li>
+</ul>
+<h3 id="112-常用浏览器对象">11.2 常用浏览器对象</h3>
+<h4 id="1121-navigator">11.2.1 Navigator</h4>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<p>浏览器对象，具有与浏览器相关的相关方法和属性。</p>
+</li>
+</ul>
+<h4 id="1122-window">11.2.2 Window</h4>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<ul>
+<li>浏览器窗口对象。</li>
+<li>可以直接通过属性获取该window的其他对象。</li>
+</ul>
+</li>
+<li>
+<p><strong>常用方法</strong>：</p>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">alert()</td><td align="center">弹出警告框</td></tr>
+<tr><td align="center">confirm()</td><td align="center">弹出具有确定和取消按钮的警告框，点击确定将返回true，点击取消返回false</td></tr>
+<tr><td align="center">prompt()</td><td align="center">弹出具有输入框的警告框，返回输入的内容</td></tr>
+<tr><td align="center">close()</td><td align="center">关闭当前窗口（关闭调用者window对象表示的窗口）</td></tr>
+<tr><td align="center">open()</td><td align="center">打开新窗口，可以传递url以打开指定页面。返回新创建的window对象</td></tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><strong>注意事项</strong>：</p>
+<ol>
+<li>window对象不需要创建就可以直接使用，格式：<code>window.demoFunction()</code></li>
+<li>window引用可以省略</li>
+</ol>
+</li>
+</ul>
+<h4 id="1123-location">11.2.3 Location</h4>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<ul>
+<li>Location 对象包含有关当前 URL 的信息。</li>
+<li>Location 对象是 Window 对象的一个部分，可通过 window.location 属性来访问。</li>
+</ul>
+</li>
+<li>
+<p><strong>常用属性和方法</strong>：</p>
+<table>
+<thead>
+<tr><th align="center">属性/方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">href</td><td align="center">设置或返回完整的 URL。</td></tr>
+<tr><td align="center">reload()</td><td align="center">重新加载当前文档。</td></tr>
+<tr><td align="center">replace()</td><td align="center">用新的文档替换当前文档。</td></tr>
+</tbody>
+</table>
+</li>
+</ul>
+<h4 id="1124-history">11.2.4 History</h4>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<ul>
+<li>历史记录对象，表示当前窗口的历史记录。</li>
+<li>History 对象是 Window 对象的一个部分，可通过 window.history 属性来访问。</li>
+</ul>
+</li>
+<li>
+<p><strong>常用属性和方法</strong>：</p>
+<table>
+<thead>
+<tr><th align="center">属性/方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">length</td><td align="center">返回当前窗口中的历史URL数量</td></tr>
+<tr><td align="center">back()</td><td align="center">加载history列表中的前一个URL</td></tr>
+<tr><td align="center">forward()</td><td align="center">加载history列表中的下一个URL</td></tr>
+<tr><td align="center">go()</td><td align="center">加载history列表中某个特定的URL</td></tr>
+</tbody>
+</table>
+</li>
+</ul>
+<h4 id="1125-screen">11.2.5 Screen</h4>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<p>显示器屏幕对象，具有与显示器屏幕相关的属性。</p>
+</li>
+</ul>
+<h2 id="12-定时器">12. 定时器</h2>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<p>使用定时器，可以在指定时间后执行JavaScript代码，或周期性地执行JavaScript代码。</p>
+<p>定时器的方法属于window对象，可以不加引用直接调用。</p>
+</li>
+<li>
+<p><strong>使用</strong>：</p>
+<p>可以使用如下两个方法：</p>
+<ul>
+<li><strong>setInterval(&lt;code...&gt;, &lt;millisec...&gt;, [lang...])</strong> ：按照<strong>指定的周期</strong>（以毫秒计）来调用函数或计算表达式。方法会<strong>不停</strong>地调用函数，直到 <strong>clearInterval()</strong> 被调用或窗口被关闭。</li>
+<li>code：要执行的代码，用引号包裹</li>
+<li>millisec：周期的毫秒值</li>
+<li>lang：可选：JScript | VBScript | JavaScript</li>
+<li><strong>setTimeout(&lt;code...&gt;, &lt;millisec...&gt;, [lang...])</strong> ：在<strong>指定的毫秒数</strong>后调用函数或计算表达式。若调用了 <strong>clearTimeout()</strong> 则会取消定时器。</li>
+<li>code：要执行的代码，用引号包裹</li>
+<li>millisec：延迟的毫秒值</li>
+<li>lang：可选：JScript | VBScript | JavaScript</li>
+</ul>
+</li>
+<li>
+<p><strong>示例</strong>：</p>
+<pre><code class="language-javascript">var i = 0;
+setInterval(&quot;document.write(++i)&quot;, 500);
+</code></pre>
+</li>
+<li>
+<p><strong>注意事项</strong>：</p>
+<ol>
+<li>若传入已定义的方法，方法名后不需要加上括号。</li>
+</ol>
+</li>
+</ul>
+
+
+</body>
+</html>

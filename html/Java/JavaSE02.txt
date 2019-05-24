@@ -1,0 +1,772 @@
+﻿Java笔记02（Day10-Day18）
+
+目录
+	1.引用类型问题
+	2.链式编程
+	3.包的概述
+	4.导包概述
+	5.修饰符
+	6.内部类
+	7.eclipse的使用
+	8.Object类的部分方法
+	9.Scanner类概述/构造方法/方法
+	10.String类概述/构造方法/方法
+	11.StringBuffer概述/构造方法/方法
+	12.String，StringBuffer，StringBuilder区别
+	13.排序
+	14.查找
+	15.Arrays工具类
+	16.Integer包装类
+	17.Character包装类
+	18.正则表达式
+	19.Math类
+	20.Random类
+	21.System类
+	22.BigInteger类
+	23.BigDecimal类
+	24.日期相关类：Date/DateFormat/Calender
+	25.集合的概述
+	26.Collection<E>接口
+	27.List接口
+	28.少量数据结构知识
+	29.泛型（JDK5新特性）
+	30.增强for（JDK5新特性）
+	31.静态导入（JDK5新特性）
+	32.可变参数（JDK5新特性）
+	33.Set<E>接口
+	34.Map<K, V>接口
+	35.Collections工具类
+
+1.引用类型相关问题
+	1）形式参数为引用类型时：
+		形式参数为类：需要的是该类的对象；
+		形式参数为抽象类：需要的是改抽象类的子类对象；
+		形式参数为接口：需要的是该接口实现类的对象。
+	2）返回值为引用类型时：
+		返回值为类：返回的是该类的对象；
+		返回值为抽象类：返回的是该抽象类的子类对象；
+		返回值为接口：返回的是该接口实现类的对象。
+
+2.链式编程
+	链式编程就是通过“点”的语法，将本需要多个语句的代码内容在一个语句中连续地写出来。
+	合理地使用链式编程将提高代码的易读性。
+	
+3.包/package的概述
+	1）其实就是文件夹
+	2）作用：
+		对类进行分类管理（把相同的类名放到不同的包中）
+	3）定义包的格式：
+		package 包名;
+			多级包用.分开即可。
+	4）注意事项：
+		A：package语句必须是程序的第一条可执行代码；
+		B：package语句在一个Java文件中只能有一个；
+		C：如果没有package，默认表示无包名。
+	5）带包的编译和运行：
+		A：手动式：
+			a：编写一个带包的Java文件；
+			b：通过javac命令编译该Java文件；
+			c：手动创建与包名相同的文件夹；
+			d：把编译生成的class文件放到最底层包文件夹；
+			e：回到包根目录所在目录，然后带包运行。
+		B：自动式：
+			a：编写一个带包的Java文件；
+			b：javac编译的时候带上-d即可，示例：
+				javac -d . HelloWorld.java
+			c：回到包根目录所在目录，然后带包运行。
+		带包运行格式：
+			java 包名.类名
+
+4.导包概述
+	1）因为每次使用不同包下的类的时候，都需要加上包的全路径，比较麻烦。导包可以进行不同包下类之间的访问。
+	2）格式：
+		import 包名.类名;
+			类名可以为*，这样会导入该包下所有类，不建议。
+	3）package import class的顺序关系：
+		package > import > class
+		package：只能有一个；
+		import：可以有多个；
+		class：可以有多个，建议一个。
+
+5.修饰符
+	权限修饰符：private，默认，protected，public
+	状态修饰符：static，final
+	抽象修饰符：abstract
+		1）各内容可使用的修饰符：
+			类：
+				权限修饰符：默认，public
+				状态修饰符：final
+				抽象修饰符：abstract
+			成员变量：
+				权限修饰符：private，默认，protected，public
+				状态修饰符：static，final
+			构造方法：
+				权限修饰符：private，默认，protected，public
+			成员方法：
+				权限修饰符：private，默认，protected，public
+				状态修饰符：static，final
+				抽象修饰符：abstract
+		2）权限修饰符的详细访问权限：
+				修饰符				可访问的位置
+				--------------------------------
+				private				本类		
+				默认					本类		同包子类		同包普通类
+				protected			本类		同包子类		同包普通类		不同包子类
+				public				本类		同包子类		同包普通类		不同包子类		不同包普通类
+
+6.内部类
+	定义：把类定义在其他类的内部，这个类就称为内部类。
+	访问特点：
+		1）内部类可以直接访问外部类的成员，包括私有；
+		2）外部类要访问内部类的成员，必须创建对象。
+	成员内部类：
+		访问内部类的成员：
+			外部类名.内部类名 对象名 = 外部类对象.内部类对象
+			例：Outer.Inner oi = new Outer().new Inner();oi.show();
+		修饰符：
+			private 为了保证数据的安全性
+			static 为了方便访问数据，注意静态内部类访问的外部类数据必须用静态修饰。
+				访问方式：外部类名.内部类名 对象名 = new 外部类名.内部类名();
+	局部内部类：
+		A：可以直接访问外部类的成员；
+		B：在局部位置，可以创建内部类对象，通过对象调用内部类方法，来使用局部内部类功能。
+			注意：局部内部类访问的局部变量必须用final修饰。
+	匿名内部类：
+		就是内部类的简化写法。
+		前提：存在一个类或者接口（这里的类可以是具体类也可以是抽象类）。
+		格式：
+			new 类名或接口名() {
+				重写方法;
+			}
+		本质：
+			是一个继承了该类或者实现了该接口的子类匿名对象。
+
+7.eclipse的使用
+	1）常用快捷键：
+		alt+/  内容辅助，起提示作用。
+			例：输入main/syso/sout+alt+/可自动补齐
+		ctrl+shift+f  自动格式化（format）
+		ctrl+shift+o  自动导包
+		ctrl+/  单行注释选中行，再次使用取消注释
+		ctrl+shift+/ , ctrl+shift+\  多行注释选中部分，取消多行注释选中部分
+		*alt+上/下方向键  将选中代码上下移动（*实测eclipse4.7连同ctrl+alt+方向键复制代码一起失效，eclipse3.7有效）
+		F3/按住ctrl+鼠标点击  选中类名查看源码
+		ctrl + alt + down	光标所在行自动向下复制一行
+	2）常用快捷操作：
+		alt+shift+s  +对应字母  快捷生成构造方法（o），get/set方法（r）等
+	3）生成/使用jar包：
+		生成方法：选中项目，右键export-Java-Jar File
+		使用方法：将Jar包复制粘贴到项目下，然后添加至构建路径（Build Path）
+	4）制作帮助文档：
+		首先写源程序，写好文档注释，之后在项目上右键export-Java-Javadoc
+
+8.Object类的部分方法：
+	1）public int hashCode()
+		返回该对象的哈希码值。
+			哈希码值是根据哈希算法计算出来的一个值，这个值和地址值有关，但是不是实际的地址值。（可以理解为地址值）
+		调用举例：System.out.println(s1.hashCode());
+	2）public final class getClass()
+		返回此object的运行时类。
+			返回值为class，class也是一个类，该类中有一个方法：public String getName();
+				以String的形式返回此class对象所表示的实体名称。
+	3）public String toString()
+		返回该对象的字符串表示。
+			toString()等价于getClass().getName() + '@' + Integer.toHexString(hashCode())
+				Integer类下一个静态方法：
+					public static String toHexString(int i)把一个整数转成一个十六进制表示的字符串。
+		建议所有子类重写该方法，将该类所有成员变量组成返回即可。
+		可以右键自动生成该方法。
+		注意：若直接输出一个对象名称，其实就是调用该对象的toString()方法。
+	4）public boolean equals(Object obj)
+		指示其他某个对象是否与此对象相等。
+			这个方法默认情况下比较的是地址值。由于一般来说比较地址值意义不大，常常要重写该方法。
+			重写一般要求比较对象的成员变量值是否相同。
+	5）protected void finalize()
+		当垃圾回收期确定不存在该对象的更多引用时，由对象的垃圾回收器调用此方法，用于垃圾回收。
+		什么时候回收，不确定。
+	6）protected Object clone()
+		创建并返回此对象的一个副本。
+			要调用此方法：
+				A：子类重写该方法（因为protected修饰的方法只有在本包/子类中才可以访问）；
+				B：子类实现Cloneable接口，以指示Object.clone()方法可以合法地对该类实例进行按字段复制。
+					Cloneable接口没有方法，为标记类接口，表明实现了该接口的类就可以实现对象的复制了。
+
+9.Scanner类概述/构造方法/方法：
+	Scanner sc = new Scanner(System.in) 使用的构造方法是：
+		Scanner(InputStream source)
+	方法：
+		public boolean hasNextXxx() 判断是否是某种类型的元素
+		public Xxx nextXxx() 获取该元素
+	注意事项（18.3.25.）：
+		public String nextLine()会扫描剩下的所有字符，直到遇到换行符"\n"为止。其行为不同于next()方法，该方法会从遇到的第一个有效字符（非空格、换行符）开始扫描，直到遇到空格或者换行符为止。
+		这意味着如果在敲了enter后调用了nextLine()方法，nextLine()会立即扫描结束，并返回一个空值。然后继续执行后面的语句。
+
+10.String类的概述/构造方法/功能：
+	概述：字符串就是由多个字符组成的一串数据，也可以看成是一个字符数组。
+		通过查看API可知：1）字符串字面值"abc"也可以看成是一个字符串对象；2）字符串为常量，赋值后不能改变（是值不能改变，引用可以改变）。
+	构造方法：
+		public String()																//空构造
+		public String(byte[] bytes)												//把字节数组转成字符串
+		public String(byte[] bytes,int index,int length)				//把字节数组的一部分转换成字符串，从index开始，共length个成员
+		public String(byte[] bys, String charsetName)				//通过指定字符集（编码表）解码给定字节数组，创建字符串对象
+		public String(char[] value)												//把字符数组转成字符串
+		public String(char[] value,int index,int length)				//把字符数组的一部分转成字符串，从index开始，共length个成员
+		public String(String original)											//把字符串常量值转成字符串
+	功能：
+		1）判断功能：
+			boolean equals(String str)											//比较字符串的 [内容] 是否相同，区分大小写
+			boolean equalsIgnoreCase(String str)						//比较字符串的内容是否相同，不区分大小写
+			boolean contains(String str)										//判断大字符串中是否包含小字符串
+			boolean startsWith(String str)									//判断字符串是否以某个指定的字符串开头
+			boolean endsWith(String str)									//判断字符串是否以某个指定的字符串结尾
+			boolean isEmpty()														//判断字符串是否为空
+		2）获取功能
+			int length()																//获取字符串的长度
+			char charAt(int index)												//获取指定索引位置的字符
+			int indexOf(int ch)													//返回指定字符在此字符串中第一次出现的索引																		*此处参数为int类型的原因是，int大于char，如果用char接收需要强制转换，而int类型的数据也可以表示char类型的数据
+			int indexOf(String str)												//返回指定字符串在此字符串中第一次出现的索引，返回的是首字符的索引
+			int indexOf(int ch,int fromIndex)								//返回指定字符在此字符串中从指定位置后第一次出现的索引												*注意包括指定索引的字符串
+			int indexOf(String str,int fromIndex)							//返回指定字符串在此字符串中从指定位置后第一次出现的索引
+			String substring(int beginIndex)								//从beginIndex开始一直到结尾截取新的字符串并返回
+			String substring(int beginIndex,int endIndex)			//从beginIndex开始到endIndex截取新的字符串并返回															*注意，包左不包右		*是的你没看错substring都是小写
+		3）转换功能
+			byte[] getBytes()														//把字符串转换为Byte（字节）数组
+			byte[] getBytes(String charsetName)							//s.getBytes(编码表名)，使用给定字符集（编码表）将字符串编码为字节数组
+			char[] toCharArray()													//把字符串转换为字符数组
+			static String valueOf(char[] chs)								//把字符数组转换成字符串
+			static String valueOf(int i)											//把int类型数据转成字符串
+			String toLowerCase()												//把字符串转成小写
+			String toUpperCase()												//把字符串转成大写
+			String concat(String str)											//把字符串拼接
+		4）其他功能
+			替换：
+			String replace(char old,char new)								//把字符串中所有old字符替换为new字符
+			String replace(String old,String new)							//String s = s1.replace(oldString, newString)，把字符串中所有old小字符串替换成new小字符串，返回替换后的字符串，原有字符串不发生改变
+			去除字符串两端空格：
+			String trim()																//去除字符串两端的空格
+			按字典顺序比较两个字符串
+			int compareTo(String str)											//*+区分大小写
+			int compareToIgnoreCase(String str)							//*+不区分大小写
+			//*	比较字符串与参数字符串第一个字符，若不等，返回字符串ASCII-参数字符串ASCII；若相等，比较下一位；以此类推。
+			//*	若两个字符串不同，且一个字符串为另一个字符串的前面N位，返回字符串长度-参数字符串长度
+	注意事项：
+		1）如果是字符串变量相加（String类型的对象），会先在堆内存开新空间，再相加；
+		2）字符串如果是常量相加，是先相加并在方法区的常量池找，如果相加后的字符串存在就返回，否则就创建后返回。
+
+11.StringBuffer概述/构造方法/方法
+	线程安全的可变字符串。
+	1）StringBuffer和String的区别：
+		前者长度和内容可变，后者不可变。如果使用前者做字符串的拼接，不会浪费太多的资源。
+	2）构造方法
+		public StringBuffer()														//无参构造方法
+		public StringBuffer(int capacity)									//指定容量的字符串缓冲区对象
+		public StringBuffer(String str)										//指定字符串内容的字符串缓冲区对象
+	3）方法
+		A.获取功能
+			public int capacity()													//返回当前容量
+			public int length()														//返回长度（字符数）
+		B.添加功能
+			public StringBuffer append(String str)						//把任意类型数据添加到字符串缓冲区后面，返回字符串缓冲区本身
+			public StringBuffer insert(int offset,String str)			//在指定位置把任意类型数据添加到字符串缓冲区里面
+		C.删除功能
+			public StringBuffer deleteCharAt(int index)				//删除指定位置的字符，并返回本身
+			public StringBuffer delete(int start,int end)				//删除指定位置开始到指定位置结束的字符，并返回本身，包左不包右
+		D.替换功能
+			public StringBuffer replace(int start,int end,String str)		//从Start开始到End用str替换，包左不包右
+		E.反转功能
+			public StringBuffer reverse()										//将字符串反转
+		F.截取功能
+			public String substring(int start)								//从start到结尾/到end截取字符串，包左不包右
+			public String substring(int start,int end)					//注意返回值为String，方法不对StringBuffer本身做修改
+	4）String和StringBuffer之间的相互转换
+		A.String => StringBuffer
+			方式1：
+				通过构造方法public StringBuffer(String str)
+				StringBuffer sb = new StringBuffer(str)
+			方式2：
+				通过append()方法public StringBuffer append(String str)
+				sb.append(s)
+		B.StringBuffer => String
+			方式1：
+				通过构造方法public String(StringBuffer buffer)
+				String str = new String(buffer)
+			方式2：
+				通过toString()方法public String toString()
+				String str = buffer.toString()
+	5）注意事项
+		String作为参数传递，其效果和基本类型作为参数传递是一样的。
+
+12.String , StringBuffer , StringBuilder 的区别？
+	1）String是内容不可变的，StringBuffer和StringBuilder是内容可变的；
+	2）StringBuffer是同步的，数据安全，效率低；StringBuilder是不同步的，数据不安全，效率高。
+
+13.排序
+	1）冒泡排序（bubbleSort）：
+		相邻元素两两比较，大的往后放。第一次完毕，最大值出现在最大索引处。
+	2）选择排序：
+		从0索引开始，依次和后面的元素比较，小的往前放。第一次完毕，最小值出现在最小索引处。
+
+14.查找
+	1）基本查找
+		数组元素无序（从头找到尾）
+	2）二分查找
+		数组元素有序（折半查找）
+
+15.Arrays工具类
+	重要方法：
+		public static String toString(int[] arr)								//Arrays.toString(int[] arr)，把数组转成字符串"[11, 22, 33]"
+		public static void sort(int[] arr)										//Arrays.sort(int[] arr)，对数组进行升序排序
+		public static int binarySearch(int[] arr,int key)				//Arrays.binarySearch(int[] arr , int key)，二分查找key在arr中的位置，注意在查找前需对数组进行排序（sort）
+		
+		public static <T> List<T> asList(T... a)							//把数组转成集合（这里的可变参数是JDK5新特性，之前是数组）
+			//注意：这转成的是Arrays私有的终极ArrayList类型（内部类），不包含add()和remove()等方法，所以转成的集合长度不能改变。
+
+16.Integer包装类
+	概述：
+		Integer类在在对象中包装了一个基本类型int的值。Integer类型的对象包含一个int类型的字段。
+		此外，该类提供了多个方法，能在int类型和String类型之间相互转换，还提供了处理int类型时非常有用的其他一些常量和方法。
+	构造方法：
+		public Integer(int value)
+		public Integer(String s)													//注意此处String只能有数字
+	重要方法：
+		public static int parseInt(String s)									//将字符串转换为十进制整数int，其他基本类型的包装类中也有类似方法
+		public static int parseInt(String s,int radix)					//将其他进制数字转换为十进制，范围2-36
+		public static String toString(int i,int radix)						//将十进制数字转转为其他进制，范围2-36
+	*JDK5的新特性
+		自动装箱：把基本类型转换为包装类类型。
+			如：Integer i = 100;	可通过编译，等价于Integer i = Integer.valueOf(100);
+		自动拆箱：把包装类类型转换为基本类型。
+			如：Integer i = 100;	i += 200;		可通过编译，后句等价于i = Integer.valueOf(i.intValue() + 200);
+		注意：在使用时若Integer i = null;	上述过程会出现NullPointerException空指针异常。
+		注意：Integer的数据直接赋值，如果在-128~127之间，会直接从缓冲池里获取数据。
+			如：Integer i = 127;	Integer ii = 127;		System.out.println( i == ii );		将会输出true
+
+17.Character包装类
+	概述：
+		Character类在对象中包装了一个基本类型为char的值。Character类型的对象包含类型为char的单个字段。
+		此外，该类提供了几种方法，以确定字符的类别（小写字母，数字，等等），并将字符从大写转换成小写，反之亦然。
+	构造方法：
+		public Character(char value)
+	重要方法：
+		public static boolean isUpperCase(char ch)					//判断给定字符是否是大写字符
+		public static boolean isLowerCase(char ch)					//判断给定字符是否是小写字符
+		public static boolean isDigit(char ch)							//判断给定字符是否是数字字符
+		public static char toUpperCase(char ch)						//把给定字符转成大写字符
+		public static char toLowerCase(char ch)						//把给定字符转成小写字符
+
+18.正则表达式
+	概述：
+		是指一个用来描述或者匹配一系列符合某个句法规则的字符串的单个字符串。其实就是一种规则，有自己特殊的应用。
+	规则：
+		可在API中查找Pattern类查看，以下是重要规则：
+			x							字符x
+			\\							反斜线字符
+			\n						新行（换行）符
+			\r							回车符
+			
+			[abc]					a、b或、c
+			[^abc]					任何字符除了a、b或、c
+			[a-zA-Z]				a到z或A到Z，两头字母包括在内
+			[0-9]					0到9的字符都包括
+			
+			.							任何字符，若要表示'.'字符，\.
+			\d						数字
+			\w						单词字符[a-zA-Z_0-9]
+			
+			X? 						X，一次或一次也没有 
+			X* 						X，零次或多次 
+			X+ 						X，一次或多次 
+			X{n} 					X，恰好n次 
+			X{n,} 					X，至少n次 
+			X{n,m} 				X，至少 n 次，但是不超过 m 次 
+	使用：
+		String类的匹配功能：
+			public boolean matches(String regex)							//字符串.maches(正则表达式)，返回boolean
+		String类的拆分功能：
+			public String[] split(String regex)									//字符串.split(正则表达式)，返回拆分的字符串数组。所得的数组不包括结尾空字符串。
+		String类的替换功能：
+			public String replaceAll(String regex,String replacement)		//字符串.replaceAll(正则表达式,目标)	以目标替换所有字符串中出现的正则表达式
+		Pattern类和Matcher类实现的判断（匹配）功能：
+			典型的调用顺序：
+				Pattern p = Pattern.compile("a*b");							//把正则表达式编译成模式对象
+				Matcher m = p.matcher("aaaaab");							//通过模式对象调用matcher方法输入被匹配的字符串得到匹配器对象
+				boolean b = m.matches();											//调用匹配器对象的功能
+		Pattern类和Matcher类实现的获取功能：
+			典型的调用顺序：
+				Pattern p = Pattern.compile(regex);							//把正则表达式编译成模式对象
+				Matcher m = p.matcher(s);										//通过模式对象调用matcher方法输入被匹配的字符串得到匹配器对象
+				while(m.find()){
+					System.out.println(m.group());								//第一个括号为group(1)，以此类推。group(0)为整个匹配到的字符串。
+				}
+
+19.Math类
+	概述：
+		Math类包含用于执行基本数学运算的方法，如初等指数，对数，平方根和三角函数。
+	重要方法：
+		public static int abs(int a)													//Math.abs(int a)，返回a的绝对值
+		public static double ceil(double a)									//Math.ceil(double a)，将a向上取整并返回
+		public static double floor(double a)									//Math.floor(double a)，将a向下取整并返回
+		public static int max(int a,int b)										//Math.max(int a,int b)，返回a,b的较大值，同理还有min方法
+		public static double pow(double a,double b)					//Math.pow(double a,double b)，返回a的b次幂（double）
+		public static double random()											//Math.random()，返回[0.0,1.0)的double类型随机数
+		public static int round(float a)											//Math.round(数字f)，四舍五入返回int
+		public static double sqrt(double a)									//Math.sqrt(double a)返回a的正平方根
+
+20.Random类
+	概述：
+		产生随机数的类。
+	构造方法：
+		public Random()																//使用默认种子（当前时间毫秒值）
+		public Random(long seed)												//使用给定种子（给定种子后每次都会得到相同的随机数）
+	重要方法：
+		public int nextInt()															//rd.nextInt()，返回的是int范围内的随机数
+		public int nextInt(int n)														//rd.nextInt(int n)，返回的是[0,n)范围内的随机数
+
+21.System类
+	重要方法：
+		public static void gc()														//System.gc()，调用垃圾回收器。实际上是调用了Object类的finalize()方法。建议除非是回收大量对象，不要使用该方法
+		public static void exit(int status)										//System.exit(0)，关闭当前运行的Java虚拟机。参数作为状态码，非0状态码表示异常终止
+		public static long currentTimeMillis()								//System.currentTimeMillis()，返回自1970年1月1日开始的当前时间的毫秒值表示
+		public static void arraycopy(Object src,int srcPos,Object dest,int deskPos,int length)			//System.arraycopy(原数组,原数组起始索引,目标数组,目标数组起始索引,要复制元素个数)
+			//从原数组中复制一个子数组到目标数组
+			//注意：arraycopy全部为小写
+
+22.BigInteger类
+	概述：
+		可表示超出int范围的整数。
+	重要构造方法：
+		public BigInteger(String val)
+	重要方法：
+		public BigInteger add(BigInteger val)								//bi.add()，返回bi + bi2
+		public BigInteger subtract(BigInteger val)							//bi.subtract(bi2)，返回bi - bi2
+		public BigInteger multiply(BigInteger val)							//bi.multiply(bi2)，返回bi * bi2
+		public BigInteger divide(BigInteger val)								//bi.divide(bi2)，返回bi / bi2
+		public BigInteger[] divideAndRemainder(BigInteger val)			//bi.divideAndRemainder(bi2)，返回BigInteger[]数组	{商，余数}
+
+23.BigDecimal类
+	概述：
+		该类可以精确的表示及计算浮点数，不同于bi2float和double在运算时有时会丢失精度。
+		不可变的，任意精度的有符号十进制数。
+	重要构造方法：
+		public BigDecimal(String val)											//将字符串转换为BigDecimal，此方法稳定/产生的结果可预知，首选
+		*public  BigDecimal(double val)										//将double数字转换为BigDecimal，此方法有时候会产生不可预知的结果，必须使用double时，可使用Double.toString(double)
+	重要方法：
+		public BigDecimal add(BigDecimal augend)						//bd1.add(bd2)，返回和(BigDecimal)
+		public BigDecimal subtract(BigDecimal subtrahend)			//bd1.subtract(bd2)，返回减(BigDecimal)
+		public BigDecimal multiply(BigDecimal multiplicand)		//bd1.multiply(bd2)，返回乘(BigDecimal)
+		public BigDecimal divide(BigDecimal divisor)					//bd1.divide(bd2)，返回商(BigDecimal)
+		public BigDecimal divide(BigDecimal divisor,int scale,int roundingMode)			//bd1.divide(bd2,保留几位小数,舍取方法)，一般"舍取方法"填入BigDecimal.ROUND_HALF_UP即可表示四舍五入
+
+24.日期相关类：Date/DateFormat/Calender
+	1）Date类
+		概述：
+			表示特定的时间，精确到毫秒。
+		构造方法：
+			Date()																			//根据当前毫秒值构造日期对象
+			Date(long date)															//根据给定毫秒值构造日期对象
+		重要方法：
+			#重写了toString()，直接输出会得到		星期 月份 日期 时:分:秒 时区 年份
+			public long getTime()													//dt.getTime()，返回Date对象dt的毫秒值(long)
+			public void setTime(long time)										//dt.setTime(long time)，给Date对象dt设置毫秒值
+	2）DateFormat抽象类
+		概述：
+			其子类如SimpleDateFormat允许实现格式化（日期 --> 文本）和解析（文本 --> 日期）和标准化。
+		重要方法：
+			public final String format(Date date)											//sdf.format(d)，返回String。将一个Date格式化为String（日期/时间）。
+			public Date parse(String source) throws ParseException			//sdf.parse(s)，返回Date。将一个String（日期/时间）解析为Date。注意此处提供的String需要与sdf构造的模式相匹配。
+		重要子类SimpleDateFormat：
+			构造方法：
+				SimpleDateFormat()													//使用默认的模式
+				SimpleDateFormat(String pattern)								//使用给定的模式
+					此处给定模式的重要格式：
+						年			y
+						月			M
+						日			d
+						时			H
+						分			m
+						秒			s
+						*更多可以查阅API
+						*举例："2018年01月13日 19:14:30" 	"yyyy年MM月dd日 HH:mm:ss"
+	3）Calendar类
+		概述：
+			Calendar日历类是一个抽象类，其包含诸如YEAR,MONTH,DAY_OF_MONTH,HOUR等的int字段，并提供了一些转换的方法。
+			注意：MONTH字段从0开始，0表示一月。
+		重要方法：
+			public static Calendar getInstance()								//Calendar.getInstance()，获取一个子类对象，使用当前的时间/默认时区等。				//暂时当作构造方法使用
+			
+			public int get(int field)													//cl.get(Calendar.YEAR)，获取该对象给定日历字段的值。
+			public void add(int field,int amount)								//cl.add(Calendar.YEAR , -5)，根据给定字段和时间，对日历对象进行操作。
+			public final void set(int year,int month,int date)			//cl.set(2018,0,14)，设置日历对象的年月日。
+
+25.集合的概述
+	为什么会出现集合类？
+		面向对象语言对事物的体现都是以对象的形式，为了方便对多个对象的操作，Java就提供了集合类。
+	数组和集合类同时容器，有何不同？
+		1.长度：数组长度固定/集合的长度可变；
+		2.类型：数组只能存储同一种类型的元素/集合可以存储不同类型的元素；
+		3.基本/引用：数组可以存储基本和引用类型数据/集合只能存储引用类型数据。
+
+26.Collection<E>接口
+	概述：
+		Collection是集合的顶层接口。其子体系有重复的/唯一的/有序的/无序的。
+	重要功能：
+		1）添加功能
+			boolean add(Object obj)												//c.add(o)，添加一个元素，成功操作返回true
+			boolean addAll(Collection c)											//c1.addAll(c2)，添加一个集合的元素，成功操作返回true
+		2）删除功能
+			void clear()																	//c.clear()，清除所有元素
+			boolean remove(Object obj)											//c.remove(o)，移除一个元素，成功操作返回true
+			boolean removeAll(Collection c)									//c1.removeAll(c2)，从c1中移除c2包含的所有元素
+		3）判断功能
+			boolean contains(Object obj)										//c.contains(o)，判断集合中是否包含指定元素（底层是equals）
+			boolean containsAll(Collection c)									//c1.containsAll(c2)，判断c1中是否包含所有c2中的元素
+		4）获取功能
+			Iterator<E> iterator()													//Iterator it = c.iterator()，Iterator是一个接口，这里返回的是一个子类对象
+			迭代器的最终实现，是通过各集合最终实现类（如ArrayList）中的内部类。
+			Iterator的功能：
+				boolean hasNext()													//it.hasNext()，如果仍有元素可以迭代，返回true
+				Object next()															//it.next()，获取元素，并移动到下一位置
+		5）长度功能
+			int size()																		//c.size()，返回集合中元素的个数
+			注意：此处为集合与数组和String的不同之处，后两者的长度功能为length()
+		6）交集功能
+			boolean retainAll(Collection c)										//c1.retainAll(c2)，c1和c2做交集，结果保存在c1中，c2不变。如果c1发生了改变返回true
+		7）转换功能
+			Object[] toArray()															//c.toArray()，返回此collection中所有元素的数组
+
+27.List接口
+	概述：
+		有序的Collection，又称为序列。此接口可根据整数索引访问元素，根据索引搜索元素，精确控制插入元素的位置等。
+		与Set不同，List通常允许重复的元素。
+	特有功能：
+		添加功能：
+			void add(int index,Object element)								//list.add(索引,元素)，用[元素]替代原来在[索引]处的元素，原来[索引]开始的元素全体后移一位
+		获取功能：
+			Object get(int index)														//list.get(索引)，返回[索引]处的元素
+		删除功能：
+			Object remove(int index)												//list.remove(索引)，删除[索引处的元素]（后面的集体前移一位），返回被删除的元素
+		修改功能：
+			Object set(int index,Object element)								//list.set(索引,元素)，根据索引修改元素，返回被修改的元素
+		列表迭代器：
+			ListIterator listIterator()													//list.listIterator()，返回List集合特有的迭代器ListIterator（同为子类对象实现）
+			ListIterator：一个接口，List集合特有的迭代器，继承了Iterator（可以直接使用hasNext()和next()）。
+			部分特有功能：
+				Object previous()														//lit.previous()，返回上一个元素
+				boolean hasPrevious()												//lit.hasPrevious()，判断是否有上一个元素
+				void add(E e)															//lit.add(元素)，将指定元素添加到List（注意不是添加到迭代器），添加的位置为当前迭代器迭代指针的位置
+	注意事项：
+		ConcurrentModificationException并发修改异常：
+			已由集合生成迭代器，并在迭代器进行迭代时对集合的元素进行修改，会抛出此异常。
+			解决方案：
+				A.用迭代器迭代元素时，可用迭代器的void add(E e)方法；
+				B.直接集合遍历元素，集合添加元素，此时添加的位置为List末尾。
+	List的三个重要实现类：
+		1）ArrayList
+			底层数据结构是[数组]（查询快，增删慢），线程不安全，效率高
+		2）Vector
+			概述：
+				底层数据结构是[数组]（查询快，增删慢），线程安全，效率低
+			特有功能：
+				添加功能：
+					public void addElement(Object obj)						//vec.addElement(元素)，常用add()替代
+				获取功能：
+					public Object elementAt(int index)						//vec.elementAt(索引)，返回索引处的元素，场用get(index)替代
+					public Enumeration elements()								//vec.elements()，常用Iterator iterator()替代
+					boolean hasMoreElements()									//en.hasMoreElements()，常用hasNext()替代
+					Object nextElement()											//en.nextElement()，常用next()替代
+		3）LinkedList
+			概述：
+				底层数据结构是[链表]（查询慢，增删快），线程不安全，效率高
+			部分特有功能：
+				添加功能：
+					public void addFirst(Object e)								//list.addFirst(元素)，将元素插入列表开头
+					public void addLast(Object e)								//list.addLast(元素)，将元素插入列表末尾
+				获取功能：
+					public Object getFirst()											//list.getFirst()，返回列表第一个元素
+					public Object getLast()											//list.getLast()，返回列表最后一个元素
+				删除功能：
+					public Object removeFirst()									//list.removeFirst()，移除并返回列表第一个元素
+					public Object removeLast()									//list.removeLast()，移除并返回列表最后一个元素
+
+28.少量数据结构知识
+	概述：
+		数据结构，即数据的组织方式。
+	常见数据结构：
+		1）栈
+			特点：先入（压栈）后出（弹栈）。
+		2）队列
+			特点：先进先出。
+		3）数组
+			概述：
+				存储同一种类型的多个元素的容器，有索引方便获取元素。
+			特点：
+				查询快，增删慢（由于长度固定需新建数组）。
+		4）链表
+			概述：
+				由一个“链子”把多个结点连起组成的数据。
+				结点：由数据和地址组成（数据域和指针域）
+			特点：
+				查询慢（需从头开始），增删快。具体可查看传智播客Day15.26。
+
+29.泛型（JDK5新特性）
+	概述：
+		不同于数组，泛型是一种把类型确定工作推迟到创建对象/调用方法的时候的一种特殊类型。将类型当作参数传递。
+	格式：
+		<数据类型>																		//此处的数据类型只能是引用类型
+	泛型类：
+		把泛型定义在类上																//class ObjectTools<T>
+	泛型方法：
+		把泛型定义在方法上															//public <T> void show(T t)
+	泛型通配符：
+		<?>																					//任意类型
+		<? extends E>																	//E及其子类
+		<? super E>																		//E及其父类
+	好处：
+		1）把运行时期的问题提前到编译时期；
+		2）避免了强制类型转换；
+		3）消除了警告，优化了程序设计。
+
+30.增强for（JDK5新特性）
+	概述：
+		是for循环的一种，可以替代迭代器，简化集合遍历。
+	格式：
+		for(元素数据类型 变量 : 数组或者collection集合) {	使用变量（元素）}
+	举例：
+		for(String x : arr) {
+			System.out.println(x);
+		}
+	弊端：
+		增强for的目标不能为null，否则会报空指针异常；
+		同迭代器一样，在遍历的时候更改集合元素会报并发修改异常。
+
+31.静态导入（JDK5新特性）
+	概述：
+		import可以直接导入到方法的级别。
+	格式：
+		import static 包名.类名.方法名;
+	举例：
+		import static java.lang.Math.pow;
+		...
+		System.out.println(pow(2.0 , 3.0));
+	注意事项：
+		1）导入的方法必须为static；
+		2）如果本类下有多个同名的静态方法，必须加类名前缀调用。
+
+32.可变参数（JDK5新特性）
+	概述：
+		定义方法的时候参数的个数可以不确定。
+	格式：
+		修饰符 返回值类型 方法名(数据类型... 变量名){方法体}
+	举例：
+		//该方法可以对任意个int数字求和
+		public int sum(int... a){
+			int s = 0;
+			for(int x : a){
+				s += a;
+			}
+			return s;
+		}
+	注意事项：
+		1）可变参数的变量是一个数组（长度为所传参数的个数）；
+		2）可变参数的位置可以传入对应数据类型的数组；
+		3）如果除了可变参数还需传入其他参数，可变参数必须放到最后。
+
+33.Set<E>接口
+	概述：
+		一个不包含重复元素（不包含满足equals关系的元素对）（唯一），元素无序的Collection（无序）。
+		最多只能有一个null。
+		相比Collection没有特有方法。
+	Set的二个重要实现类：
+		1）HashSet<E>
+			概述：
+				HashSet<E>的底层由HashMap支持。
+			重要子类：
+				LinkedHashSet
+					概述：
+						唯一、有序的HashSet，底层数据结构由哈希表和链表组成。哈希表保证元素唯一性，链表保证元素有序。
+			相关问题：
+				存储多个相同字符串时只会留下一个的解释：
+					public boolean add(E e)方法底层依赖hashCode()和equals()。
+					比较基于hashCode()的值是否相同，
+						相同：继续比较equals()，若也相同就不添加，否则就添加；
+						不同：添加。
+		2）TreeSet<E>																	//创建此类型的Set需要做一些其他事情
+			概述：
+				基于TreeMap的NavigableSet实现，能够按照某种规则对元素进行过排序。默认使用[自然顺序]对元素进行排序，或者根据创建Set时提供的Comparator进行排序，具体取决于使用的构造方法。
+				不论是自然排序还是比较器排序，该类会[依次从小到大排序]。
+			特点：
+				唯一和排序
+			自然排序：
+				概述：
+					使用public TreeSet()构造方法。
+					元素所属类需要实现Comparable<T>接口并重写int comparaTo(T o)，自行定义比较规则：
+						若返回值大于0则认为[元素]大于[参数]，返回值小于0认为[元素]小于[参数]，返回值等于0认为[元素]等于[参数]（不添加到集合）。
+				原理：
+					自然排序底层的数据结构是二叉树，加入集合的第一个元素为root，后来加入集合的元素将首先与root进行比较，若小于root则往root左边挂，大于root则往root右边挂，等于root则不添加到集合。
+					二叉树具体查看传智播客Java基础Day17.19。
+					自然排序中的比较是依赖元素的compareTo()方法。compareTo()定义在接口Comparable中，需要子类实现该接口并按照需求重写该方法。
+					自然排序中检查compareTo()的返回值，若返回值大于0则认为[元素]大于[参数]，返回值小于0认为[元素]小于[参数]，返回值等于0认为[元素]等于[参数]（不添加到集合）。
+					例如需要对学生类的元素进行比较，规定age更大的学生对象为较大者，则需要在学生类中实现Comparable接口重写compareTo()，返回this.age - age 。
+			比较器排序：
+				概述：
+					使用public TreeSet(Comparator<? super E> comparator)构造方法。
+					需要自行写一个类实现Comparator<T>接口并重写int compare(T o1, T o2)，自行定义比较规则：
+						若返回值大于0则认为[o1]大于[o2]，返回值小于0认为[o1]小于[o2]，返回值等于0认为[o1]等于[o2]（不添加到集合）。
+					建议不单独写一个Comparator<T>实现类，而是在参数处定义匿名内部类。格式：
+						TreeSet ts<Student> = new TreeSet<Student>(new Comparator<Student>() {public int compare(Student s1, Student s2){ ... }});
+						
+34.Map<K,V>接口
+	概述：
+		集合框架另一个根接口（类似Collection），存储键值对（映射）。一个Map不能包含相同的键，不过可以有相同的值存在。
+	重要功能：
+		1）添加功能
+			V put(K key, V value)													//m.put(key, value)，添加元素。若添加的key存在，用现在key对应的value替换之前的value并返回之前的value；若添加的key不存在，返回null。
+		2）删除功能
+			void clear()																	//m.clear()，移除所有键值对
+			V remove(Object key)													//m.remove(key)，根据键删除键值对，返回值。如果键不存在返回null。
+		3）判断功能
+			boolean containsKey(Object key)									//m.containsKey(key)，判断集合是否包含指定的键
+			boolean containsValue(Object value)							//m.containsValue(value)，判断集合是否包含指定的值
+			boolean isEmpty()															//m.isEmpty()，判断集合是否为空
+		4）获取功能
+			Set<Map.Entry<K, V>> entrySet()									//m.entrySet()，返回该map中所有键值对对象的Set集合
+				*需结合Map.Entry接口的K getKey()和V getValue()来获取键值对对象中的键和值。
+			V get(Object key)															//m.get(key)，根据键获取值。若键不存在返回null。
+			Set<V> keySet()															//m.keySet()，获取map中所有键的Set集合
+			Collection<V> values()													//m.values()，获取map中所有值的Collection集合
+		5）长度功能
+			int size()																		//m.size()，返回map中键值对的对数
+	重要子类：
+		1）HashMap
+			概述：
+				基于哈希表的Map接口实现。键的唯一性由哈希表保证，也就是键是否唯一取决于键所在类的hashCode()和equals()。
+			重要子类LinkedHashMap：
+				Map接口的哈希表和链表实现，具有可预知的迭代顺序（有序）。哈希表保证元素的唯一性，链表保证键的顺序（存入和取出顺序一致）。
+		2）TreeMap																		//创建此类型的Map时需要做一些其他事情
+			概述：
+				基于红黑树的Map接口实现。默认根据key的自然顺序进行排序，或者根据创建map时提供的comparator进行排序，具体取决于构造方法。
+			排序概述：
+				#详见33-TreeSet
+				自然排序需要存储的key所在类实现Comparable<T>接口并重写int compareTo(T o)。
+				比较器排序需要自行写一个类实现Comparator<T>接口并重写int compare(T o1, T o2)，建议使用匿名内部类。
+	Map与Collection的区别：
+		1）Map存储的是成对的元素，Collection存储的是单个元素；
+		2）Map集合的键（KEY）是唯一的，值（VALUE）是可重复的；Collection集合的Set是唯一的，List是可重复的。
+	Hashtable和HashMap的区别：
+		Hashtable线程安全，效率低，不允许null键和null值。
+		HashMap线程不安全，效率高，允许null键和null值。
+		
+35.Collections工具类
+	概述：
+		针对集合进行操作的工具类，都是静态方法。
+	部分重要方法：
+		public static <T> void sort(List<T> list)								//Collections.sort(List<T>)，对集合进行排序。该构造方法使用自然排序（参数需要Comparable），可追加一个Comparator进行比较器排序。
+		public static <T> int binarySearch(List<?> list, T key)		//Collections.binarySearch(List<? extends T>, key)，使用二分查找法查找给定key在集合中的索引，需要传入已排序的list。
+		public static <T> T max(Collection<?> c)							//Collections.max(Collection)，获取集合中的最大值。
+		public static void reverse(List<?> list)								//Collections.reverse(List)，反转集合中的元素。
+		public static void shuffel(List<?> list)								//Collections.shuffel(List)，随机置换集合中的元素。
+	Collection和Collections的区别：
+		Collection：是单列集合的顶层接口，有子接口List和Set
+		Collections：是针对集合进行操作的工具类，包含排序、二分查找等实用方法。
+
+---------------------------------------------------------------------

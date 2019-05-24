@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>Archlinux</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="archlinux">Archlinux</h1>
+<ul>
+<li><a href="#0-需求">0. 需求</a></li>
+<li><a href="#1-基本安装">1. 基本安装</a>
+<ul>
+<li><a href="#10-全新硬盘的磁盘分区">1.0 全新硬盘的磁盘分区</a></li>
+<li><a href="#11-基本安装">1.1 基本安装</a></li>
+<li><a href="#12-基本设置与软件安装">1.2 基本设置与软件安装</a></li>
+<li><a href="#13-安装-bootloaderrefind">1.3 安装 Bootloader：refind</a></li>
+<li><a href="#14-检查">1.4 检查</a></li>
+</ul>
+</li>
+<li><a href="#2-交换文件">2. 交换文件</a></li>
+<li><a href="#3-新建用户">3. 新建用户</a></li>
+<li><a href="#4-配置-sudo">4. 配置 sudo</a></li>
+<li><a href="#5-图形服务与驱动">5. 图形服务与驱动</a>
+<ul>
+<li><a href="#51-nvidia">5.1 nvidia</a></li>
+<li><a href="#52-xorg">5.2 xorg</a></li>
+<li><a href="#53-sddm">5.3 sddm</a></li>
+</ul>
+</li>
+<li><a href="#6-桌面环境">6. 桌面环境</a></li>
+<li><a href="#7-常用软件">7. 常用软件</a>
+<ul>
+<li><a href="#71-浏览器">7.1 浏览器</a></li>
+<li><a href="#72-shadowsocks">7.2 shadowsocks</a></li>
+<li><a href="#73-办公软件与文档查看器">7.3 办公软件与文档查看器</a></li>
+</ul>
+</li>
+<li><a href="#8-开发软件">8. 开发软件</a>
+<ul>
+<li><a href="#81-jdk">8.1 JDK</a></li>
+<li><a href="#82-intellij-idea">8.2 IntelliJ IDEA</a></li>
+<li><a href="#83-mysql">8.3 MySQL</a></li>
+<li><a href="#84-maven">8.4 MAVEN</a></li>
+<li><a href="#85-tomcat">8.5 Tomcat</a></li>
+<li><a href="#86-git">8.6 Git</a></li>
+<li><a href="#87-redis">8.7 Redis</a></li>
+</ul>
+</li>
+<li><a href="#9-美化插件">9. 美化插件</a></li>
+</ul>
+<h2 id="0-需求">0. 需求</h2>
+<ul>
+<li>~~secure boot相关问题~~</li>
+<li>引导美化</li>
+<li>驱动相关</li>
+<li>桌面相关</li>
+<li>语言相关
+<ul>
+<li>显示语言</li>
+<li>console语言</li>
+<li>输入法</li>
+</ul>
+</li>
+<li>软件安装相关</li>
+<li>shadowsocks</li>
+<li>~~chrome~~</li>
+<li>~~文本编辑器~~</li>
+<li>ide</li>
+<li>媒体</li>
+<li>模拟器&amp;兼容层</li>
+<li>办公套件</li>
+<li>~~java~~</li>
+<li>git</li>
+<li>maven</li>
+<li>mysql</li>
+<li>tomcat</li>
+</ul>
+<h2 id="1-基本安装">1. 基本安装</h2>
+<h3 id="10-全新硬盘的磁盘分区">1.0 全新硬盘的磁盘分区</h3>
+<ul>
+<li>
+<p>查看引导方式</p>
+<pre><code class="language-shell">ls /sys/firmware/efi/efivars
+</code></pre>
+</li>
+<li>
+<p>查看设备和分区信息</p>
+<pre><code class="language-shell">fdisk -l
+</code></pre>
+</li>
+<li>
+<p>联网并测试</p>
+<ul>
+<li>有线：</li>
+</ul>
+<pre><code class="language-shell">dhcpcd
+</code></pre>
+<ul>
+<li>无线：</li>
+</ul>
+<pre><code class="language-shell">wifi-menu
+</code></pre>
+<ul>
+<li>检测：</li>
+</ul>
+<pre><code class="language-shell">ping baidu.com
+</code></pre>
+</li>
+<li>
+<p>更新系统时间</p>
+<pre><code class="language-shell">timedatectl set-ntp true
+</code></pre>
+</li>
+<li>
+<p>进行分区</p>
+<ul>
+<li>创建引导分区</li>
+</ul>
+<pre><code class="language-shell"># 选择 Device 下对应设备进入fdisk
+fdisk /dev/xxx
+
+# 按 o 来创建新的 MBR 分区表，按 g 来创建gpt
+...
+
+# 按 n 创建引导分区，指定大小时使用+xxxM，可以使用单位 M 或 G，创建完后使用 p 来查看
+...
+
+# 使用 t 查看可用的分区类型，使用相应代码更改分区类型为 EFI ...
+...
+
+# 使用 w 来保存更改
+...
+
+# 格式化创建的引导分区（fat32）
+mkfs.fat -F32 /dev/xxx
+</code></pre>
+<ul>
+<li>创建根分区</li>
+</ul>
+<pre><code class="language-shell"># 大部分与上述步骤相同，只是大小使用默认大小，以及格式化为 ext4
+...
+mkfs.ext4 /dev/xxx
+</code></pre>
+</li>
+</ul>
+<h3 id="11-基本安装">1.1 基本安装</h3>
+<ul>
+<li>
+<p>挂载分区</p>
+<pre><code class="language-shell"># 挂载根分区
+mount /dev/xxx /mnt
+
+# 挂载引导分区
+mount /dev/xxx /mnt/boot
+</code></pre>
+</li>
+<li>
+<p>选择镜像源</p>
+<pre><code class="language-shell"># 编辑 pacman 的配置文件，搜索 china 镜像源，复制到开头
+vim /etc/pacman.d/mirrorlist
+</code></pre>
+</li>
+<li>
+<p>安装基本包</p>
+<pre><code class="language-shell">pacstrap /mnt base base-devel
+</code></pre>
+</li>
+<li>
+<p>设置分区自动挂载</p>
+<pre><code class="language-shell"># 生成 fstab 文件
+genfstab -L /mnt &gt;&gt; /mnt/etc/fstab
+
+# 检查生成的 fstab
+cat /mnt/etc/fstab
+</code></pre>
+</li>
+</ul>
+<h3 id="12-基本设置与软件安装">1.2 基本设置与软件安装</h3>
+<ul>
+<li>
+<p>切换到新系统</p>
+<pre><code class="language-shell">arch-chroot /mnt
+</code></pre>
+</li>
+<li>
+<p>设置时区</p>
+<pre><code class="language-shell"># 设置时区为上海，并生成相关文件
+ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+hwclock --systohc
+</code></pre>
+</li>
+<li>
+<p>安装常用软件包</p>
+<pre><code class="language-shell">pacman -S vim dialog wpa_supplicant ntfs-3g networkmanager
+</code></pre>
+</li>
+<li>
+<p>设置 Locale （语言）</p>
+<pre><code class="language-shell"># 编辑
+vim /etc/locale.gen
+
+# 找到一个英文、三个中文（UTF-8）取消注释
+...
+
+# 执行
+locale-gen
+
+# 编辑 locale 设置文件
+vim /etc/locale.conf
+
+# 添加如下内容
+LANG=en_US.UTF-8
+</code></pre>
+</li>
+<li>
+<p>设置主机名</p>
+<pre><code class="language-shell">vim /etc/hostname
+</code></pre>
+<p>在第一行自行设置 hostname</p>
+</li>
+<li>
+<p>设置 host</p>
+<pre><code>vim /etc/hosts
+</code></pre>
+<p>添加如下内容：</p>
+<blockquote>
+<pre><code>127.0.0.1	localhost
+::1		localhost
+127.0.1.1	myhostname.localdomain	myhostname
+</code></pre>
+</blockquote>
+</li>
+<li>
+<p>设置 root 密码</p>
+<pre><code class="language-shell">passwd
+</code></pre>
+<p>按提示设置。</p>
+</li>
+<li>
+<p>安装<code>intel-ucode</code> （非intel跳过）</p>
+<pre><code>pacman -S intel-ucode
+</code></pre>
+</li>
+</ul>
+<h3 id="13-安装-bootloaderrefind">1.3 安装 Bootloader：refind</h3>
+<ul>
+<li>
+<p>安装</p>
+<pre><code class="language-shell">pacman -S refind-efi
+</code></pre>
+</li>
+<li>
+<p>部署</p>
+<pre><code class="language-shell">refind-install
+</code></pre>
+<p>手动部署参照wiki</p>
+</li>
+<li>
+<p>手动创建条目</p>
+<p>refind.conf：</p>
+<pre><code>menuentry &quot;Arch Linux&quot; {
+      icon     /EFI/refind/icons/os_arch.icns
+      volume   1:
+      loader   /boot/vmlinuz-linux
+      initrd   /boot/initramfs-linux.img
+      options  &quot;root=PARTUUID=3518bb68-d01e-45c9-b973-0b5d918aae96 rw rootfstype=ext4&quot;
+}
+</code></pre>
+<p>说明：PARTUUID需改为正确的UUID，通过<code>blkid</code>或<code>lsblk -f</code>查看。</p>
+<p>文件路径需设置正确。</p>
+</li>
+<li>
+<p>删除多余的Linux条目</p>
+<p>refind.conf中找到自动检测kernal，取消注释那一行即可。</p>
+</li>
+</ul>
+<h3 id="14-检查">1.4 检查</h3>
+<p>EFI 分区中需要有<code>initramfs-linux-fallback.img</code>、<code>initramfs-linux.img</code>、<code>intel-ucode.img</code>、<code>vmlinuz-linux</code>几个文件。</p>
+<p>若没有，</p>
+<pre><code class="language-shell">pacman -S linux
+</code></pre>
+<h2 id="2-交换文件">2. 交换文件</h2>
+<h2 id="3-新建用户">3. 新建用户</h2>
+<h2 id="4-配置-sudo">4. 配置 sudo</h2>
+<h2 id="5-图形服务与驱动">5. 图形服务与驱动</h2>
+<h3 id="51-nvidia">5.1 nvidia</h3>
+<ul>
+<li>
+<p>查看显卡情况</p>
+<pre><code class="language-shell">lspci -k | grep -A 2 -E &quot;(VGA|3D)&quot;
+</code></pre>
+</li>
+<li>
+<p>pacman 安装 <code>nvidia</code>或<code>nvidia-lts</code></p>
+</li>
+<li>
+<p>重启</p>
+</li>
+<li>
+<p>进行自动配置（可以先安装 xorg）</p>
+<pre><code class="language-shell">nvidia-xconfig
+</code></pre>
+</li>
+</ul>
+<h3 id="52-xorg">5.2 xorg</h3>
+<ul>
+<li>安装<code>xorg</code>或<code>xorg-server</code></li>
+</ul>
+<h3 id="53-sddm">5.3 sddm</h3>
+<ul>
+<li>
+<p>安装<code>sddm</code></p>
+</li>
+<li>
+<p>启用：</p>
+<pre><code class="language-shell">systemctl enable sddm.service
+</code></pre>
+</li>
+</ul>
+<h2 id="6-桌面环境">6. 桌面环境</h2>
+<h2 id="7-常用软件">7. 常用软件</h2>
+<h3 id="71-浏览器">7.1 浏览器</h3>
+<h3 id="72-shadowsocks">7.2 shadowsocks</h3>
+<h3 id="73-办公软件与文档查看器">7.3 办公软件与文档查看器</h3>
+<h2 id="8-开发软件">8. 开发软件</h2>
+<h3 id="81-jdk">8.1 JDK</h3>
+<h3 id="82-intellij-idea">8.2 IntelliJ IDEA</h3>
+<p>安装：</p>
+<ul>
+<li>
+<p>AUR：<code>intellij-idea-ultimate-edition</code></p>
+</li>
+<li>
+<p>安装位置：<code>/opt</code></p>
+<pre><code class="language-shell">yay -S intellij-idea-ultimate-edition
+</code></pre>
+</li>
+</ul>
+<h3 id="83-mysql">8.3 MySQL</h3>
+<h3 id="84-maven">8.4 MAVEN</h3>
+<h3 id="85-tomcat">8.5 Tomcat</h3>
+<h3 id="86-git">8.6 Git</h3>
+<h3 id="87-redis">8.7 Redis</h3>
+<h2 id="9-美化插件">9. 美化插件</h2>
+
+
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>Freemarker</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="freemarker">Freemarker</h1>
+<ul>
+<li><a href="#1-网页静态化技术概述">1. 网页静态化技术概述</a>
+<ul>
+<li><a href="#11-概述">1.1 概述</a></li>
+<li><a href="#12-好处">1.2 好处</a></li>
+</ul>
+</li>
+<li><a href="#2-freemarker-概述">2. Freemarker 概述</a>
+<ul>
+<li><a href="#21-概述">2.1 概述</a></li>
+<li><a href="#22-搭建使用环境与入门使用">2.2 搭建使用环境与入门使用</a></li>
+</ul>
+</li>
+<li><a href="#3-freemarker-常用指令">3. Freemarker 常用指令</a>
+<ul>
+<li><a href="#31-注释">3.1 注释</a></li>
+<li><a href="#32-变量定义">3.2 变量定义</a></li>
+<li><a href="#33-包含其他页面">3.3 包含其他页面</a></li>
+<li><a href="#34-条件判断">3.4 条件判断</a></li>
+<li><a href="#35-集合遍历">3.5 集合遍历</a></li>
+<li><a href="#36-内建函数">3.6 内建函数</a></li>
+<li><a href="#37-运算符支持">3.7 运算符支持</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="1-网页静态化技术概述">1. 网页静态化技术概述</h2>
+<h3 id="11-概述">1.1 概述</h3>
+<ul>
+<li>顾名思义，网页静态化就是将数量庞大或是内容不怎么变化的页面以静态化的形式提供。</li>
+</ul>
+<h3 id="12-好处">1.2 好处</h3>
+<ul>
+<li>网页静态化可以减轻数据库访问压力，适合于高并发场景。</li>
+<li>有利于 SEO（Search Engine Optimization 搜索引擎优化）。</li>
+</ul>
+<h2 id="2-freemarker-概述">2. Freemarker 概述</h2>
+<h3 id="21-概述">2.1 概述</h3>
+<ul>
+<li>Freemarker 是一个 Java 语言编写的模板引擎，基于模板来生成文本输出。</li>
+<li>Freemarket 可以输出几乎任何形式的文本文件。</li>
+<li>通过模板和数据模型来生成目标文件。</li>
+</ul>
+<h3 id="22-搭建使用环境与入门使用">2.2 搭建使用环境与入门使用</h3>
+<ol>
+<li>
+<p><strong>引入依赖。</strong></p>
+<pre><code class="language-xml">&lt;dependency&gt; 
+ &lt;groupId&gt;org.freemarker&lt;/groupId&gt; 
+ &lt;artifactId&gt;freemarker&lt;/artifactId&gt; 
+ &lt;version&gt;2.3.23&lt;/version&gt; 
+&lt;/dependency&gt;
+</code></pre>
+</li>
+<li>
+<p><strong>创建 .ftl 模板文件。</strong></p>
+<p>具体规则下文描述。</p>
+</li>
+<li>
+<p><strong>编写测试类生成目标文件。</strong></p>
+<pre><code class="language-java">public class Test {
+   public static void main(String[] args) {
+       // 1. 创建配置类
+       Configuration conf = new Configuration(Configuration.getVersion());
+       // 2. 设置模板所在目录
+       conf.setDirectoryForTemplateLoading(new File(&quot;...&quot;));
+       // 3. 设置字符集
+       conf.setDefaultEncoding(&quot;UTF-8&quot;);
+       // 4. 加载模板
+       Template template = conf.getTemplate(&quot;test.ftl&quot;);
+       // 5. 创建数据模型
+       Map map = new HashMap();
+       map.put(&quot;name&quot;, &quot;zhangsan&quot;);
+       // 6. 创建 Writer
+       Writer out = new FileWriter(new File(&quot;...&quot;));
+       // 7. 输出
+       template.process(map, out);
+       // 8. 关闭 writer
+       out.close();
+   }
+}
+</code></pre>
+<p>也可以使用 StringTemplateLoader 使用字符串生成模板。</p>
+</li>
+</ol>
+<h2 id="3-freemarker-常用指令">3. Freemarker 常用指令</h2>
+<h3 id="31-注释">3.1 注释</h3>
+<pre><code>&lt;#-- 注释 --&gt;
+</code></pre>
+<h3 id="32-变量定义">3.2 变量定义</h3>
+<pre><code>&lt;#assign name=&quot;zhangsan&quot;&gt;
+联系人：${name}
+
+&lt;#assign info={&quot;name&quot;: &quot;zhangsan&quot;, &quot;age&quot;: 20}&gt;
+姓名： ${info.name}
+年龄： ${info.age}
+</code></pre>
+<h3 id="33-包含其他页面">3.3 包含其他页面</h3>
+<pre><code>&lt;#include &quot;other.ftl&quot;&gt;
+</code></pre>
+<h3 id="34-条件判断">3.4 条件判断</h3>
+<pre><code>&lt;#if flag=true&gt;
+	pass
+&lt;#else&gt;
+	negative
+&lt;/#if&gt;
+</code></pre>
+<h3 id="35-集合遍历">3.5 集合遍历</h3>
+<ul>
+<li>
+<p><strong>遍历 list 结构集合</strong></p>
+<pre><code>&lt;#list itemList as items&gt;
+${items_index + 1}. 名称： ${items.name}, 价格： {items.price}
+&lt;/#list&gt;
+</code></pre>
+<blockquote>
+<p>itemList 的结构如下：</p>
+<p>[{&quot;name&quot;: &quot;apple&quot;, &quot;price&quot;: &quot;10&quot;}, {&quot;name&quot;: &quot;banana&quot;, &quot;price&quot;: &quot;20&quot;}, ...]</p>
+</blockquote>
+</li>
+<li>
+<p><strong>遍历 map 结构集合</strong></p>
+<pre><code>&lt;#list myMap?keys as k&gt;
+姓名：${myMap[k].name}
+年龄：${myMap[k].age}
+&lt;/list&gt;
+</code></pre>
+<blockquote>
+<p>myMap 的结构如下：</p>
+<p>[{&quot;name&quot;: &quot;xiaoming&quot;, &quot;age&quot;: 20}, {&quot;name&quot;: &quot;xiaohong&quot;, &quot;age&quot;: 18}, ...]</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="36-内建函数">3.6 内建函数</h3>
+<ul>
+<li>
+<p>使用内建函数的格式：</p>
+<pre><code>${变量?函数名}
+</code></pre>
+</li>
+<li>
+<p>常用内建函数：</p>
+<ul>
+<li><strong>集合大小</strong></li>
+</ul>
+<pre><code>${itemList?size}
+</code></pre>
+<ul>
+<li><strong>json 字符串转为可用数据对象</strong></li>
+</ul>
+<pre><code>&lt;#assign jsonText=&quot;{'name': 'zhangsan', 'age': 20}&quot;&gt;
+
+&lt;#assign person=jsonText?eval /&gt;
+
+姓名： ${person.name}, 年龄： ${person.age}
+</code></pre>
+<ul>
+<li><strong>日期格式化</strong></li>
+</ul>
+<pre><code class="language-java">// java 数据模型
+modelMap.put(&quot;today&quot;, new Date());
+</code></pre>
+<pre><code>日期： ${today?date}
+时间： ${today?time}
+日期+时间： ${today?datetime}
+格式化： ${today?string(&quot;yyyy-MM-dd&quot;)}
+</code></pre>
+<ul>
+<li><strong>数字显示</strong></li>
+</ul>
+<pre><code>&lt;#-- 可避免数字显示时带千分位逗号，如 1,000,000 --&gt;
+
+#{num?c}
+</code></pre>
+<ul>
+<li><strong>空值/无效值判断</strong></li>
+</ul>
+<pre><code>&lt;#-- 判断变量是否存在 --&gt;
+&lt;#if item??&gt;
+	存在
+&lt;#else&gt;
+	不存在
+&lt;/#if&gt;
+
+&lt;#-- 变量空值判断 --&gt;
+${num!0}
+</code></pre>
+</li>
+</ul>
+<h3 id="37-运算符支持">3.7 运算符支持</h3>
+<ul>
+<li>Freemarker 支持大部分 java 中的逻辑运算符和比较运算符。</li>
+<li>其中 &gt;、&gt;= 等可以用 gt、gte 等代替。</li>
+<li>运算符可以结合上述内建函数使用。</li>
+</ul>
+
+
+</body>
+</html>

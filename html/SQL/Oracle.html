@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>Oracle</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="oracle">Oracle</h1>
+<ul>
+<li><a href="#1-概述">1. 概述</a></li>
+<li><a href="#2-数据库与表空间用户连接">2. 数据库与表空间、用户、连接</a>
+<ul>
+<li><a href="#21-数据库与表空间">2.1 数据库与表空间</a></li>
+<li><a href="#22-用户">2.2 用户</a></li>
+<li><a href="#23-连接">2.3 连接</a></li>
+</ul>
+</li>
+<li><a href="#3-数据类型">3. 数据类型</a></li>
+<li><a href="#4-序列">4. 序列</a>
+<ul>
+<li><a href="#41-概述">4.1 概述</a></li>
+<li><a href="#42-创建与使用">4.2 创建与使用</a></li>
+</ul>
+</li>
+<li><a href="#5-视图">5. 视图</a>
+<ul>
+<li><a href="#51-概述">5.1 概述</a></li>
+<li><a href="#52-定义与使用">5.2 定义与使用</a></li>
+</ul>
+</li>
+<li><a href="#6-索引">6. 索引</a>
+<ul>
+<li><a href="#61-概述">6.1 概述</a></li>
+<li><a href="#62-创建索引">6.2 创建索引</a></li>
+<li><a href="#63-重要说明">6.3 重要说明</a></li>
+</ul>
+</li>
+<li><a href="#7-plsql">7. pl/sql</a>
+<ul>
+<li><a href="#71-概述">7.1 概述</a></li>
+<li><a href="#72-示例">7.2 示例</a></li>
+<li><a href="#73-常用操作">7.3 常用操作</a></li>
+</ul>
+</li>
+<li><a href="#8-存储过程">8. 存储过程</a>
+<ul>
+<li><a href="#81-概述">8.1 概述</a></li>
+<li><a href="#82-编写">8.2 编写</a></li>
+<li><a href="#83-使用">8.3 使用</a></li>
+</ul>
+</li>
+<li><a href="#9-存储函数">9. 存储函数</a>
+<ul>
+<li><a href="#91-概述">9.1 概述</a></li>
+<li><a href="#92-范例">9.2 范例</a></li>
+<li><a href="#93-调用">9.3 调用</a></li>
+</ul>
+</li>
+<li><a href="#10-触发器">10. 触发器</a>
+<ul>
+<li><a href="#101-概述">10.1 概述</a></li>
+<li><a href="#102-定义">10.2 定义</a></li>
+</ul>
+</li>
+<li><a href="#11-oracle-jdbc">11. Oracle jdbc</a>
+<ul>
+<li><a href="#111-数据库版本与-ojdbc-版本的对应">11.1 数据库版本与 ojdbc 版本的对应</a></li>
+<li><a href="#112-连接信息">11.2 连接信息</a></li>
+<li><a href="#113-调用存储过程概述">11.3 调用存储过程概述</a></li>
+</ul>
+</li>
+<li><a href="#-补充">#. 补充</a>
+<ul>
+<li><a href="#1-方言外连接的简略写法">#.1 方言：外连接的简略写法</a></li>
+<li><a href="#2-方言rownum-与分页查询">#.2 方言：Rownum 与分页查询</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="1-概述">1. 概述</h2>
+<ul>
+<li>ORACLE 数据库系统是美国ORACLE 公司（甲骨文）提供的以分布式数据库为核心的一组 软件产品，是目前最流行的客户/服务器(CLIENT/SERVER)或 B/S体系结构的数据库之一。</li>
+<li><strong>由于继承了 SQL 标准，其相当部分内容与 MySQL 相似/相同，本文仅列出一些常见的不同之处</strong>。</li>
+</ul>
+<h2 id="2-数据库与表空间用户连接">2. 数据库与表空间、用户、连接</h2>
+<h3 id="21-数据库与表空间">2.1 数据库与表空间</h3>
+<ul>
+<li>
+<p>Oracle 数据库的概念与其他数据库软件的有所不同，可以认为一个操作系统只有一个<strong>数据库</strong>。</p>
+</li>
+<li>
+<p>一个数据库可以有多个<strong>实例</strong>，一个实例由多个进程与内存结构组成。</p>
+</li>
+<li>
+<p>一个数据库在逻辑上被分成一到若干个<strong>表空间</strong>，一个表空间可以对应物理上的一到若干个 dbf/ora 文件。</p>
+</li>
+<li>
+<p>映射了表空间的 dbf/ora 文件<strong>不能直接删除</strong>，需要先删除表空间后方可删除。</p>
+</li>
+<li>
+<p>操作示例：</p>
+<ul>
+<li>创建表空间：</li>
+</ul>
+<pre><code class="language-sql">create tablespace 表空间名 
+datafile '/usr/demo.dbf' 
+size 100m
+autoextend on 
+next 10m
+</code></pre>
+</li>
+</ul>
+<h3 id="22-用户">2.2 用户</h3>
+<ul>
+<li>
+<p>用户是在实例下建立的，不同实例可以创建相同名字的用户。</p>
+</li>
+<li>
+<p>用户的权限：</p>
+<ul>
+<li>新创建的用户没有任何权限，需要授予角色以获取权限。</li>
+<li>可用的权限：</li>
+<li>connect：包含一些基本权限</li>
+<li>resource：授予开发人员的角色，包含建表、建立触发器、建立类型等。</li>
+<li>dba：数据库的最高权限。</li>
+</ul>
+</li>
+<li>
+<p>操作示例：</p>
+<ul>
+<li>创建用户：</li>
+</ul>
+<pre><code class="language-sql">create user 用户名 
+identified by 密码 
+default tablespace 默认表空间
+</code></pre>
+<ul>
+<li>给用户授权：</li>
+</ul>
+<pre><code class="language-sql">grant connect|resource|dba to 用户名
+</code></pre>
+</li>
+</ul>
+<h3 id="23-连接">2.3 连接</h3>
+<ul>
+<li>
+<p>使用 sqlplus 连接：</p>
+<pre><code class="language-shell"># 格式
+sqlplus 用户名/密码@服务器地址:端口号/数据库名
+# 实例
+sqlplus system/oracle@localhost:1521/orcl
+</code></pre>
+</li>
+<li>
+<p>使用 jdbc 连接：</p>
+<p>db.properties</p>
+<pre><code class="language-properties">jdbc.driver=oracle.jdbc.driver.OracleDriver
+jdbc.url=jdbc:oracle:thin:@local:1521:oracle
+jdbc.username=username
+jdbc.password=password
+</code></pre>
+</li>
+</ul>
+<h2 id="3-数据类型">3. 数据类型</h2>
+<p>Oracle 的常用数据类型如下表：</p>
+<table>
+<thead>
+<tr><th>数据类型</th><th>描述</th></tr>
+</thead>
+<tbody>
+<tr><td>varchar, varchar2</td><td>表示一个字符串</td></tr>
+<tr><td>number</td><td>number(n)，表示长度n的整数；number(m,n)，m为总长度，n为小数长度</td></tr>
+<tr><td>date</td><td>日期类型</td></tr>
+<tr><td>CLOB</td><td>大对象，可存文本，最多4G</td></tr>
+<tr><td>BLOB</td><td>大对象，可存二进制数据，最多4G</td></tr>
+</tbody>
+</table>
+<h2 id="4-序列">4. 序列</h2>
+<h3 id="41-概述">4.1 概述</h3>
+<ul>
+<li>Oracle 没有 mysql 中的auto_increment 约束，可以使用序列来完成表中字段值的<strong>自动增长</strong>。</li>
+<li>序列与表没有必然关系，不过一般各表会使用各自的序列。</li>
+</ul>
+<h3 id="42-创建与使用">4.2 创建与使用</h3>
+<ul>
+<li>
+<p><strong>创建</strong>：</p>
+<pre><code class="language-sql">create sequence 序列名 
+[increment by n] 
+[start with n] 
+[maxvalue/minvalue n | nomaxvalue] 
+[cycle | nocycle] 
+[cache n | nocache]
+</code></pre>
+<p>实例：</p>
+<pre><code class="language-sql">create sequence seq_userNum;
+</code></pre>
+</li>
+<li>
+<p><strong>使用</strong>：</p>
+<pre><code class="language-sql">-- 获取序列的下一个内容
+序列名.nextval
+-- 获取序列的当前内容
+序列名.currval
+</code></pre>
+<p>实例：</p>
+<pre><code class="language-sql">-- 直接获取值
+select seq_userNum.nextval from dual;
+-- 通过序列插入自动增长的值
+insert into user(num, ...) values(seq_userNum.nextval, ...);
+</code></pre>
+</li>
+</ul>
+<h2 id="5-视图">5. 视图</h2>
+<h3 id="51-概述">5.1 概述</h3>
+<ul>
+<li>视图就是封装了一条复杂的查询语句，定义后可方便地调用。</li>
+</ul>
+<h3 id="52-定义与使用">5.2 定义与使用</h3>
+<ul>
+<li>
+<p>定义 view （视图）：</p>
+<pre><code class="language-sql">create [or replace] view 视图名 as 
+-- 定义的 sql 子查询语句
+select * from emp 
+[with read only]
+</code></pre>
+</li>
+<li>
+<p>使用视图：</p>
+<pre><code class="language-sql">select * from 视图名
+</code></pre>
+</li>
+</ul>
+<h2 id="6-索引">6. 索引</h2>
+<h3 id="61-概述">6.1 概述</h3>
+<p>在表的列上构建一个二叉树，可以大幅<strong>提高查询的效率</strong>，却会影响增删改的效率。</p>
+<h3 id="62-创建索引">6.2 创建索引</h3>
+<ul>
+<li>
+<p>创建单列索引</p>
+<pre><code>create index 索引名 on 表名(字段名);
+</code></pre>
+</li>
+<li>
+<p>创建复合索引</p>
+<pre><code>create index 索引名 on 表名(字段名,字段名,...);
+</code></pre>
+</li>
+</ul>
+<h3 id="63-重要说明">6.3 重要说明</h3>
+<ul>
+<li>只有当查询列中的原始值时，才会触发索引；单行函数、模糊查询等不会触发。</li>
+<li>复合索引中的第一列会优先检索。</li>
+<li>要触发复合索引，必须包含优先检索列中的原始值。</li>
+<li>or 语句不会触发索引。</li>
+</ul>
+<h2 id="7-plsql">7. pl/sql</h2>
+<h3 id="71-概述">7.1 概述</h3>
+<ul>
+<li>是对 sql 语言的扩展，使其具有某些编程语言的特性。</li>
+<li>主要用来编写存储过程和存储函数等。</li>
+</ul>
+<h3 id="72-示例">7.2 示例</h3>
+<ul>
+<li>
+<p>声明方法 &amp; 入门</p>
+<pre><code class="language-plsql">declare
+--- 声明部分
+i number(2) := 10;
+begin
+--- 执行部分
+dbms_output.put_line(i);
+end;
+</code></pre>
+</li>
+</ul>
+<h3 id="73-常用操作">7.3 常用操作</h3>
+<ul>
+<li>
+<p><strong>赋值</strong></p>
+<p>可以使用 := 也可以使用 into 语句赋值。</p>
+<ul>
+<li>:=</li>
+</ul>
+<blockquote>
+<p>标识 类型(长度) := 值;</p>
+</blockquote>
+<ul>
+<li>into 语句</li>
+</ul>
+<blockquote>
+<p>select 字段 into 标识 from 表 where 字段 = 值;</p>
+</blockquote>
+</li>
+<li>
+<p><strong>连接字符串</strong></p>
+<blockquote>
+<p>||</p>
+</blockquote>
+</li>
+<li>
+<p><strong>引用型变量</strong></p>
+<p>一个值。</p>
+<blockquote>
+<p>标识 表.字段%type;</p>
+</blockquote>
+</li>
+<li>
+<p><strong>记录型变量</strong></p>
+<p>一条记录。</p>
+<blockquote>
+<p>标识 表%rowtype;</p>
+</blockquote>
+</li>
+<li>
+<p><strong>if 语句</strong></p>
+<pre><code class="language-plsql">if 条件 then
+...
+elsif 条件 then
+...
+else
+...
+end if;
+</code></pre>
+</li>
+<li>
+<p><strong>循环</strong></p>
+<ul>
+<li>while</li>
+</ul>
+<pre><code class="language-plsql">while 条件 loop
+	...
+	...(控制语句)
+end loop;
+</code></pre>
+<ul>
+<li>exit</li>
+</ul>
+<pre><code class="language-plsql">loop
+	exit when 条件;
+	...
+	...(控制语句)
+end loop;
+</code></pre>
+<ul>
+<li>for</li>
+</ul>
+<pre><code class="language-plsql">for 变量 in 初始值...最终值 loop
+	...
+end loop;
+</code></pre>
+</li>
+<li>
+<p><strong>游标</strong></p>
+<ul>
+<li>
+<p>可以存储查询返回的多条语句。</p>
+</li>
+<li>
+<p>定义：</p>
+</li>
+</ul>
+<pre><code class="language-plsql">declare
+	cursor 游标名[(参数名 数据类型,参数名 数据类型,...)] is select ...;
+</code></pre>
+<ul>
+<li>使用：</li>
+</ul>
+<pre><code class="language-plsql">-- 打开游标
+open 游标;
+	-- 取一行游标的值（遍历）
+	fetch 游标 into rowtype变量;
+	-- 关闭
+	exit when 游标%notfound;
+-- 关闭游标
+close 游标;
+</code></pre>
+</li>
+</ul>
+<h2 id="8-存储过程">8. 存储过程</h2>
+<h3 id="81-概述">8.1 概述</h3>
+<ul>
+<li>存储过程是一段提前编译好的 plsql 语言，存储在数据库端。</li>
+<li>一般都是固定的业务。</li>
+</ul>
+<h3 id="82-编写">8.2 编写</h3>
+<pre><code class="language-plsql">create [or replace] procedure 过程名 [(参数名 in/out 数据类型)] 
+as
+begin
+	...
+end;
+</code></pre>
+<h3 id="83-使用">8.3 使用</h3>
+<ul>
+<li>
+<p>可以通过 java 来使用。</p>
+</li>
+<li>
+<p>可以直接使用：</p>
+<pre><code class="language-plsql">declare
+...
+begin
+过程名(参数);
+end;
+</code></pre>
+</li>
+</ul>
+<h2 id="9-存储函数">9. 存储函数</h2>
+<h3 id="91-概述">9.1 概述</h3>
+<ul>
+<li>存储函数与存储过程的主要区别在于<strong>存储函数可以有一个返回值</strong>，而存储过程没有返回值。</li>
+<li>可以利用 out 函数，实现在函数和过程中返回多个值。</li>
+</ul>
+<h3 id="92-范例">9.2 范例</h3>
+<pre><code class="language-plsql">create or replace function empincome(eno in emp.empno%type) return number is
+	psal emp.sal%type;
+	pcomm emp.comm%type;
+begin
+	select t.sal into psal from emp t where t.empno = eno;
+	return psal * 12 + nvl(pcomm, 0);
+end;
+</code></pre>
+<h3 id="93-调用">9.3 调用</h3>
+<pre><code class="language-plsql">declare
+	income number;
+begin
+	empincome(123, income);
+	dbms_output.put_line(income);
+end;
+</code></pre>
+<h2 id="10-触发器">10. 触发器</h2>
+<h3 id="101-概述">10.1 概述</h3>
+<ul>
+<li>触发器就是与表相关联的，存储的 plsql 程序。</li>
+<li>当 insert、update 和 delete 在指定表上发出时，Oracle 会自动执行触发器中定义的语句。</li>
+</ul>
+<h3 id="102-定义">10.2 定义</h3>
+<pre><code class="language-plsql">create [or replace] trigger 触发器名
+&lt;before | after&gt;
+&lt;update | insert | delete&gt; [of 列名]
+on 表名
+[for each row [when 条件]]
+declare
+	...
+begin
+	...
+end;
+</code></pre>
+<h2 id="11-oracle-jdbc">11. Oracle jdbc</h2>
+<h3 id="111-数据库版本与-ojdbc-版本的对应">11.1 数据库版本与 ojdbc 版本的对应</h3>
+<ul>
+<li>Oracle 10g - ojdbc 14</li>
+<li>Oracle 14g - ojdbc 6</li>
+</ul>
+<h3 id="112-连接信息">11.2 连接信息</h3>
+<p>db.properties</p>
+<pre><code class="language-properties">driver = oracle.jdbc.OracleDriver
+url = jdbc:oracle:thin:@地址:1521:数据库
+username = ...
+password = ...
+</code></pre>
+<h3 id="113-调用存储过程概述">11.3 调用存储过程概述</h3>
+<p>plsql</p>
+<pre><code class="language-plsql">create or replace procedure proc_countyearsal(eno in number,esal out number) as
+begin    
+	select sal*12+nvl(comm,0) into esal from emp where empno=eno; 
+end;
+</code></pre>
+<p>java</p>
+<pre><code class="language-java">public class Test {
+    String driver = ...;
+    String url = ...;
+    ...
+    public void test throws Exception() {
+        Class.forName(driver);
+        Connection conn = DriverManager.getConnection(url,username,password);
+        
+        // 定义预编译的存储过程
+        CallableStatement callSt = conn.prepareCall(&quot;call proc_countyearsal(?,?)&quot;);
+        // 设置参数
+        callSt.setInt(1, 123);
+        // 注册返回值
+        callSt.registerOutParameter(2, OracleTypes.NUMBER);
+        // 执行
+        callSt.execute();
+        // 输出返回值
+        System.out.println(callSt.getObject(2));
+        
+    }
+}
+</code></pre>
+<h2 id="-补充">#. 补充</h2>
+<h3 id="1-方言外连接的简略写法">#.1 方言：外连接的简略写法</h3>
+<pre><code class="language-sql">select e.*,d.* from emp e and dept d where e.empno(+) = d.deptno
+</code></pre>
+<h3 id="2-方言rownum-与分页查询">#.2 方言：Rownum 与分页查询</h3>
+<ul>
+<li>
+<p>rownum 是一个伪列，存在于每一张表中。</p>
+</li>
+<li>
+<p>若要在查询结果中显示 rownum 列，直接在 select 后面写上 rownum 即可，可以同时带上表的别名。</p>
+</li>
+<li>
+<p>rownum 从 1 开始。</p>
+</li>
+<li>
+<p>rownum 不支持使用 <code>&gt;</code> 的逻辑判断，所以需要使用子查询来实现分页。</p>
+</li>
+<li>
+<p>分页示例：</p>
+<pre><code class="language-sql">-- 查询第六到第十条信息
+select * from (select rownum r,emp.* from emp) t
+where b.r &gt; 5 and b.r &lt; 11
+</code></pre>
+</li>
+</ul>
+
+
+</body>
+</html>

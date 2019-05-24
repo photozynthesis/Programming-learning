@@ -1,4 +1,4 @@
-body{
+body {
     margin: 0 auto 50px auto;
     padding: 0px 5%;
     /*width: 900px;*/
@@ -19,10 +19,10 @@ h1, h2, h3, h4, h5, h6 {
     margin-top: 1em;
 }
 
-h1, h2, h3, h4, h5, h6{
+h1, h2, h3, h4, h5, h6 {
     font-family: "Microsoft YaHei", arial, sans-serif;
 }
-h1, h2, h3, h4, h5, p , dl{
+h1, h2, h3, h4, h5, p , dl {
     margin-bottom: 16px;
     padding: 0;
 }

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>Git & SVN</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="git--svn">Git &amp; SVN</h1>
+<ul>
+<li><a href="#1-git概述">1. Git：概述</a></li>
+<li><a href="#2-git创建与克隆仓库">2. Git：创建与克隆仓库</a></li>
+<li><a href="#3-git暂存区相关">3. Git：暂存区相关</a></li>
+<li><a href="#4-git设置名字和邮箱">4. Git：设置名字和邮箱</a></li>
+<li><a href="#5-git将缓存区中的内容提交到仓库">5. Git：将缓存区中的内容提交到仓库</a></li>
+<li><a href="#6-git分支相关">6. Git：分支相关</a></li>
+<li><a href="#7-git标签">7. Git：标签</a></li>
+</ul>
+<h2 id="1-git概述">1. Git：概述</h2>
+<ul>
+<li>Git 是一个开源的分布式的版本管理系统。</li>
+</ul>
+<h2 id="2-git创建与克隆仓库">2. Git：创建与克隆仓库</h2>
+<ul>
+<li>
+<p>创建仓库</p>
+<pre><code class="language-bash">git init
+</code></pre>
+</li>
+<li>
+<p>克隆仓库</p>
+<pre><code class="language-shell">git clone url [localFolderName]
+</code></pre>
+</li>
+</ul>
+<h2 id="3-git暂存区相关">3. Git：暂存区相关</h2>
+<ul>
+<li>
+<p>概述</p>
+<p><code>git add</code> 命令可以将工作区中指定的内容添加到暂存区。</p>
+<p>暂存区不等同于版本库，存入暂存区的内容需要经过 <code>git commit</code> 方能进入本地版本库。</p>
+</li>
+<li>
+<p>查看版本库</p>
+<pre><code class="language-shell"># 查看暂存区文件信息与工作区文件信息的对比
+git status
+
+# 查看工作区文件概览，AD表示暂存区中存在但工作区中已删除，AM表示工作区中文件已更改，??表示新加入的文件
+git status -s
+</code></pre>
+</li>
+<li>
+<p>将文件添加到暂存区</p>
+<pre><code class="language-shell"># 指定文件进行添加
+git add README
+git add README HelloWorld.java
+
+# 添加全部文件
+git add .
+</code></pre>
+</li>
+</ul>
+<h2 id="4-git设置名字和邮箱">4. Git：设置名字和邮箱</h2>
+<pre><code class="language-shell">git config --global user.name 'photozynthesis'
+git config --global user.email photozynthesis@outlook.com
+</code></pre>
+<h2 id="5-git将缓存区中的内容提交到仓库">5. Git：将缓存区中的内容提交到仓库</h2>
+<pre><code class="language-shell"># 指定更新信息，不使用 -m 则会打开 vim，保存后会进行提交
+git commit -m '今日更新了README'
+
+# 跳过提交到暂存区的步骤，将暂存区已跟踪的文件提交到本版库
+git commit -a
+git commit -am '今日又又更新了'
+</code></pre>
+<ul>
+<li>
+<p>查看提交历史</p>
+<pre><code class="language-shell">git log [--reverse] [--oneline] [--graph]
+</code></pre>
+</li>
+</ul>
+<h2 id="6-git分支相关">6. Git：分支相关</h2>
+<ul>
+<li>
+<p>查看分支信息</p>
+<pre><code class="language-shell">git branch
+</code></pre>
+</li>
+<li>
+<p>新增分支</p>
+<pre><code class="language-shell">git branch newBranch
+</code></pre>
+</li>
+<li>
+<p>切换当前分支</p>
+<pre><code class="language-shell"># 切换分支后，会显示目标分支下已提交的内容
+git checkout newBranch
+</code></pre>
+</li>
+<li>
+<p>删除分支</p>
+<pre><code class="language-shell">git branch -d newBranch
+</code></pre>
+</li>
+<li>
+<p>合并分支</p>
+<pre><code class="language-shell"># 将指定分支合并到当前分支上，文件的增删会自动处理，而修改会发生冲突
+git merge newBranch
+</code></pre>
+</li>
+<li>
+<p>处理合并中的冲突</p>
+<ul>
+<li>产生冲突后对应文件中会出现提示。</li>
+<li>可以手动对出现提示的地方进行处理，处理完毕后进行 <code>add</code> 和 <code>commit</code> 操作即合并完成。</li>
+</ul>
+</li>
+</ul>
+<h2 id="7-git标签">7. Git：标签</h2>
+<ul>
+<li>
+<p>给最新一次注解打上版本标签</p>
+<pre><code class="language-shell">git tag -a v1.0
+</code></pre>
+</li>
+</ul>
+
+
+</body>
+</html>

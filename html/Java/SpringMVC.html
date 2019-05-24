@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>SpringMVC</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<p># SpringMVC</p>
+<ul>
+<li><a href="#1-springmvc-概述">1. SpringMVC 概述</a>
+<ul>
+<li><a href="#11-表现层的概述">1.1 表现层的概述</a></li>
+<li><a href="#12-mvc-模型概述">1.2 MVC 模型概述</a></li>
+<li><a href="#13-springmvc-概述">1.3 SpringMVC 概述</a></li>
+<li><a href="#14-springmvc-与-struts2-的对比">1.4 SpringMVC 与 Struts2 的对比</a></li>
+</ul>
+</li>
+<li><a href="#2-入门intellij-idea-参考">2. 入门：IntelliJ IDEA 参考</a>
+<ul>
+<li><a href="#21-创建项目并导入依赖坐标">2.1 创建项目并导入依赖坐标</a></li>
+<li><a href="#22-配置核心控制器-dispatcherservlet">2.2 配置核心控制器 DispatcherServlet</a></li>
+<li><a href="#23-配置-springmvc-的核心配置文件">2.3 配置 SpringMVC 的核心配置文件</a></li>
+<li><a href="#24-编写页面和控制器">2.4 编写页面和控制器</a></li>
+<li><a href="#25-说明">2.5 说明</a></li>
+</ul>
+</li>
+<li><a href="#3-controllerrequestmapping-和请求参数绑定">3. Controller：@RequestMapping 和请求参数绑定</a>
+<ul>
+<li><a href="#30-requestmapping">3.0 @RequestMapping</a></li>
+<li><a href="#31-请求参数绑定概述">3.1 请求参数绑定：概述</a></li>
+<li><a href="#32-请求参数绑定实现">3.2 请求参数绑定：实现</a></li>
+<li><a href="#33-新增备注">3.3 新增备注</a></li>
+</ul>
+</li>
+<li><a href="#4-filter-解决乱码">4. filter 解决乱码</a></li>
+<li><a href="#5-类型转换器">5. 类型转换器</a></li>
+<li><a href="#6-controller使用-servlet-api-对象作为参数">6. Controller：使用 Servlet API 对象作为参数</a></li>
+<li><a href="#7-controller常用注解">7. Controller：常用注解</a>
+<ul>
+<li><a href="#71-requestparam">7.1 @RequestParam</a></li>
+<li><a href="#72-requestbody">7.2 RequestBody</a></li>
+<li><a href="#73-rest-风格-url-和-pathvariable">7.3 REST 风格 URL 和 @PathVariable</a></li>
+<li><a href="#74-hiddenhttpmethodfilter-概述与示例">7.4 HiddenHttpMethodFilter 概述与示例</a></li>
+<li><a href="#75-requestheader">7.5 @RequestHeader</a></li>
+<li><a href="#76-cookievalue">7.6 @CookieValue</a></li>
+<li><a href="#77-modelattribute">7.7 @ModelAttribute</a></li>
+<li><a href="#78-sessionattributes">7.8 @SessionAttributes</a></li>
+</ul>
+</li>
+<li><a href="#8-controller使用不同返回值">8. Controller：使用不同返回值</a>
+<ul>
+<li><a href="#81-string">8.1 String</a></li>
+<li><a href="#82-void">8.2 void</a></li>
+<li><a href="#83-modelandview">8.3 ModelAndView</a></li>
+<li><a href="#84-返回-bean-响应-ajax-请求">8.4 返回 Bean 响应 ajax 请求</a></li>
+</ul>
+</li>
+<li><a href="#9-controller转发与重定向">9. Controller：转发与重定向</a>
+<ul>
+<li><a href="#91-请求转发">9.1 请求转发</a></li>
+<li><a href="#92-重定向">9.2 重定向</a></li>
+</ul>
+</li>
+<li><a href="#10-文件上传">10. 文件上传</a></li>
+<li><a href="#11-spring-mvc异常处理">11. Spring MVC：异常处理</a>
+<ul>
+<li><a href="#111-使用自带的异常处理器">11.1 使用自带的异常处理器</a></li>
+<li><a href="#112-自定义异常处理器">11.2 自定义异常处理器</a></li>
+</ul>
+</li>
+<li><a href="#12-spring-mvc拦截器">12. Spring MVC：拦截器</a>
+<ul>
+<li><a href="#121-拦截器概述">12.1 拦截器概述</a></li>
+<li><a href="#122-拦截器执行流程">12.2 拦截器执行流程</a></li>
+<li><a href="#123-配置拦截器">12.3 配置拦截器</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="1-springmvc-概述">1. SpringMVC 概述</h2>
+<h3 id="11-表现层的概述">1.1 表现层的概述</h3>
+<p>表现层，也就是 Web 层，负责接收客户端请求，向客户端响应结果。</p>
+<p>表现层又包括<strong>展示层</strong>和<strong>控制层</strong>，控制层负责接收请求，展示层负责结果的展示。</p>
+<h3 id="12-mvc-模型概述">1.2 MVC 模型概述</h3>
+<p>MVC 全称是 Model、View、Controller，即模型、视图、控制器。</p>
+<ul>
+<li>Model：数据模型，一般指 JavaBean 的类，用于数据封装。</li>
+<li>View：展示数据，一般指 JSP、HTML等。</li>
+<li>Controller：用于接收用户的请求，控制整个流程。</li>
+</ul>
+<h3 id="13-springmvc-概述">1.3 SpringMVC 概述</h3>
+<ul>
+<li>是一种基于 <strong>Java 实现的 MVC 设计模型</strong>的请求驱动类型的<strong>轻量级 WEB 框架</strong>。</li>
+<li>Spring MVC 属于 SpringFrameWork 的后续产品，已经融合在 Spring Web Flow 里面。Spring 框架提供 了构建 Web 应用程序的全功能 MVC 模块。</li>
+<li>使用 Spring 可插入的 MVC 架构，从而在使用Spring进行WEB开发时，可以选择使用Spring的 SpringMVC框架或集成其他MVC开发框架，如Struts1(现在一般不用)，Struts2等。</li>
+</ul>
+<h3 id="14-springmvc-与-struts2-的对比">1.4 SpringMVC 与 Struts2 的对比</h3>
+<ul>
+<li><strong>共同点</strong>：
+<ul>
+<li>都是基于 MVC 模型编写的表现层框架。</li>
+<li>底层都是原始的 Servlet API。</li>
+<li>都通过一个核心控制器处理请求。</li>
+</ul>
+</li>
+<li><strong>不同点</strong>：
+<ul>
+<li>SpringMVC 的入口是 Servlet，而 Struts2 的入口是 filter。</li>
+<li>Spring MVC 是基于方法设计的，而 Struts2 是基于类设计。Spring MVC 因此相比 Struts2 较快。</li>
+<li>Spring MVC 使用更加简洁,同时还支持 JSR303, 处理 ajax 的请求更方便。</li>
+<li>通过 JSR303 注解可以方便地进行校验</li>
+<li>Struts2 的 OGNL 表达式使页面的开发效率相比 Spring MVC 更高些，但执行效率并没有比 JSTL 提 升，尤其是 struts2 的表单标签，远没有 html 执行效率高。</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-入门intellij-idea-参考">2. 入门：IntelliJ IDEA 参考</h2>
+<h3 id="21-创建项目并导入依赖坐标">2.1 创建项目并导入依赖坐标</h3>
+<ul>
+<li>
+<p>新建 maven 项目，从模板创建，认准 maven-archetype-webapp 。</p>
+</li>
+<li>
+<p>pom.xml 配置依赖坐标。简略来说，包含如下内容：</p>
+<ul>
+<li>spring-context</li>
+<li>spring-web</li>
+<li>spring-webmvc</li>
+<li>servlet-api</li>
+<li>jsp-api</li>
+</ul>
+<p>样板：</p>
+<pre><code class="language-xml">&lt;!-- 版本锁定 --&gt;
+&lt;properties&gt;
+  &lt;spring.version&gt;5.0.2.RELEASE&lt;/spring.version&gt;
+&lt;/properties&gt;
+
+&lt;dependencies&gt;
+  &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;            						&lt;artifactId&gt;spring-context&lt;/artifactId&gt;            						&lt;version&gt;${spring.version}&lt;/version&gt;
+  &lt;/dependency&gt;
+  &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;            						&lt;artifactId&gt;spring-web&lt;/artifactId&gt;            							&lt;version&gt;${spring.version}&lt;/version&gt;
+  &lt;/dependency&gt;
+  &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;            						&lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;            						&lt;version&gt;${spring.version}&lt;/version&gt;
+  &lt;/dependency&gt;
+  &lt;dependency&gt;
+      &lt;groupId&gt;javax.servlet&lt;/groupId&gt;            							&lt;artifactId&gt;servlet-api&lt;/artifactId&gt;            						&lt;version&gt;2.5&lt;/version&gt;
+      &lt;scope&gt;provided&lt;/scope&gt;
+  &lt;/dependency&gt;
+  &lt;dependency&gt;
+      &lt;groupId&gt;javax.servlet.jsp&lt;/groupId&gt;            						&lt;artifactId&gt;jsp-api&lt;/artifactId&gt;            							&lt;version&gt;2.0&lt;/version&gt;
+      &lt;scope&gt;provided&lt;/scope&gt;
+  &lt;/dependency&gt;
+&lt;/dependencies&gt;
+</code></pre>
+</li>
+</ul>
+<h3 id="22-配置核心控制器-dispatcherservlet">2.2 配置核心控制器 DispatcherServlet</h3>
+<p>DispatcherServlet 本质上是一个 Servlet，所以现在 在 web.xml 中配置。</p>
+<p>简略信息：</p>
+<ul>
+<li>完整类名为 org.springframework.web.servlet.DispatcherServlet</li>
+<li>需要传递参数：springmvc 配置文件的位置。</li>
+<li>url-pattern设置为 /</li>
+</ul>
+<p>web.xml：</p>
+<pre><code class="language-xml">...
+&lt;servlet&gt;
+	&lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+    &lt;init-param&gt;
+    	&lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+        &lt;param-value&gt;classpath:springmvc.xml&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;!-- 优先级 --&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+&lt;/servlet&gt;
+&lt;servlet-mapping&gt;
+	&lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+</code></pre>
+<h3 id="23-配置-springmvc-的核心配置文件">2.3 配置 SpringMVC 的核心配置文件</h3>
+<p>在 classpath（resources）下编写 springmvc.xml。</p>
+<p>简略信息：</p>
+<ul>
+<li>beans 标签需要引入 xmlns:beans、xmlns:mvc、xmlns:context 约束。</li>
+<li>需要配置创建容器时要扫描的包，一般而言此处扫描控制器的包。</li>
+<li>配置视图解析器，指定类，以及控制器返回结果的前后缀。</li>
+<li>配置 spring 开启注解 mvc 的支持。</li>
+</ul>
+<p>springmvc.xml：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;    xmlns:mvc=&quot;http://www.springframework.org/schema/mvc&quot;    xmlns:context=&quot;http://www.springframework.org/schema/context&quot;    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; 
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        http://www.springframework.org/schema/mvc        http://www.springframework.org/schema/mvc/spring-mvc.xsd        http://www.springframework.org/schema/context        http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+    
+	&lt;context:component-scan base-package=&quot;io.github.pz.controller&quot; /&gt;
+    
+    &lt;bean id=&quot;viewResolver&quot; class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;
+    	&lt;property name=&quot;prefix&quot; value=&quot;/WEB-INF/pages/&quot; /&gt;
+        &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot; /&gt;
+    &lt;/bean&gt;
+    
+    &lt;mvc:annotation-driven /&gt;
+    
+&lt;/beans&gt;
+</code></pre>
+<h3 id="24-编写页面和控制器">2.4 编写页面和控制器</h3>
+<ul>
+<li>
+<p>index.jsp（主页）：</p>
+<pre><code class="language-jsp">...
+&lt;a href=&quot;${pageContext.request.contextPath}/hello&quot;&gt;入门&lt;/a&gt;
+...
+</code></pre>
+</li>
+<li>
+<p>HelloController（控制器）：</p>
+<pre><code class="language-java">/**
+*	控制器
+*/
+@Controller
+public class HelloController {
+  @RequestMapping(path=&quot;/hello&quot;)
+  public String toHello() {
+      sout(&quot;mvc hello&quot;);
+      return &quot;success&quot;;
+  }
+}
+</code></pre>
+</li>
+<li>
+<p>success.jsp（跳转到的页面）：</p>
+<p>...</p>
+</li>
+</ul>
+<h3 id="25-说明">2.5 说明</h3>
+<ul>
+<li>启动 Tomcat 后，由于配置了 load-on-startup，所以会创建 DispatcherServlet，并读取 springmvc.xml。</li>
+<li>开启了 mvc 注解以及包扫描，所以 HelloController 被创建。</li>
+<li>index.jsp -&gt; DispatcherServlet -&gt; HelloController@RequestMapping -&gt; ViewResolver -&gt; success.jsp</li>
+</ul>
+<h2 id="3-controllerrequestmapping-和请求参数绑定">3. Controller：@RequestMapping 和请求参数绑定</h2>
+<h3 id="30-requestmapping">3.0 @RequestMapping</h3>
+<ul>
+<li>位置：控制器的类声明上或控制器中的方法上。</li>
+<li>说明：
+<ul>
+<li>若写在类声明上，即设置 URL 的一级访问目录，不设置则无一级访问目录。建议设置，利于模块化管理。</li>
+<li>URL 需要以 <code>/</code> 开头。</li>
+<li>以下多个属性约束之间是与的关系，若请求不满足约束条件，将返回 4xx。</li>
+</ul>
+</li>
+<li>属性：
+<ul>
+<li>value/path：指定请求的 URL 。</li>
+<li>method：指定请求的方式。</li>
+<li>params：限制请求参数的条件，支持简单的表达式。例如</li>
+<li>params = {&quot;username&quot;}，表示请求参数必须包含 username</li>
+<li>（机制混乱）params = {&quot;money!100&quot;}，表示请求参数 money 不能为 100</li>
+<li>headers：用于指定限制请求头的条件。</li>
+</ul>
+</li>
+</ul>
+<h3 id="31-请求参数绑定概述">3.1 请求参数绑定：概述</h3>
+<ul>
+<li>
+<p>请求参数绑定，即将页面<strong>表单</strong>请求的参数映射到<strong>控制器</strong>中的方法参数。</p>
+</li>
+<li>
+<p>可以映射：</p>
+<ul>
+<li>基本类型和 String 类型</li>
+<li>POJO（Bean）类型</li>
+<li>数组 &amp; 集合</li>
+</ul>
+</li>
+</ul>
+<h3 id="32-请求参数绑定实现">3.2 请求参数绑定：实现</h3>
+<h4 id="321-绑定到基本类型string">3.2.1 绑定到基本类型/String</h4>
+<ul>
+<li>
+<p>说明：请求参数的 name 需要跟控制器方法的参数名称相同，区分大小写。</p>
+</li>
+<li>
+<p>若前端传递数组，并绑定到后端数组，使用 <code>@RequestParam</code> 注解，并设置 value 为 <code>前端数组名[]</code>。</p>
+</li>
+<li>
+<p>示例：</p>
+<p>...?username=zhangsan&amp;password=123</p>
+<pre><code class="language-java">@Controller
+public class Mycontroller {
+  @RequestMapping
+  public String directToSuccess(String username, Integer password) {
+      sout(username + password);
+      return &quot;success&quot;;
+  }
+}
+</code></pre>
+</li>
+</ul>
+<h4 id="322-绑定到-javabean">3.2.2 绑定到 JavaBean</h4>
+<ul>
+<li>
+<p>说明：</p>
+<ul>
+<li>若一个表单绑定到一个 JavaBean，请求参数的 name 需要跟 JavaBean 的属性名称一致。</li>
+<li>若绑定到的 JavaBean 中包含类型为其他 <strong>Bean</strong> 的属性，请求参数的 name 需要写成<code>引用类型属性名.属性名</code>。</li>
+<li>若绑定到的 JavaBean 中包含<strong>集合</strong>属性，请求参数的 name 需要为如下格式：</li>
+<li>单列集合：<code>（集合）属性名[索引]</code>，若该集合的元素类型为 Bean，需要写<code>（集合）属性名[索引].属性名</code>。</li>
+<li>双列集合：<code>（集合）属性名['key'].value的字段名</code>。</li>
+</ul>
+</li>
+<li>
+<p>示例：</p>
+<ul>
+<li>结果包含 Bean：</li>
+</ul>
+<p>...?username=zhangsan&amp;password=123&amp;address.province=anhui&amp;address.city=anqing</p>
+<pre><code class="language-java">@Controller
+public class Mycontroller {
+    @RequestMapping
+    public String directToSuccess(User user) {
+        sout(User);
+        return &quot;success&quot;;
+    }
+}
+</code></pre>
+<ul>
+<li>结果包含 集合：</li>
+</ul>
+<p>form.html</p>
+<pre><code class="language-html">&lt;form action=&quot;account/updateAccount&quot; method=&quot;POST&quot;&gt;
+    用户名：&lt;input type=&quot;text&quot; name=&quot;username&quot; /&gt;&lt;br /&gt;
+    密码：&lt;input type=&quot;password&quot; name=&quot;password&quot; /&gt;&lt;br /&gt;
+    账户1名称：&lt;input type=&quot;text&quot; name=&quot;accounts[0].aname&quot; /&gt;&lt;br /&gt;
+    账户1金额：&lt;input type=&quot;text&quot; name=&quot;accounts[0].abal&quot; /&gt;&lt;br /&gt;
+    账户2......
+&lt;/form&gt;
+</code></pre>
+</li>
+</ul>
+<h3 id="33-新增备注">3.3 新增备注</h3>
+<ul>
+<li>SpringMVC 可以接收同时具有 query 参数（url 中的参数，就像 get）和请求体参数的 post 请求。可以使用 @RequestBody 和 @RequestParam 来接收参数。</li>
+</ul>
+<h2 id="4-filter-解决乱码">4. filter 解决乱码</h2>
+<ul>
+<li>
+<p>概述：</p>
+<p>通过配置 spring-web 提供的字符编码过滤器来实现。</p>
+</li>
+<li>
+<p>处理 POST 请求的乱码：</p>
+<p>web.xml</p>
+<pre><code class="language-xml">&lt;filter&gt;
+&lt;filter-name&gt;CharacterEncodingFilter&lt;/filter-name&gt;
+  &lt;filter-class&gt;
+  	org.springframework.web.filter.CharacterEncodingFilter
+  &lt;/filter-class&gt;
+  &lt;init-param&gt;
+  	&lt;param-name&gt;encoding&lt;/param-name&gt;
+      &lt;param-value&gt;UTF-8&lt;/param-value&gt;
+  &lt;/init-param&gt;
+  &lt;!-- 开启过滤器 --&gt;
+  &lt;init-param&gt;
+  	&lt;param-name&gt;forceEncoding&lt;/param-name&gt;
+      &lt;param-value&gt;true&lt;/param-value&gt;
+  &lt;/init-param&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+&lt;filter-name&gt;CharacterEncodingFilter&lt;/filter-name&gt;
+  &lt;!-- 过滤所有请求 --&gt;
+  &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;
+</code></pre>
+</li>
+<li>
+<p>防止静态资源被拦截：</p>
+<p>springmvc.xml</p>
+<pre><code class="language-xml">&lt;!-- location为文件夹路径，mapping为要使用的资源的路径，**表示所有子文件和文件夹 --&gt;
+&lt;mvc:resources location=&quot;/css/&quot; mapping=&quot;/css/**&quot; /&gt;
+&lt;mvc:resources location=&quot;/img/&quot; mapping=&quot;/img/**&quot; /&gt;
+
+&lt;!-- 或者使用如下方式，放过所有静态资源 --&gt;
+&lt;mvc:default-servlet-handler /&gt;
+</code></pre>
+</li>
+<li>
+<p>处理 GET 请求的乱码：</p>
+<p>修改 Tomcat 的 server.xml 配置文件。</p>
+<ul>
+<li>找到 Connector 标签，添加属性<code>useBodyEncodingForURI=&quot;true&quot;</code>。</li>
+<li>ajax 请求乱码：添加属性<code>URIEncoding=&quot;UTF-8&quot;</code>。</li>
+</ul>
+</li>
+</ul>
+<h2 id="5-类型转换器">5. 类型转换器</h2>
+<ul>
+<li>
+<p>概述：</p>
+<ul>
+<li>当页面的请求参数需要绑定到控制器中不同的类型时，例如一个日期字符串需要绑定到一个 Date 类型时，用到转换器。</li>
+<li>简要说明：编写转换器类实现 spring 的 Converter&lt;S, T&gt; 接口，并在 spring 的配置文件中进行注册。</li>
+</ul>
+</li>
+<li>
+<p>示例：</p>
+<ul>
+<li>MyStringToDateConverter.java</li>
+</ul>
+<pre><code class="language-java">package io.github.photozynthesis.converter.MyStringToDateConverter;
+...
+// Converter 的泛型第一个为源类型，第二个为转成的类型
+public class MyStringToDateConverter implements Converter&lt;String,Date&gt; {
+	@Override
+    public Date convertStrToDate (String source) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);
+            Date date = format.parse(Source);
+            return date;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<ul>
+<li>springmvc.xml</li>
+</ul>
+<pre><code class="language-xml">&lt;!-- 注册到转换服务 --&gt;
+&lt;bean id=&quot;converterService&quot; class=&quot;org.springframework.context.support.ConversionServiceFactoryBean&quot;&gt;
+	&lt;property name=&quot;converters&quot;&gt;
+    	&lt;array&gt;
+        	&lt;bean class=&quot;io.github.pz.converter.MyStringToDateConverter&quot; /&gt;
+        &lt;/array&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
+
+&lt;!-- 引用类型转换服务 --&gt;
+&lt;mvc:annotation-driven conversion-service=&quot;converterService&quot; /&gt;
+</code></pre>
+</li>
+</ul>
+<h2 id="6-controller使用-servlet-api-对象作为参数">6. Controller：使用 Servlet API 对象作为参数</h2>
+<ul>
+<li>
+<p>SpringMVC 支持将原始的 Servlet API 对象作为控制器方法的参数。</p>
+</li>
+<li>
+<p>支持如下原始 Servlet API 对象：</p>
+<ul>
+<li><strong>HttpServletRequest</strong></li>
+<li><strong>HttpServletResponse</strong></li>
+<li><strong>HttpSession</strong></li>
+<li>InputStream</li>
+<li>OutputStream</li>
+<li>Reader</li>
+<li>Writer</li>
+<li>Locale</li>
+<li>java.security.Principal</li>
+</ul>
+</li>
+<li>
+<p>示例：</p>
+<p>MyController.java</p>
+<pre><code class="language-java">...
+  @RequestMapping(&quot;/testServletAPI&quot;)
+  public String testServletAPI (HttpServletRequest req, HttpServletResponse resp, HttpSession session) {
+  session.setAttribute(...);
+  ...
+  return &quot;success&quot;;
+}
+</code></pre>
+</li>
+</ul>
+<h2 id="7-controller常用注解">7. Controller：常用注解</h2>
+<h3 id="71-requestparam">7.1 @RequestParam</h3>
+<ul>
+<li>
+<p><strong>作用</strong>：</p>
+<p>用表单<strong>请求参数</strong>中指定名称的参数给<strong>控制器的形参</strong>赋值。</p>
+</li>
+<li>
+<p><strong>说明</strong>：</p>
+<ul>
+<li>注解位置：控制器方法的形参之前（类型而非变量名之前）。</li>
+<li>属性：</li>
+<li>value：请求参数名</li>
+<li>required：请求参数是否必须包含该参数，默认为 true，表示不提供将会报错。</li>
+<li>特别说明：</li>
+<li>若请求参数为数组，请求参数名需要加上 <code>[]</code>。</li>
+</ul>
+</li>
+<li>
+<p><strong>示例</strong>：</p>
+<p>MyController.java</p>
+<pre><code class="language-java">...
+  @RequestMapping(&quot;/test&quot;)
+  public String test (@RequestParam(value=&quot;name&quot;) String username), ...) {
+  	sout(username);
+  	...
+      return &quot;success&quot;;
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="72-requestbody">7.2 RequestBody</h3>
+<ul>
+<li>
+<p><strong>作用</strong>：</p>
+<p>用于获取 <strong>POST</strong> 方法请求的<strong>请求体内容</strong>，用以给<strong>控制器的形参</strong>赋值。</p>
+</li>
+<li>
+<p><strong>说明</strong>：</p>
+<ul>
+<li>注解位置：控制器方法的形参之前（类型而非变量名之前）。</li>
+<li>属性：</li>
+<li>required：是否必须有请求体，默认为true。为 true 时候 GET 方式会报错，而为 false 时会得到一个 null 值。</li>
+</ul>
+</li>
+<li>
+<p><strong>示例</strong>：</p>
+<p>index.jsp</p>
+<pre><code class="language-jsp">&lt;form action=&quot;${pageContext.request.contextPath}/test/test2&quot; method=&quot;POST&quot;&gt;
+  用户名：&lt;input type=&quot;text&quot; name=&quot;username&quot;&gt;
+  密码：&lt;input type=&quot;password&quot; name=&quot;password&quot;&gt;
+&lt;/form&gt;
+</code></pre>
+<p>MyController.java</p>
+<pre><code class="language-java">...
+  @RequestMapping(&quot;/test2&quot;)
+  public String test (@RequestBody(required=true) String body) {
+  	sout(body); // username=demo&amp;password=demo
+  	...
+      return &quot;success&quot;;
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="73-rest-风格-url-和-pathvariable">7.3 REST 风格 URL 和 @PathVariable</h3>
+<ul>
+<li>
+<p><strong>REST 风格 URL 概述</strong>：</p>
+<ul>
+<li>REST（Representational State Transfer），是一种网络系统设计风格，没有明确标准。</li>
+<li>restful 特点：结构清晰、符合标准、易于理解、扩展方便。</li>
+<li><strong>概括来说就是提交请求时，不使用 <code>?</code> + 参数的格式，而是使用统一的 url，通过提交方式的不同来处理不同的任务</strong>。</li>
+<li>例如：/account/1    -&gt;   GET：查询；DELETE：删除；PUT：更新；POST：新增。</li>
+</ul>
+</li>
+<li>
+<p><strong>@PathVariable</strong>：</p>
+<ul>
+<li><strong>位置</strong>：</li>
+</ul>
+<p>位于 Controller 的形参之前。</p>
+<ul>
+<li><strong>说明</strong>：</li>
+</ul>
+<p>用于在 url 中定义占位符，并绑定到 Controller 的形参中。</p>
+<p>需要在 @RequestMapping 的 path 属性中定义占位符。</p>
+<ul>
+<li>
+<p><strong>属性</strong>：</p>
+</li>
+<li>
+<p>value/name：指定 url 中的占位符，给形参赋值。</p>
+</li>
+<li>
+<p>required：是否必须提供占位符。</p>
+</li>
+<li>
+<p>示例：</p>
+</li>
+</ul>
+<p>xx.jsp</p>
+<pre><code class="language-jsp">&lt;a href=&quot;.../demoPath/100&quot;&gt;demo&lt;/a&gt;
+</code></pre>
+<p>MyController.java</p>
+<pre><code class="language-java">@RequestMapping(&quot;/demoPath/{id}&quot;)
+public String demo(@PathVariable(&quot;id&quot;) Integer id) {
+    sout(id);
+    return &quot;success&quot;;
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="74-hiddenhttpmethodfilter-概述与示例">7.4 HiddenHttpMethodFilter 概述与示例</h3>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<ul>
+<li>
+<p>浏览器 form 表单只支持 GET 与 POST 请求，而 DELETE、PUT 等 method 并不支持。</p>
+</li>
+<li>
+<p>Spring3.0 添加了一个过滤器，可以<strong>将浏览器请求改为指定的请求方式</strong>，发送给我们的控制器方法，使得支持 GET、POST、PUT 与 DELETE 请求。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>使用步骤与示例</strong>：</p>
+<ul>
+<li>在 web.xml 中配置该过滤器。</li>
+</ul>
+<p>web.xml</p>
+<pre><code class="language-xml">...
+&lt;filter&gt;  
+    &lt;filter-name&gt;HiddenHttpMethodFilter&lt;/filter-name&gt;  
+    &lt;filter-class&gt;org.springframework.web.filter.HiddenHttpMethodFilter&lt;/filter-class&gt;  
+&lt;/filter&gt;  
+&lt;filter-mapping&gt;  
+    &lt;filter-name&gt;HiddenHttpMethodFilter&lt;/filter-name&gt;  
+    &lt;servlet-name&gt;spring&lt;/servlet-name&gt;  
+&lt;/filter-mapping&gt;
+&lt;servlet&gt;
+    &lt;servlet-name&gt;spring&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+        &lt;param-value&gt;classpath:dispatcher.xml&lt;/param-value&gt;
+    &lt;/init-param&gt;
+&lt;/servlet&gt;
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;spring&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;*.html&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+...
+</code></pre>
+<ul>
+<li>页面中的请求使用 POST，并使用隐藏域，定义 name=&quot;_method&quot; 和 value=&quot;PUT...&quot;</li>
+</ul>
+<pre><code class="language-html">&lt;form action=&quot;...&quot; method=&quot;POST&quot;&gt;
+    &lt;input ...&gt;
+    &lt;input type=&quot;hidden&quot; name=&quot;_method&quot; value=&quot;DELETE&quot;&gt;
+&lt;/form&gt;
+</code></pre>
+<ul>
+<li>在控制器的 @RequestMapping 中添加属性 method=RequestMethod.DELETE</li>
+</ul>
+<pre><code class="language-java">@RequestMapping(value = &quot;/test/{id}&quot;, method = RequestMethod.DELETE)
+public String demo(@PathVariable(&quot;id&quot;) Integer id) {
+    sout(id);
+    return &quot;success&quot;;
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="75-requestheader">7.5 @RequestHeader</h3>
+<ul>
+<li>
+<p><strong>说明</strong>：</p>
+<p>用于获取请求的消息头。</p>
+</li>
+<li>
+<p><strong>位置</strong>：</p>
+<p>Controller 方法的形参之前。</p>
+</li>
+<li>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>value：消息头名称。</li>
+<li>required：是否必须有此消息头。</li>
+</ul>
+</li>
+<li>
+<p>示例：</p>
+<p>MyController.java</p>
+<pre><code class="language-java">@RequestMapping(&quot;/demo&quot;)
+public String demo(@RequestHeader(value=&quot;Accept-Language&quot;, required=false) String header_language) {
+  sout(header_language);
+  return &quot;success&quot;;
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="76-cookievalue">7.6 @CookieValue</h3>
+<ul>
+<li>
+<p><strong>说明</strong>：</p>
+<p>将指定 cookie 名称的值传入 Controller 的参数。</p>
+</li>
+<li>
+<p><strong>位置</strong>：</p>
+<p>Controller 方法的形参之前。</p>
+</li>
+<li>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>value：cookie 的名称。</li>
+<li>required：是否必须有此 cookie。</li>
+</ul>
+</li>
+<li>
+<p>示例：</p>
+<p>MyController.java</p>
+<pre><code class="language-java">@RequestMapping(&quot;/demo&quot;)
+public String demo(@CookieValue(value=&quot;JSESSIONID&quot;, required=false) String cookieValue) {
+  sout(cookieValue);
+  return &quot;success&quot;;
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="77-modelattribute">7.7 @ModelAttribute</h3>
+<ul>
+<li>
+<p><strong>说明</strong>：</p>
+<ul>
+<li>于 SpringMVC 4.3 之后加入。</li>
+<li>一般用于给表单中没有没有传递的 Bean 中的字段赋值。</li>
+<li><strong>出现在 Controller 中的非 @RequestMapping 方法上</strong>：</li>
+<li>表示该方法在控制器方法执行之前执行（多个将按照方法名排序执行）。</li>
+<li><strong>可以传入表单中的参数，（处理后）直接 return 表单的目标 Bean 对象：这样不用做其他操作控制器就能接收到该 Bean 对象</strong>。</li>
+<li><strong>可以在传入表单参数的同时传入一个 <code>Map(String, Bean)</code> ，（处理后）将 Bean 存入该 Map（自定义键）：这样第一该方法无需返回值，第二在控制器的方法形参上写上 <code>@ModelAttribute(value = &quot;key&quot;)</code> 注解就可以导入之前存入的 Bean</strong>。</li>
+<li><strong>出现在 Controller 控制器方法形参上</strong>：</li>
+<li>用于传入之前处理的数据，属性 value 可以为 POJO，也可以为 Map 中的 key。</li>
+<li>没什么多余的可以说了。</li>
+</ul>
+</li>
+<li>
+<p><strong>位置</strong>：</p>
+<ul>
+<li>Controller 中的非 @RequestMapping 方法上</li>
+<li>Controller 中 @RequestMapping 方法的形参之前（需要已定义返回值为 null 并传入了 Map 的 @ModelAttribute 方法，用于指定 Map 中的 key 来给参数赋值）</li>
+</ul>
+</li>
+<li>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>我说过了。</li>
+</ul>
+</li>
+<li>
+<p><strong>示例</strong>：</p>
+<ul>
+<li><strong>没有返回值</strong>：</li>
+</ul>
+<p>page.html</p>
+<ul>
+<li>只传入了 username</li>
+</ul>
+<p>MyController.java</p>
+<pre><code class="language-java">@Controller
+public class MyController {
+
+    @ModelAttribute
+    public void getModel(String username, Map&lt;String, User&gt; map) {
+        // 根据 username 查询出一个 User，对没传的字段赋值
+        User user = getUserByName(username);
+        // 存入 map
+        map.put(&quot;user&quot;, user);
+    }
+
+    @RequestMapping(&quot;/demo&quot;)
+    public String demo(@ModelAttribute(&quot;user&quot;) User user) {
+        ...
+        return &quot;success&quot;;
+    }
+}
+</code></pre>
+<ul>
+<li><strong>有返回值</strong>：</li>
+</ul>
+<p>page.html</p>
+<ul>
+<li>只传入了 username</li>
+</ul>
+<p>MyController.java</p>
+<pre><code class="language-java">@Controller
+public class MyController {
+
+    @ModelAttribute
+    public User getUser(String username) {
+        // 根据 username 查询出一个 User，对没传的字段赋值
+        User user = getUserByName(username);
+        // 返回
+        return user;
+    }
+
+    @RequestMapping(&quot;/demo&quot;)
+    public String demo(User user) {
+        ...
+        return &quot;success&quot;;
+    }
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="78-sessionattributes">7.8 @SessionAttributes</h3>
+<ul>
+<li><strong>说明</strong>：
+<ul>
+<li>使用 @SessionAttributes 可以方便的管理 session，用于在多个请求之间共享某个模型属性数据。</li>
+<li>在 @SessionAttributes 中配置的 attributes，会在控制器将其存入 Model 时自动存入 session，也就是可以通过 Model 对象，也可以通过 ModelAndView 对象使用。</li>
+<li>属性 value 和 type 没有任何关系。</li>
+</ul>
+</li>
+<li>
+<p><strong>位置</strong>：</p>
+<ul>
+<li>控制器类定义上。</li>
+</ul>
+</li>
+<li>
+<p><strong>属性</strong>：</p>
+<ul>
+<li>value/name[]：任何符合这些 key 的 attribute在存入 Model 时，都会存一份到 session 。</li>
+<li>type[]：任何符合这些类型的 attribute 在存入 Model 时，都会存一份到 session 。</li>
+</ul>
+</li>
+<li>
+<p>示例：</p>
+<p>MyController.java</p>
+<pre><code class="language-java">@Controller
+@SessionAttributes(value={&quot;name&quot;}, type={Integer.class})
+public class MyController {
+  @RequestMapping(&quot;/demo&quot;)
+  public String demo(Model model) {
+      model.addAttribute(&quot;name&quot;, &quot;zhangsan&quot;);
+      return &quot;success&quot;;
+  }
+}
+</code></pre>
+</li>
+</ul>
+<h2 id="8-controller使用不同返回值">8. Controller：使用不同返回值</h2>
+<p>控制器方法的返回值可以设置为 String、void 或是 ModelAndView，也可以通过引入  jackson 包来返回 Bean 类型以响应 ajax 请求。具体如下：</p>
+<h3 id="81-string">8.1 String</h3>
+<ul>
+<li>
+<p>概述</p>
+<p>返回 String ,即返回逻辑视图名，最终通过视图解析器解析为物理视图地址。</p>
+</li>
+<li>
+<p>示例</p>
+<p>MyController.java</p>
+<pre><code class="language-java">@RequestMapping(&quot;/demo&quot;)
+public String demo() {
+  return &quot;success&quot;;
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="82-void">8.2 void</h3>
+<ul>
+<li>
+<p>概述</p>
+<p>返回 void，即不通过视图解析器进行解析。此时一般使用 Servlet API 的参数进行请求转发、重定向等。</p>
+</li>
+<li>
+<p>示例</p>
+<ul>
+<li>进行请求转发</li>
+</ul>
+<p>MyController.java</p>
+<pre><code class="language-java">@RequestMapping(&quot;/demo&quot;)
+public void demo(HttpServletRequest req, HttpServletResponse resp) {
+    req.getRequestDispatcher(&quot;/pages/success.jsp&quot;).forward(req, resp);
+}
+</code></pre>
+<ul>
+<li>进行重定向</li>
+</ul>
+<p>MyController.java</p>
+<pre><code class="language-java">@RequestMapping(&quot;/demo&quot;)
+public void demo(HttpServletRequest req, HttpServletResponse resp) {
+    resp.sendRedirect(&quot;/pages/success.jsp&quot;);
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="83-modelandview">8.3 ModelAndView</h3>
+<ul>
+<li>
+<p>概述</p>
+<ul>
+<li>ModelAndView 是 Spring MVC 提供的对象，可以作为 Controller 的返回值。</li>
+<li>同时包含了模型信息（attributes）和视图信息，可以：</li>
+<li>通过 <code>addObject(String,Object)</code> 来向 requestScope 中添加附加信息，在 jsp 中可以直接通过 EL 表达式获取。</li>
+<li>通过 <code>setViewName(@Nullable String)</code> 来设置逻辑视图，交由视图解析器处理。</li>
+</ul>
+</li>
+<li>
+<p>示例</p>
+<p>MyController.java</p>
+<pre><code class="language-java">@RequestMapping(&quot;/demo&quot;)
+public ModelAndView demo() {
+  ModelAndView mav = new ModelAndView();
+  mav.addObject(&quot;username&quot;, &quot;张三&quot;);
+  mav.setViewName(&quot;success&quot;);
+  return mav;
+}
+</code></pre>
+<p>success.jsp</p>
+<pre><code class="language-jsp">&lt;p&gt;
+  ${requestScope.username}，你好
+&lt;/p&gt;
+</code></pre>
+</li>
+</ul>
+<h3 id="84-返回-bean-响应-ajax-请求">8.4 返回 Bean 响应 ajax 请求</h3>
+<ul>
+<li>
+<p>概述</p>
+<ul>
+<li>该注解位于 Controller 方法的 Bean 返回值之前，注解之后 Spring MVC 会通过 HttpMessageConverter 转换为 json/xml 等。</li>
+<li>Spring MVC 默认用 MappingJacksonHttpMessageConverter 实现来转成 json ，所以<strong>此处加入 jackson 的三个包（jackson-annotations、jackson-databind、jackson-core）</strong>，具体见前面的笔记。</li>
+<li>导入的 jackson 版本需要高于 2.7.0 。</li>
+</ul>
+</li>
+<li>
+<p>示例</p>
+<ul>
+<li>page.jsp</li>
+</ul>
+<pre><code class="language-jsp">&lt;script&gt;
+    $(function() {
+        $(&quot;#test&quot;).click(function() {
+            $.ajax({
+                type:&quot;post&quot;,
+                url:&quot;${pageContext.request.contextPath}/demo&quot;,
+                contentType:&quot;application/json;charset=utf-8&quot;,
+                data:&quot;{'id':1,'name':'test','money':999.0}&quot;,
+                dataType:&quot;json&quot;,
+                success:function(data) {
+                    alert(data);
+                }
+            })
+        })
+    })
+&lt;/script&gt;
+</code></pre>
+<ul>
+<li>MyController.java</li>
+</ul>
+<pre><code class="language-java">@RequestMapping(&quot;/demo&quot;)
+public @ResponseBody Account demo(@RequestBody Account account) {
+    return account;
+}
+</code></pre>
+</li>
+</ul>
+<h2 id="9-controller转发与重定向">9. Controller：转发与重定向</h2>
+<p>可以在返回 String 时在前面加上 <code>forward:</code> 或 <code>redirect:</code> 来定义请求转发与重定向。</p>
+<h3 id="91-请求转发">9.1 请求转发</h3>
+<ul>
+<li>
+<p>说明</p>
+<ul>
+<li>若直接返回逻辑视图，默认就是请求转发的方式。</li>
+<li>在返回的 String 前面加上 <code>forward:</code> 来定义请求转发。</li>
+<li>如果使用了 <code>forward:</code> 路径必须返回 url，不能写逻辑视图，例如 <code>forward:/pages/success.jsp</code>。</li>
+</ul>
+</li>
+<li>
+<p>示例</p>
+<p>MyController.java</p>
+<pre><code class="language-java">@RequestMapping(&quot;/demo&quot;)
+public String demo() {
+  return &quot;forward:/pages/success.jsp&quot;;
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="92-重定向">9.2 重定向</h3>
+<ul>
+<li>
+<p>说明</p>
+<ul>
+<li>在返回的 String 前面加上 <code>redirect:</code> 就是重定向。</li>
+<li>与请求转发相同，不能写逻辑视图，需要写 url。</li>
+<li>若重定向到 jsp 页面，jsp 页面不能在 WEB-INF 目录中，否则找不到。</li>
+</ul>
+</li>
+<li>
+<p>示例：</p>
+<p>MyController.java</p>
+<pre><code class="language-java">@RequestMapping(&quot;/demo&quot;)
+public String demo() {
+  return &quot;redirect:/pages/success.jsp&quot;;
+}
+</code></pre>
+</li>
+</ul>
+<h2 id="10-文件上传">10. 文件上传</h2>
+<ul>
+<li>
+<p><strong>概述</strong></p>
+<ul>
+<li>需要导入 <code>commons-fileupload</code> 和 <code>commons-io</code> 两个包。</li>
+<li>需要配置文件解析器，具体见下文。</li>
+<li>页面中的表单需要方式为 POST、添加属性 <code>enctype=&quot;multipart/form-data&quot;</code>，以及类型为 <code>file</code> 的 input 标签。</li>
+<li>控制器中需要设法控制文件不重复，并最终使用 <code>uploadFile.transferTo(newFile)</code> 来完成上传。</li>
+</ul>
+</li>
+<li>
+<p><strong>具体</strong></p>
+<ul>
+<li>导入包</li>
+</ul>
+<p>略。</p>
+<ul>
+<li>配置文件解析器</li>
+</ul>
+<p>springmvc.xml</p>
+<pre><code class="language-xml">&lt;!-- id固定，不能改动 --&gt;
+&lt;bean id=&quot;multipartResolver&quot; class=&quot;org.springframework.web.multipart.commons.CommonsMultipartResolver&quot;&gt;
+	&lt;!-- 设置最大上传大小，单位：Byte --&gt;
+    &lt;property name=&quot;maxUploadSize&quot;&gt;
+    	&lt;value&gt;1048576&lt;/value&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
+</code></pre>
+<ul>
+<li>页面</li>
+</ul>
+<p>demo.html</p>
+<pre><code class="language-html">&lt;form action=&quot;/fileUpload&quot; method=&quot;POST&quot; enctype=&quot;multipart/form-data&quot;&gt;
+    文件：&lt;input type=&quot;file&quot; name=&quot;uploadedFile&quot; /&gt;&lt;br&gt;
+    &lt;input type=&quot;submit&quot; value=&quot;上传&quot; /&gt;
+&lt;/form&gt;
+</code></pre>
+<ul>
+<li>控制器</li>
+</ul>
+<p>FileUploadController.java</p>
+<pre><code class="language-java">@Controller
+public class FileUploadController {
+    @RequestMapping(&quot;/fileUpload&quot;)
+    public String fileUpload(MultipartFile uploadedFile, HttpServletRequest req) throws Exception {
+        // 1. 获取上传文件的文件名
+        String srcFileName = uploadedFile.getOriginalFilename();
+        // 2. 定义文件放置位置的 basePath
+        String basePath = &quot;/usr/filesUploaded&quot;;
+        // 3. 判断 basePath 是否存在，不存在就创建目录
+        File basePathFile = new File(basePath);
+        if(!basePathFile.exists()) {
+            basePathFile.mkdirs();
+        }
+        // 4. 拼接成新文件
+        File targetFile = new File(basePath, srcFileName);
+        // 5. 调用 MultipartFile 接口中的方法，进行复制
+        uploadedFile.transferTo(targetFile);
+        // 6. 页面跳转
+        return &quot;success&quot;;
+    }
+}
+</code></pre>
+</li>
+<li>
+<p><strong>跨服务器文件上传概述</strong></p>
+<ul>
+<li>
+<p>负责文件存储的 Tomcat 服务器需要添加如下 jar 包：</p>
+</li>
+<li>
+<p>commons-fileupload</p>
+</li>
+<li>commons-io</li>
+<li>jersey-client</li>
+<li>
+<p>jersey-core</p>
+</li>
+<li>
+<p>需要设置文件解析器，见上文，略。</p>
+</li>
+<li>
+<p>需要编辑 web.xml。</p>
+</li>
+<li>
+<p>主服务器中控制器的核心代码：</p>
+</li>
+</ul>
+<pre><code class="language-java">...
+    public static final String FILE_SERVER_URL = &quot;http://localhost:9090/.../uploads&quot;;
+	@RequestMapping(&quot;/demo&quot;)
+	...
+        Client client = CLient.create();
+		WebResource resource = client.resource(FILE_SERVER_URL + fileName);
+		String result = resource.put(String.class, uploadFile.getBytes());
+</code></pre>
+</li>
+</ul>
+<h2 id="11-spring-mvc异常处理">11. Spring MVC：异常处理</h2>
+<p><strong>概述</strong>：</p>
+<ul>
+<li>Dao、Service 等层抛出的异常，最终会传到 Controller，之后到达前端控制器 DispatcherServlet，被交由异常处理器处理。</li>
+<li>Spring MVC 提供了简单的异常处理器实现：SimpleMappingExceptionResolver，对异常进行统一的处理（例如统一跳转到指定页面等）。</li>
+<li>使用 Spring MVC，也可以自定义异常处理器。</li>
+</ul>
+<h3 id="111-使用自带的异常处理器">11.1 使用自带的异常处理器</h3>
+<p>springmvc.xml</p>
+<pre><code class="language-xml">&lt;!-- springmvc提供的简单异常处理器 --&gt;
+&lt;bean class=&quot;org.springframework.web.servlet.handler.SimpleMappingExceptionResolver&quot;&gt;
+     &lt;!-- 定义默认的异常处理页面 --&gt;
+    &lt;property name=&quot;defaultErrorView&quot; value=&quot;/WEB-INF/jsp/error.jsp&quot;/&gt;
+    &lt;!-- 定义异常处理页面用来获取异常信息的变量名，也可不定义，默认名为exception --&gt; 
+    &lt;property name=&quot;exceptionAttribute&quot; value=&quot;ex&quot;/&gt;
+    &lt;!-- 定义需要特殊处理的异常，这是重要点 --&gt; 
+    &lt;property name=&quot;exceptionMappings&quot;&gt;
+        &lt;props&gt;
+            &lt;prop key=&quot;ssm.exception.CustomException&quot;&gt;/WEB-INF/jsp/custom_error.jsp&lt;/prop&gt;
+        &lt;/props&gt;
+        &lt;!-- 还可以定义其他的自定义异常 --&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
+</code></pre>
+<h3 id="112-自定义异常处理器">11.2 自定义异常处理器</h3>
+<p>参考步骤：</p>
+<ul>
+<li>
+<p><strong>编写错误页面</strong></p>
+<p>error.html：略。</p>
+</li>
+<li>
+<p><strong>编写自定义异常类</strong></p>
+<p>MyException.java</p>
+<pre><code class="language-java">public class MyException extends Exception {
+  private String message;
+  public MyException(String message) {
+      this.message = message;
+  }
+  public String getMessage() {
+      return message;
+  }
+}
+</code></pre>
+</li>
+<li>
+<p><strong>自定义异常处理器 及 配置</strong></p>
+<ul>
+<li>自定义异常处理器参考</li>
+</ul>
+<p>MyExceptionResolver.java</p>
+<pre><code class="language-java">public class MyExceptionResolver implements HandlerExceptionResolver {
+    @Override
+    public ModelAndView resolveException(HttpServletRequest req, HttpServletResponse resp, Object handler, Exception e) {
+        // 1. 打印异常信息
+        e.printStackTrace();
+        // 2. 创建自定义的异常
+        MyException expt = null;
+        // 3. 判断抛出的异常是否为自定义异常，否则赋予通用信息
+        if(e instanceof MyException {
+            expt = (MyException)e;
+        }) else {
+            expt = new MyException(&quot;系统发生了通用错误！&quot;);
+        }
+        // 4. 将异常中的信息赋予 ModelAndView，同时也赋予其错误页面逻辑视图
+        ModelAndView mav = new ModelAndView();
+        mav.addObject(&quot;message&quot;, expt.getMessage());
+        mav.setViewName(&quot;error&quot;);
+        // 5. 结束
+        return mav;
+    }
+}
+</code></pre>
+<ul>
+<li>配置异常处理器</li>
+</ul>
+<p>springmvc.xml</p>
+<pre><code class="language-xml">&lt;bean id=&quot;handlerExceptionResolver&quot; class=&quot;io.github.pz.exceptionResolvers.MyExceptionResolver&quot; /&gt;
+</code></pre>
+</li>
+</ul>
+<h2 id="12-spring-mvc拦截器">12. Spring MVC：拦截器</h2>
+<h3 id="121-拦截器概述">12.1 拦截器概述</h3>
+<ul>
+<li>Spring MVC 的拦截器类似于 Servlet 中的 Filter，不过它只能做 Filter 能做的部分事情，而 Filter 可以做一切拦截器能做的事情。</li>
+<li>拦截器用于对处理器进行预处理和后处理。</li>
+<li>与 Filter 类似，拦截器也存在拦截器链，去程和回程都会按照往返的顺序来执行。</li>
+<li>与 Filter 的区别：
+<ul>
+<li>Filter 是 Servlet 规范的一部分，一般 Web 工程都可以使用；而拦截器只有配置了 Spring MVC 框架的工程才能使用。</li>
+<li>过滤器在配置了 <code>/*</code> 之后，会对所有要访问的资源进行拦截；而<strong>拦截器只会拦截对控制器的访问</strong>，对于 jsp、html、js、css、img 等静态资源不拦截。</li>
+</ul>
+</li>
+</ul>
+<h3 id="122-拦截器执行流程">12.2 拦截器执行流程</h3>
+<ul>
+<li>
+<p><strong>拦截器链</strong></p>
+<blockquote>
+<p>客户端 --- MyHandlerInterceptor1 --- MyHandlerInterceptor2 --- ... --- Controller</p>
+</blockquote>
+</li>
+<li>
+<p><strong>定义拦截器</strong></p>
+<p>自定义类实现 HandlerInterceptor，并重写其中三个方法。</p>
+<p>MyHandlerInterceptor.java</p>
+<pre><code class="language-java">public class MyHandlerInterceptor implements HandlerInterceptor {
+
+  @Override
+  public boolean preHandler(HttpServletRequest req, HttpServletResponse resp, Object handler) throws Exception {
+      ...
+      return true;
+  }
+
+  @Override
+  public void postHandle(HttpServletRequest req, HttpServletResponse resp, Object handler, ModelAndView mav) throws Exception {
+      ...
+  }
+
+  @Override
+  public void afterCompletion(HttpServletRequest req, HttpServletResponse resp, Object handler, Exception ex) throws Exception {
+      ...
+  }
+
+}
+</code></pre>
+</li>
+<li>
+<p><strong>拦截器中的三个方法及执行时机</strong></p>
+<ul>
+<li>
+<p><strong>boolean preHandle()</strong></p>
+</li>
+<li>
+<p>调用时机：</p>
+<p>去程，按照 springmvc.xml 配置文件中配置的顺序调用。</p>
+<p>若上游的拦截器返回了 false（没有放行），就不调用了。</p>
+</li>
+<li>
+<p>如何放行：</p>
+<p>返回 true 即放行，false 拦截。</p>
+<p>放行后执行下游拦截器中的 preHandle() 或执行控制器；拦截后执行上游拦截器中的 afterCompletion() 或直接向客户端返回结果。</p>
+</li>
+<li>
+<p>作用示例：</p>
+<p>访问验证之类。</p>
+</li>
+<li>
+<p><strong>void postHandle()</strong></p>
+</li>
+<li>
+<p>调用时机：</p>
+<p>Controller 执行完之后。</p>
+<p>按拦截器在配置文件中定义顺序的逆序调用。</p>
+</li>
+<li>
+<p>作用：</p>
+<p>在该方法中对用户请求 request 进行处理。</p>
+</li>
+<li>
+<p><strong>void afterCompletion()</strong></p>
+</li>
+<li>
+<p>调用时机：</p>
+<p>DispatcherServlet 完全处理完请求之后调用。</p>
+<p>即所有的 postHandle() 执行完后。</p>
+<p>按拦截器在配置文件中定义顺序的逆序调用。</p>
+</li>
+<li>
+<p>作用：</p>
+<p>资源清理之类。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="123-配置拦截器">12.3 配置拦截器</h3>
+<p>springmvc.xml</p>
+<pre><code class="language-xml">&lt;mvc:interceptors&gt;
+	&lt;mvc:interceptor&gt;
+        &lt;!-- 拦截的路径 --&gt;
+    	&lt;mvc:mapping path=&quot;/**&quot; /&gt;
+        &lt;!-- 排除的路径 --&gt;
+        &lt;mvc:exclude-mapping path=&quot;...&quot; /&gt;
+        &lt;bean id=&quot;myHandlerInterceptor&quot; class=&quot;io.github.pz.web.interceptor.MyHandlerInterceptor&quot; /&gt;
+    &lt;/mvc:interceptor&gt;
+    &lt;mvc:interceptor&gt;
+    	...
+    &lt;/mvc:interceptor&gt;
+    ...
+&lt;/mvc:interceptors&gt;
+</code></pre>
+
+
+</body>
+</html>

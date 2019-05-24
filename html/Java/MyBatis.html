@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>MyBatis</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="mybatis">MyBatis</h1>
+<ul>
+<li><a href="#1-mybatis-概述">1. MyBatis 概述</a></li>
+<li><a href="#2-mybatis-入门">2. MyBatis 入门</a></li>
+<li><a href="#3-sqlmapconfigxml-配置文件">3. SqlMapConfig.xml 配置文件</a>
+<ul>
+<li><a href="#31-内容与顺序">3.1 内容与顺序</a></li>
+<li><a href="#32-properties">3.2 properties</a></li>
+<li><a href="#33-typealiases">3.3 typeAliases</a></li>
+<li><a href="#34-mappers">3.4 mappers</a></li>
+</ul>
+</li>
+<li><a href="#4-mapper映射器概述">4. Mapper：映射器概述</a>
+<ul>
+<li><a href="#41-概述">4.1 概述</a></li>
+<li><a href="#42-格式">4.2 格式</a></li>
+<li><a href="#43-主要元素">4.3 主要元素</a></li>
+</ul>
+</li>
+<li><a href="#5-mapper基本增删改查">5. Mapper：基本增删改查</a>
+<ul>
+<li><a href="#51-重要元素属性介绍">5.1 重要元素属性介绍</a></li>
+<li><a href="#52-重要说明">5.2 重要说明</a></li>
+<li><a href="#53-代码示例">5.3 代码示例</a></li>
+</ul>
+</li>
+<li><a href="#6-mapperresultmap">6. Mapper：resultMap</a>
+<ul>
+<li><a href="#61-概述">6.1 概述</a></li>
+<li><a href="#62-重要属性介绍">6.2 重要属性介绍</a></li>
+<li><a href="#63-重要子标签及子标签属性">6.3 重要子标签及子标签属性</a></li>
+<li><a href="#64-重要标签association-和-collection">6.4 重要标签：association 和 collection</a></li>
+</ul>
+</li>
+<li><a href="#7-mybatis连接池相关">7. MyBatis：连接池相关</a>
+<ul>
+<li><a href="#71-mybatis连接池的分类">7.1 MyBatis连接池的分类</a></li>
+<li><a href="#72-设置数据源类型">7.2 设置数据源类型</a></li>
+</ul>
+</li>
+<li><a href="#8-mybatis事务相关">8. MyBatis：事务相关</a>
+<ul>
+<li><a href="#81-设置自动提交">8.1 设置自动提交</a></li>
+<li><a href="#82-手动提交与回滚">8.2 手动提交与回滚</a></li>
+</ul>
+</li>
+<li><a href="#9-mapper动态sql">9. Mapper：动态SQL</a>
+<ul>
+<li><a href="#91--if--标签">9.1 &lt; if &gt; 标签</a></li>
+<li><a href="#92--where--标签">9.2 &lt; where &gt; 标签</a></li>
+<li><a href="#93--foreach--标签">9.3 &lt; foreach &gt; 标签</a></li>
+</ul>
+</li>
+<li><a href="#10-mapper重用sql片段">10. Mapper：重用SQL片段</a></li>
+<li><a href="#11-延迟加载">11. 延迟加载</a>
+<ul>
+<li><a href="#111-概述">11.1 概述</a></li>
+<li><a href="#111-如何使用">11.1 如何使用</a></li>
+</ul>
+</li>
+<li><a href="#12-缓存">12. 缓存</a>
+<ul>
+<li><a href="#121-缓存概述">12.1 缓存概述</a></li>
+<li><a href="#122-一级缓存">12.2 一级缓存</a></li>
+<li><a href="#123-二级缓存">12.3 二级缓存</a></li>
+</ul>
+</li>
+<li><a href="#-mapper注解方式">#. Mapper：注解方式</a></li>
+<li><a href="#-mybatisgenerator">#. MyBatis：Generator</a>
+<ul>
+<li><a href="#1-概述">#.1 概述</a></li>
+<li><a href="#2-使用">#.2 使用</a></li>
+</ul>
+</li>
+<li><a href="#-插件pagehelper">#. 插件：PageHelper</a></li>
+</ul>
+<h2 id="1-mybatis-概述">1. MyBatis 概述</h2>
+<ul>
+<li>MyBatis是一个可以<strong>自定义SQL、存储过程和高级映射</strong>的持久层框架。</li>
+<li>MyBatis 摒除了大部分的JDBC代码、手工设置参数和结果集重获。<strong>MyBatis只使用简单的XML和注解来配置和映射基本数据类型、Map 接口和POJO 到数据库记录</strong>。</li>
+</ul>
+<h2 id="2-mybatis-入门">2. MyBatis 入门</h2>
+<p>MyBatis简单的查询案例：</p>
+<ol>
+<li>
+<p>maven添加MyBatis依赖：</p>
+<pre><code class="language-xml">&lt;!-- 版本号及最新信息可在官网查询 --&gt;
+&lt;dependency&gt;
+   &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+   &lt;artifactId&gt;mybatis&lt;/artifactId&gt;
+   &lt;version&gt;3.4.6&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+</li>
+<li>
+<p>在数据库创建表，并插入数据；</p>
+</li>
+<li>
+<p>创建JavaBean（实现Serializable）；</p>
+</li>
+<li>
+<p>编写Dao（持久层接口）：</p>
+<pre><code class="language-java">public interface UserDao {
+   /**
+   *	查询并返回所有用户的List
+   */
+   List&lt;User&gt; getAll();
+}
+</code></pre>
+</li>
+<li>
+<p>在Resources根目录（src/main/java）创建核心配置文件<code>SqlMapConfig.xml</code>，内容如下：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE configuration     PUBLIC &quot;-//mybatis.org//DTD Config 3.0//EN&quot;
+       &quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;&gt;
+&lt;configuration&gt;
+   &lt;!-- 配置 mybatis 的环境 --&gt;
+   &lt;environments default=&quot;mysql&quot;&gt;
+       &lt;!-- 配置 mysql 的环境 --&gt;
+       &lt;environment id=&quot;mysql&quot;&gt;
+           &lt;!-- 配置事务的类型 --&gt;
+           &lt;transactionManager type=&quot;JDBC&quot;&gt;
+           &lt;/transactionManager&gt;
+           &lt;!-- 配置连接数据库的信息：用的是数据源(连接池) --&gt;
+           &lt;dataSource type=&quot;POOLED&quot;&gt;
+               &lt;property name=&quot;driver&quot; value=&quot;com.mysql.cj.jdbc.Driver&quot;/&gt;
+               &lt;property name=&quot;url&quot; value=&quot;jdbc:mysql://localhost:3306/test?serverTimezone=CST&quot;/&gt;
+               &lt;property name=&quot;username&quot; value=&quot;root&quot;/&gt;
+               &lt;property name=&quot;password&quot; value=&quot;rootzxcvbnm&quot;/&gt;
+           &lt;/dataSource&gt;
+       &lt;/environment&gt;
+   &lt;/environments&gt;
+   &lt;!-- 告知 mybatis 映射配置的位置 --&gt;
+   &lt;mappers&gt;
+       &lt;mapper resource=&quot;io/github/photozynthesis/dao/UserDao.xml&quot;/&gt;
+   &lt;/mappers&gt;
+&lt;/configuration&gt;
+</code></pre>
+<p>说明：</p>
+<ul>
+<li>每添加一个Mapper，需要在<code>mappers</code>标签下添加一条<code>mapper</code>。</li>
+</ul>
+</li>
+<li>
+<p>在Dao接口的同目录下，创建同名的xml文件（mapper）。在Resources文件夹中创建时，注意需要创建相同的目录结构。</p>
+<p>UserDao.xml：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper
+       PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
+       &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;io.github.photozynthesis.dao.UserDao&quot;&gt;
+   &lt;!-- 配置查询所有操作 --&gt;
+   &lt;select id=&quot;getAll&quot; resultType=&quot;io.github.photozynthesis.domain.User&quot;&gt;
+       select * from user where id = #{id}
+   &lt;/select&gt;
+&lt;/mapper&gt;
+</code></pre>
+<p>说明：</p>
+<ul>
+<li><code>mapper</code>标签的属性<code>namespace</code>的值需要为Dao接口的完整包路径。</li>
+<li><code>select</code>标签的属性<code>id</code>的值需要为与Dao中相同的方法名。</li>
+<li><code>select</code>标签的属性<code>resultType</code>的值需要为查询结果JavaBean的完整包路径，若查询结果为List等，会自动封装。</li>
+<li>可以使用<code>#{参数}</code>作为SQL占位符，参数名需要为方法传递的形参名。</li>
+</ul>
+</li>
+<li>
+<p>进行测试。</p>
+<p>测试分为多个步骤：</p>
+<pre><code class="language-java">import io.github.photozynthesis.dao.UserDao;
+import io.github.photozynthesis.domain.User;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+
+public class Test {
+   public static void main(String[] args) {
+       // 1.读取配置文件
+       InputStream is = null;
+       try {
+           is = Resources.getResourceAsStream(&quot;SqlMapConfig.xml&quot;);
+       } catch (IOException e) {
+           e.printStackTrace();
+           System.exit(1);
+       }
+
+       // 2.创建SqlSessionFactoryBuilder对象
+       SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
+
+       // 3.使用构建者创建SqlSessionFactory
+       SqlSessionFactory factory = builder.build(is);
+
+       // 4.生产SqlSession
+       SqlSession session = factory.openSession();
+
+       // 5.使用SqlSession创建Dao的代理对象
+       UserDao userDao = session.getMapper(UserDao.class);
+
+       // 6.使用代理对象执行查询所有的方法
+       List&lt;User&gt; list = userDao.getAll();
+       for (User user : list) {
+           System.out.println(user);
+       }
+
+       // 7.释放资源
+       session.close();
+       try {
+           is.close();
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
+   }
+}
+</code></pre>
+</li>
+</ol>
+<h2 id="3-sqlmapconfigxml-配置文件">3. SqlMapConfig.xml 配置文件</h2>
+<p>SqlMapConfig.xml是MyBatis的核心配置文件，包含很多框架基本的配置信息。</p>
+<p>放在Resources根目录（/src/main/java下）。</p>
+<h3 id="31-内容与顺序">3.1 内容与顺序</h3>
+<pre><code>-properties（属性）
+	--property
+-settings（全局配置参数）
+	--setting 
+-typeAliases（类型别名）
+	--typeAliase
+	--package
+-typeHandlers（类型处理器）
+-objectFactory（对象工厂）
+-plugins（插件） 
+-environments（环境集合属性对象）  
+	--environment（环境子属性对象）   
+		---transactionManager（事务管理）   
+		---dataSource（数据源） 
+-mappers（映射器）  
+	--mapper  
+	--package
+</code></pre>
+<p>具体可以参考http://mybatis.org/dtd/mybatis-3-config.dtd约束文件。</p>
+<h3 id="32-properties">3.2 properties</h3>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<p>配置name - value键值对，用以在xml中可以使用<code>${name}</code>来表示value。</p>
+</li>
+<li>
+<p><strong>编写方式</strong>：</p>
+<ul>
+<li>方式一：在properties中写property，编写name和value属性。</li>
+</ul>
+<pre><code class="language-xml">&lt;!-- SqlMapConfig.xml --&gt;
+&lt;properties&gt;
+	&lt;property name=&quot;jdbc.driver&quot; value=&quot;com.mysql.cj.jdbc.driver&quot; /&gt;
+    &lt;property ... /&gt;
+&lt;/properties&gt;
+</code></pre>
+<ul>
+<li>方式二：编写外部properties文件，通过properties的url属性引入。</li>
+</ul>
+<pre><code class="language-properties"># db.properties
+jdbc.driver=com.mysql.cj.jdbc.driver
+...
+</code></pre>
+<pre><code class="language-xml">&lt;!-- SqlMapConfig.xml --&gt;
+&lt;properties url=&quot;file:///D:/.../db.properties&quot;&gt;&lt;/properties&gt;
+</code></pre>
+</li>
+<li>
+<p><strong>使用</strong>：</p>
+<p>在任意位置<code>&quot;${name}&quot;</code>即可。</p>
+<pre><code class="language-xml">&lt;environments&gt;
+&lt;environment&gt;
+  	&lt;dataSource type=&quot;POOLED&quot;&gt;
+      	&lt;property name=&quot;driver&quot; value=&quot;${jdbc.driver}&quot; /&gt;
+          &lt;property ... /&gt;
+      &lt;/dataSource&gt;
+  &lt;/environment&gt;
+&lt;/environments&gt;
+</code></pre>
+</li>
+</ul>
+<h3 id="33-typealiases">3.3 typeAliases</h3>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<p>可以给类自定义别名。</p>
+<p>别名定义后，直接使用即可。</p>
+</li>
+<li>
+<p><strong>编写</strong>：</p>
+<ul>
+<li>定义单个类的别名</li>
+</ul>
+<pre><code class="language-xml">&lt;typeAliases&gt;
+	&lt;typeAlias alias=&quot;user&quot; type=&quot;io.github.photozynthesis.domain.User&quot; /&gt;
+    &lt;typeAlias ... /&gt;
+&lt;/typeAliases&gt;
+</code></pre>
+<ul>
+<li>批量定义一整个包下所有类的别名（别名为类名，不区分大小写）</li>
+</ul>
+<pre><code class="language-xml">&lt;typeAliases&gt;
+	&lt;package name=&quot;io.github.photozynthesis.domain&quot; /&gt;
+    &lt;package ... /&gt;
+&lt;/typeAliases&gt;
+</code></pre>
+</li>
+</ul>
+<h3 id="34-mappers">3.4 mappers</h3>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<p>定义映射。</p>
+</li>
+<li>
+<p><strong>编写</strong>：</p>
+<ul>
+<li>指定相对于classpath的资源（xml）</li>
+</ul>
+<pre><code class="language-xml">&lt;mappers&gt;
+	&lt;mapper resource=&quot;io/github/photozynthesis/dao/UserDao.xml&quot; /&gt;
+&lt;/mappers&gt;
+</code></pre>
+<ul>
+<li>指定mapper接口的类路径</li>
+</ul>
+<pre><code class="language-xml">&lt;mappers&gt;
+	&lt;mapper class=&quot;io.github.photozynthesis.dao.UserDao&quot; /&gt;
+&lt;/mappers&gt;
+</code></pre>
+<p>说明：需要接口与映射文件名称相同，且放在同一个目录中。</p>
+<ul>
+<li>（package）注册指定包下所有接口</li>
+</ul>
+<pre><code class="language-xml">&lt;mappers&gt;
+	&lt;package name=&quot;io.github.photozynthesis.dao&quot; /&gt;
+&lt;/mappers&gt;
+</code></pre>
+<p>说明：需要接口与映射文件名称相同，且放在同一个目录中。</p>
+</li>
+</ul>
+<h2 id="4-mapper映射器概述">4. Mapper：映射器概述</h2>
+<h3 id="41-概述">4.1 概述</h3>
+<ul>
+<li><strong>概述</strong>：
+<ul>
+<li>映射器是MyBatis最强大的工具，也是使用最多的工具。</li>
+<li>通过映射器，可以很容易地进行数据的增删改查操作</li>
+</ul>
+</li>
+<li><strong>使用概述</strong>：
+<ul>
+<li>映射器是由<strong>Java接口</strong>和**XML文件（或注解）**共同组成的，Java接口主要定义调用者接口，XML文件是配置映射器的核心文件。</li>
+<li>使用MyBatis，只需定义接口和配置文件即可方便地进行增删改查操作。借此可以更多的关注于SQL语句本身。</li>
+</ul>
+</li>
+</ul>
+<h3 id="42-格式">4.2 格式</h3>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;!DOCTYPE mapper
+        PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
+        &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;io.github.photozynthesis.dao.UserDao&quot;&gt;
+    &lt;其他标签... /&gt;
+&lt;/mapper&gt;
+</code></pre>
+<h3 id="43-主要元素">4.3 主要元素</h3>
+<ul>
+<li><strong>select</strong>：查询语句
+<ul>
+<li>参数：自定义</li>
+<li>返回：结果集</li>
+</ul>
+</li>
+<li><strong>insert</strong>：插入语句
+<ul>
+<li>返回：整数（插入的条数）</li>
+</ul>
+</li>
+<li><strong>update</strong>：更新语句
+<ul>
+<li>返回：整数（更新的条数）</li>
+</ul>
+</li>
+<li><strong>delete</strong>：删除语句
+<ul>
+<li>返回：整数（删除的条数）</li>
+</ul>
+</li>
+<li><strong>sql</strong>：定义SQL引用</li>
+<li><strong>resultMap</strong>：从数据库结果集中加载对象，并配置关联关系</li>
+<li><strong>cache</strong>：给定命名空间的缓存配置</li>
+</ul>
+<h2 id="5-mapper基本增删改查">5. Mapper：基本增删改查</h2>
+<h3 id="51-重要元素属性介绍">5.1 重要元素属性介绍</h3>
+<ul>
+<li>
+<p><strong>id</strong>：</p>
+<ul>
+<li>说明：对应Dao接口中的方法名。</li>
+</ul>
+</li>
+<li>
+<p><strong>parameterType</strong>：传入参数类型</p>
+<ul>
+<li>范围：基本类型及包装类、String、Map、JavaBean</li>
+<li>说明：</li>
+<li><strong>基本类型</strong>和<strong>String</strong>可以直接写类名，也可以使用完整包路径名。</li>
+<li>若传入基本类型或String，占位符中的表达式可以随便写，不过推荐使用&quot;value&quot;。</li>
+<li>JavaBean若没有取别名，则必须使用完整路径。</li>
+<li>MyBatis默认已经为很多常用的Java类取了别名，如基本类型、集合相关、Date、BigDecimal等。具体可以查阅文档。</li>
+</ul>
+</li>
+<li><strong>resultType</strong>：返回结果类型
+<ul>
+<li>范围：基本类型及包装类、JavaBean</li>
+<li>说明：</li>
+<li>当类型为JavaBean时，实体类中的<strong>属性名称</strong>必须要和<strong>查询结果中的列名</strong>一致，否则无法实现封装。</li>
+<li>若JavaBean没有取别名，则必须使用完整类路径。</li>
+</ul>
+</li>
+<li><strong>resultMap</strong>：结果集映射
+<ul>
+<li>说明：强大的工具，不能和resultType一起使用。</li>
+<li><strong>下文将以单独章节介绍</strong>。</li>
+</ul>
+</li>
+<li>more...</li>
+</ul>
+<h3 id="52-重要说明">5.2 重要说明</h3>
+<ul>
+<li>
+<p><strong>ognl表达式</strong>：</p>
+<ul>
+<li>
+<p>它是 apache 提供的一种表达式语言，全称是：   Object Graphic Navigation Language  对象图导航语言。</p>
+</li>
+<li>
+<p>它是按照一定的语法格式来获取数据的。</p>
+</li>
+<li>语法格式：#{对象.对象}</li>
+<li><strong>在MyBatis映射器中，若已在<code>parameterType</code>指定了参数类型，可以直接在占位符<code>#{}</code>或<code>${}</code>中填入参数的字段名</strong>。</li>
+</ul>
+</li>
+<li>
+<p><strong>占位符<code>#{}</code>与<code>${}</code></strong>：</p>
+<ul>
+<li><code>#{}</code>：</li>
+<li>表示一个占位符，类似于？。</li>
+<li>实现 preparedStatement 向占位符中设置值。</li>
+<li>自动进行 java 类型和 jdbc 类型转换.</li>
+<li>可以有效防止 sql 注入。</li>
+<li>可以接收简单类型值或 pojo 属性值。</li>
+<li><code>${}</code>：</li>
+<li>表示拼接 sql 串。</li>
+<li>不进行 jdbc 类型转换。</li>
+<li>可以接收简单类型值或 pojo 属性值。</li>
+<li>sql 注入风险。</li>
+</ul>
+</li>
+</ul>
+<h3 id="53-代码示例">5.3 代码示例</h3>
+<ul>
+<li>
+<p>SQL</p>
+<table>
+<thead>
+<tr><th>id</th><th>username</th><th>age</th><th>birthday</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>Jack</td><td>20</td><td>2010-10-10</td></tr>
+<tr><td>2</td><td>Rose</td><td>22</td><td>2008-08-08</td></tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>User.java</p>
+<pre><code class="language-java">public class User {
+  String username;
+  int age;
+  Date birthday;
+
+  constructor ...
+  getter &amp; setter ...
+  toString ...
+}
+</code></pre>
+</li>
+<li>
+<p>Test.java</p>
+<pre><code class="language-java">public class Test {
+
+  SqlSession sqlSession;
+
+  // 来自junit，在所有Test方法执行之前执行
+  @Before
+  public void init() {
+      // 1. 读取核心配置文件
+      InputStream is = null;
+      try {
+          is = Resources.getResourceAsStream(&quot;SqlMapConfig.xml&quot;);
+      } catch (IOException e) {
+          e.printStackTrace();
+      }
+
+      // 2. 创建工厂建造者对象
+      SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
+
+      // 3. 使用建造者，以inputstream创建工厂
+      SqlSessionFactory factory = builder.build(is);
+
+      // 4. 生产SqlSession
+      sqlSession = factory.openSession();
+  }
+
+  // 来自junit，在Test方法执行完毕后执行
+  @After
+  public void destroy() {
+      sqlSession.close();
+  }
+}
+</code></pre>
+</li>
+</ul>
+<h4 id="531-查询">5.3.1 查询</h4>
+<ul>
+<li>
+<p>UserDao.java</p>
+<pre><code class="language-java">/**
+*	查询所有用户
+*/
+public interface UserDao {
+  List&lt;User&gt; getAllUsers();
+}
+</code></pre>
+</li>
+<li>
+<p>UserDao.xml</p>
+<pre><code class="language-xml">&lt;?xml ...?&gt;
+&lt;!DOCTYPE ...&gt;
+&lt;mapper namespace=&quot;io.github.photozynthesis.dao.UserDao&quot;&gt;
+&lt;select id=&quot;getAllUsers&quot; resultType=&quot;io.github.photozynthesis.domain.User&quot;&gt;			SELECT * FROM user
+  &lt;/select&gt;
+&lt;/mapper&gt;
+</code></pre>
+</li>
+<li>
+<p>Test.java</p>
+<pre><code class="language-java">...
+  public void queryTest() {
+  	UserDao userDao = sqlSession.getMapper(UserDao.class);
+  	List&lt;User&gt; list = userDao.getAllUsers();
+  	// 遍历输出，省略
+  	...
+}
+...
+</code></pre>
+</li>
+</ul>
+<h4 id="532-增加">5.3.2 增加</h4>
+<ul>
+<li>
+<p>UserDao.java</p>
+<pre><code class="language-java">/**
+*	添加一个用户
+*/
+public interface UserDao {
+  int insertUser(User user);
+}
+</code></pre>
+</li>
+<li>
+<p>UserDao.xml</p>
+<pre><code class="language-xml">&lt;?xml ...?&gt;
+&lt;!DOCTYPE ...&gt;
+&lt;mapper namespace=&quot;io.github.photozynthesis.dao.UserDao&quot;&gt;
+&lt;select id=&quot;insertUser&quot; parameterType=&quot;io.github.photozynthesis.domain.User&quot;&gt;
+      INSERT INTO user(username,age,birthday) values(#{username},#{age},#{birthday})
+  &lt;/select&gt;
+&lt;/mapper&gt;
+</code></pre>
+</li>
+<li>
+<p>Test.java</p>
+<pre><code class="language-java">...
+  public void queryTest() {
+  	UserDao userDao = sqlSession.getMapper(UserDao.class);
+  	User user = new User(...);
+  	...
+  	int rowsAffected = userDao.insertUser(user);
+  	sqlSession.commit();
+}
+...
+</code></pre>
+</li>
+</ul>
+<h4 id="533-删除">5.3.3 删除</h4>
+<ul>
+<li>
+<p>UserDao.java</p>
+<pre><code class="language-java">/**
+*	添加一个用户
+*/
+public interface UserDao {
+  int insertUser(User user);
+}
+</code></pre>
+</li>
+<li>
+<p>UserDao.xml</p>
+<pre><code class="language-xml">&lt;?xml ...?&gt;
+&lt;!DOCTYPE ...&gt;
+&lt;mapper namespace=&quot;io.github.photozynthesis.dao.UserDao&quot;&gt;
+&lt;delete id=&quot;deleteUser&quot; parameterType=&quot;java.lang.Integer&quot;&gt;
+      DELETE FROM user WHERE uid = #{随便写}
+  &lt;/delete&gt;
+&lt;/mapper&gt;
+</code></pre>
+</li>
+<li>
+<p>Test.java</p>
+<pre><code class="language-java">...
+  public void deleteTest() {
+  	UserDao userDao = sqlSession.getMapper(UserDao.class);
+  	int rowsAffected = userDao.deleteUser(2);
+}
+...
+</code></pre>
+</li>
+</ul>
+<h4 id="534-修改">5.3.4 修改</h4>
+<ul>
+<li>
+<p>UserDao.java</p>
+<pre><code class="language-java">/**
+*	修改一个用户
+*/
+public interface UserDao {
+  int updateUser(User user);
+}
+</code></pre>
+</li>
+<li>
+<p>UserDao.xml</p>
+<pre><code class="language-xml">&lt;?xml ...?&gt;
+&lt;!DOCTYPE ...&gt;
+&lt;mapper namespace=&quot;io.github.photozynthesis.dao.UserDao&quot;&gt;
+&lt;update id=&quot;updateUser&quot; parameterType=&quot;io.github.photozynthesis.domain.User&quot;&gt;
+      update user set username = #{username},age = #{age},birthday = #{birthday} where uid = #{uid}
+  &lt;/update&gt;
+&lt;/mapper&gt;
+</code></pre>
+</li>
+<li>
+<p>Test.java</p>
+<pre><code class="language-java">...
+  public void queryTest() {
+  	UserDao userDao = sqlSession.getMapper(UserDao.class);
+  	User user = new User(...);
+  	...
+  	int rowsAffected = userDao.updateUser(user);
+  	sqlSession.commit();
+}
+...
+</code></pre>
+</li>
+</ul>
+<h4 id="535-模糊查询聚合函数查询等不再赘述">5.3.5 模糊查询、聚合函数查询等不再赘述</h4>
+<h2 id="6-mapperresultmap">6. Mapper：resultMap</h2>
+<h3 id="61-概述">6.1 概述</h3>
+<ul>
+<li>
+<p>resultMap 标签可以建立查询的<strong>列名</strong>和实体类的<strong>属性名</strong>称<strong>不一致</strong>时建立<strong>对应关系</strong>。从而实现封装。</p>
+</li>
+<li>
+<p>resultMap 还可以实现<strong>集合属性</strong>和 <strong>bean 属性</strong>的封装。</p>
+</li>
+<li>
+<p>编写后如何使用？在<code>select</code>标签中指定 resultMap 的 id 引用即可。</p>
+</li>
+<li>
+<p>示例：</p>
+<pre><code class="language-xml">&lt;resultMap type=&quot;io.github.photozynthesis.domain.User&quot; id=&quot;userMap&quot;&gt;
+  &lt;id column=&quot;id&quot; property=&quot;userId&quot;/&gt;
+  &lt;result column=&quot;username&quot; property=&quot;userName&quot;/&gt;
+  &lt;result column=&quot;sex&quot; property=&quot;userSex&quot;/&gt;
+  &lt;result column=&quot;address&quot; property=&quot;userAddress&quot;/&gt;
+  &lt;result column=&quot;birthday&quot; property=&quot;userBirthday&quot;/&gt;
+&lt;/resultMap&gt;
+</code></pre>
+</li>
+</ul>
+<h3 id="62-重要属性介绍">6.2 重要属性介绍</h3>
+<ul>
+<li>
+<p><strong>type</strong>：</p>
+<p>指定 JavaBean 的完整类名。</p>
+</li>
+<li>
+<p><strong>id</strong>：</p>
+<p>此 resultMap 的唯一标识，用于给 select 标签进行引用。</p>
+</li>
+</ul>
+<h3 id="63-重要子标签及子标签属性">6.3 重要子标签及子标签属性</h3>
+<ul>
+<li>
+<p><strong>子标签</strong>：</p>
+<ul>
+<li><strong>id</strong>：</li>
+</ul>
+<p>指定查询结果中的主键字段。</p>
+<ul>
+<li><strong>result</strong>：</li>
+</ul>
+<p>指定查询结果中的<strong>非</strong>主键字段。</p>
+<ul>
+<li><strong>association</strong>：</li>
+</ul>
+<p>下方独立小节详细描述。</p>
+<ul>
+<li><strong>collection</strong>：</li>
+</ul>
+</li>
+<li>
+<p><strong>重要子标签属性</strong>：</p>
+<ul>
+<li><strong>column</strong>：</li>
+</ul>
+<p>指定查询结果表中的字段名。</p>
+<ul>
+<li><strong>property</strong>：</li>
+</ul>
+<p>指定实体类的属性名称。</p>
+</li>
+</ul>
+<h3 id="64-重要标签association-和-collection">6.4 重要标签：association 和 collection</h3>
+<h4 id="641-association">6.4.1 association</h4>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<ul>
+<li>
+<p>association 位于 resultMap 根标签下，就像是映射一个字段/属性一样。</p>
+</li>
+<li>
+<p>用于 多<strong>对一</strong>/一<strong>对一</strong> 的查询。当查询的结果 JavaBean 包含类型为其他 JavaBean 的属性时，可进行封装。</p>
+</li>
+<li>
+<p>举例：一个用户可能有多个账户，但一个账户一般只为一个用户所拥有。此时若要查询一个账户的相关信息，同时包含该账户所属的用户的相关信息时，就需要用到 association 。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>示例</strong>：</p>
+<p>AccountWithUser.java：</p>
+<pre><code class="language-java">public class AccountWithUser {
+  // Account 自身的属性
+  private ...
+
+  // Account 所属的 User
+  private User user;
+}
+</code></pre>
+<p>UserDao.xml：</p>
+<pre><code class="language-xml">...
+&lt;resultMap id=&quot;accountMap&quot; type=&quot;io.github.photozynthesis.domain.AccountWithUser&quot;&gt;
+&lt;!-- 映射其他字段 --&gt;
+  &lt;id ...&gt;&lt;/id&gt;
+  &lt;result ...&gt;&lt;/result&gt;
+  ...
+  &lt;!-- 映射 User 对象 --&gt;
+  &lt;association property=&quot;user&quot; javaType=&quot;io.github.photozynthesis.domain.User&quot;&gt;
+  	&lt;id column=&quot;...&quot; property=&quot;...&quot; /&gt;
+      &lt;result column=&quot;...&quot; property=&quot;...&quot; /&gt;
+      ...
+  &lt;/association&gt;
+&lt;/resultMap&gt;
+
+&lt;select id=&quot;findAll&quot; resultMap=&quot;accountMap&quot;&gt;
+select u.*,a.id aid,a.money from account a,user u where a.uid = u.id
+&lt;/select&gt;
+...
+</code></pre>
+</li>
+<li>
+<p><strong>说明</strong>：</p>
+<ul>
+<li>association 的 property 属性为指定 JavaBean 的属性名称（用于封装）。</li>
+<li>association 的 javaType 属性为 JavaBean的完整名称。</li>
+<li>association 的子标签相关内容与前文所述内容完全一致，无需赘述。</li>
+</ul>
+</li>
+</ul>
+<h4 id="642-collection">6.4.2 collection</h4>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<ul>
+<li>collection 位于 resultMap 根标签下，就像是映射一个字段/属性一样。</li>
+<li>用于 一<strong>对多</strong>/多<strong>对多</strong> 的查询。当查询的结果 JavaBean 包含类型为其他 JavaBean集合 的属性时，可进行封装。</li>
+<li>举例：一个用户可能有多个账户。此时若要查询一个用户的相关信息，同时包含该用户所有的账户的相关信息时，就需要用到 collection 。</li>
+</ul>
+</li>
+<li>
+<p><strong>示例</strong>：</p>
+<p>UserWithAccounts.java：</p>
+<pre><code class="language-java">public class UserWithAccounts {
+  // User 自身的属性
+  private ...
+
+  // 所有的 Account 集合
+  private List&lt;Account&gt; accounts;
+}
+</code></pre>
+<p>UserDao.xml：</p>
+<pre><code class="language-xml">...
+&lt;resultMap id=&quot;userMap&quot; type=&quot;io.github.photozynthesis.domain.UserWithAccounts&quot;&gt;
+&lt;!-- 映射其他字段 --&gt;
+  &lt;id ...&gt;&lt;/id&gt;
+  &lt;result ...&gt;&lt;/result&gt;
+  ...
+  &lt;!-- 映射 List&lt;Account&gt; 集合 --&gt;
+  &lt;collection property=&quot;accounts&quot; ofType=&quot;io.github.photozynthesis.domain.Account&quot;&gt;
+  	&lt;id column=&quot;...&quot; property=&quot;...&quot; /&gt;
+      &lt;result column=&quot;...&quot; property=&quot;...&quot; /&gt;
+      ...
+  &lt;/association&gt;
+&lt;/resultMap&gt;
+
+&lt;select id=&quot;findAll&quot; resultMap=&quot;userMap&quot;&gt;
+select a.*,u.id id,u.username username from user u,account a where a.uid=u.id
+&lt;/select&gt;
+...
+</code></pre>
+</li>
+<li>
+<p><strong>说明</strong>：</p>
+<ul>
+<li>collection 的 property 属性为指定 集合 的名称（用于封装）。</li>
+<li>collection 的 ofType 属性为 集合的泛型类名。</li>
+<li>SQL 语句方面，只需得到一张具有多条记录的表即可（多条记录之间 bean 除集合属性外其他属性内容一致，集合属性内容不同），mybatis 会自动封装成一个 JavaBean。</li>
+<li>collection 的子标签相关内容与前文所述内容完全一致，无需赘述。</li>
+</ul>
+</li>
+</ul>
+<h2 id="7-mybatis连接池相关">7. MyBatis：连接池相关</h2>
+<h3 id="71-mybatis连接池的分类">7.1 MyBatis连接池的分类</h3>
+<ul>
+<li>
+<p>UNPOOLED</p>
+<p>不使用连接池的数据源</p>
+</li>
+<li>
+<p>POOLED</p>
+<p>使用连接池的数据源，一般使用这种</p>
+</li>
+<li>
+<p>JNDI</p>
+<p>使用JNDI实现的数据源</p>
+</li>
+</ul>
+<h3 id="72-设置数据源类型">7.2 设置数据源类型</h3>
+<p>在核心配置文件中的<code>SqlMapConfig.xml</code>中：</p>
+<pre><code class="language-xml">&lt;dataSource type=&quot;POOLED&quot;&gt;
+	...
+&lt;/dataSource&gt;
+</code></pre>
+<h2 id="8-mybatis事务相关">8. MyBatis：事务相关</h2>
+<h3 id="81-设置自动提交">8.1 设置自动提交</h3>
+<p>使用<code>SqlSessionFactory</code>创建 SqlSession 时，传入参数 <code>true</code>，即在此 SqlSession 中事务会自动提交。</p>
+<pre><code class="language-java">SqlSession sqlSession = sqlSessionFactory.openSession(true);
+</code></pre>
+<p>注意：</p>
+<ul>
+<li>此处若不传入参数，事务将不自动提交。</li>
+</ul>
+<h3 id="82-手动提交与回滚">8.2 手动提交与回滚</h3>
+<p>若没有开启事务自动提交，可以在操作后使用<code>SqlSession</code>对象调用<code>commit()</code>或<code>rollback()</code>来手动提交/回滚。</p>
+<pre><code class="language-java">...
+sqlSession.commit();
+</code></pre>
+<h2 id="9-mapper动态sql">9. Mapper：动态SQL</h2>
+<p>动态SQL可以实现某些复杂的逻辑。</p>
+<h3 id="91--if--标签">9.1 &lt; if &gt; 标签</h3>
+<p>示例如下：</p>
+<pre><code class="language-xml">&lt;select id=&quot;findByUser&quot; resultType=&quot;user&quot; parameterType=&quot;user&quot;&gt;
+	SELECT * FROM user where 1=1
+    &lt;!-- 若username字段不为空则拼接子句执行模糊查询 --&gt;
+    &lt;if test=&quot;username != null and username != '' &quot;&gt;
+    	and username like #{username}
+    &lt;/if&gt;
+    &lt;!-- 若address字段不为空则拼接子句执行模糊查询 --&gt;
+   	&lt;if test=&quot;address != null&quot;&gt;
+    	and address like #{address}
+    &lt;/if&gt;
+&lt;/select&gt;
+</code></pre>
+<p>说明：</p>
+<ul>
+<li>if标签写在select、delete、update、insert等标签下。</li>
+<li>若其 test 属性中的表达式返回true，则拼接标签体中的字符串。</li>
+<li>test 表达式的内容为<strong>类Java代码</strong>，不同之处在于<code>与</code>和<code>或</code>使用<code>and</code>和<code>or</code>而不是<code>&amp;&amp;</code>和<code>||</code>。</li>
+<li>若参数类型为JavaBean，则注意 if 标签中需要遵循OGNL表达式。</li>
+<li>test 属性中的标识符由于只是变量名，不是具体值，所以直接写字段名即可。</li>
+</ul>
+<h3 id="92--where--标签">9.2 &lt; where &gt; 标签</h3>
+<p>引入where标签之后，就不用再写利于拼接字符串的<code>where 1=1</code>了。</p>
+<p>示例如下：</p>
+<pre><code class="language-xml">&lt;select id=&quot;findByUser&quot; resultType=&quot;user&quot; parameterType=&quot;user&quot;&gt;
+	SELECT * FROM user
+    &lt;where&gt;
+        &lt;!-- 若username字段不为空则拼接子句执行模糊查询 --&gt;
+        &lt;if test=&quot;username != null and username != '' &quot;&gt;
+            and username like #{username}
+        &lt;/if&gt;
+    &lt;/where&gt;
+&lt;/select&gt;
+</code></pre>
+<h3 id="93--foreach--标签">9.3 &lt; foreach &gt; 标签</h3>
+<p>foreach 标签用于填充一个传入的集合中的值。</p>
+<p>典型的使用场景如通过多个 id 查询多个用户，此时将多个 id 装入集合，并将集合作为 JavaBean 的一个属性随 Bean 一并传入。之后就可以通过 foreach 标签遍历出数据，并动态生成 SQL 语句。</p>
+<p>示例如下：</p>
+<ul>
+<li>
+<p>QueryVo.java</p>
+<pre><code class="language-java">public class QueryVo implements Serializable {
+  private List&lt;Integer&gt; ids;
+  // getters and setters ...
+  ...
+}
+</code></pre>
+</li>
+<li>
+<p>UserDao.java</p>
+<p>略。</p>
+</li>
+<li>
+<p>UserDao.xml</p>
+<pre><code class="language-xml">...
+&lt;select id=&quot;findByIds&quot; resultType=&quot;user&quot; parameterType=&quot;queryVo&quot;&gt;
+SELECT * FROM user
+  &lt;where&gt;
+  	&lt;if test=&quot;ids != null and ids.size() &gt; 0&quot;&gt;
+      	&lt;foreach collections=&quot;ids&quot; open=&quot;id in (&quot; close=&quot;)&quot; item=&quot;uid&quot; separator=&quot;,&quot;&gt;
+          	#{uid}
+          &lt;/foreach&gt;
+      &lt;/if&gt;
+  &lt;/where&gt;
+&lt;/select&gt;
+...
+</code></pre>
+</li>
+</ul>
+<p>说明：</p>
+<ul>
+<li>collection：要遍历的集合/数组，分多种情况：
+<ul>
+<li>若集合是 JavaBean 中的一个属性，此处需要写 JavaBean 中集合的字段名。</li>
+<li>若集合为映射器的唯一参数（单独传一个集合/数组），此处需要填写 list 或 array。</li>
+</ul>
+</li>
+<li>open：语句开始的部分，可以认为是循环开始前拼接的字符串。</li>
+<li>close：语句结束的部分，可以认为是循环结束后拼接的字符串。</li>
+<li>separator：代表分隔多个循环元素间的字符串。</li>
+<li>item：代表从集合遍历出的元素，随意取名，可写在循环体中的占位符<code>#{}</code>中。</li>
+</ul>
+<h2 id="10-mapper重用sql片段">10. Mapper：重用SQL片段</h2>
+<p>重用 SQL 可以将重复的 SQL 语句提取出来，使用的时候直接用 include 标签引入即可。</p>
+<p><strong>sql 标签</strong>：</p>
+<pre><code class="language-xml">&lt;sql id=&quot;defaultSql&quot;&gt;
+	SELECT * FROM user
+&lt;/sql&gt;
+</code></pre>
+<p><strong>引用实例</strong>：</p>
+<pre><code class="language-xml">&lt;select ...&gt;
+	&lt;include refid=&quot;defaultSql&quot;&gt;&lt;/include&gt;
+    &lt;!-- 其他拼接操作 --&gt;
+    ...
+&lt;/select&gt;
+</code></pre>
+<p><strong>说明</strong>：</p>
+<ul>
+<li>sql 标签的 id 为改标签的唯一标识，供 include 标签引用。</li>
+<li>include 标签的 refid 属性填写上述 sql 标签的 id。</li>
+</ul>
+<h2 id="11-延迟加载">11. 延迟加载</h2>
+<h3 id="111-概述">11.1 概述</h3>
+<ul>
+<li>延迟加载，即在需要使用到数据时才加载，没用到的时候就不加载。又称懒加载。</li>
+<li>在某些情况下可以提高数据库性能，而有时候也会增加等待时间。</li>
+<li>在使用了 association 和 collection 时可以使用延迟加载。</li>
+</ul>
+<h3 id="111-如何使用">11.1 如何使用</h3>
+<ul>
+<li>
+<p>前提：</p>
+<ul>
+<li>进行一对一、一对多查询并使用 association 或 collection（即返回的结果实体类包含其他实体 bean 或 其他实体集合）。</li>
+</ul>
+</li>
+<li>
+<p>开启懒加载：</p>
+<p>在 SqlMapConfig.xml 中添加延迟加载的配置：</p>
+<pre><code class="language-xml">&lt;settings&gt;
+&lt;setting name=&quot;lazyLoadingEnabled&quot; value=&quot;true&quot; /&gt;
+  &lt;setting name=&quot;aggressiveLazyLoading&quot; value=&quot;false&quot; /&gt;
+&lt;/settings&gt;
+</code></pre>
+</li>
+<li>
+<p>进行查询，并不使用结果的关联属性。</p>
+</li>
+</ul>
+<h2 id="12-缓存">12. 缓存</h2>
+<h3 id="121-缓存概述">12.1 缓存概述</h3>
+<ul>
+<li>MyBatis 提供了缓存策略，以此可以减少数据库的查询次数，提高性能。</li>
+<li>MyBatis 的缓存分为一级缓存和二级缓存。</li>
+</ul>
+<h3 id="122-一级缓存">12.2 一级缓存</h3>
+<ul>
+<li>概述：
+<ul>
+<li>一级缓存是 SqlSession 级别的缓存，只要 SqlSession 没有 close 或 flush，缓存就存在。</li>
+<li>无需特意开启。</li>
+</ul>
+</li>
+<li>注意事项：
+<ul>
+<li>当 sqlSession <strong>调用添加、删除、修改、flush() 或 close()</strong> 等的时候，会<strong>清除缓存</strong>。</li>
+<li>在 mybatis-spring 中，由于使用 template，每次操作都是申请新的 sqlSession，所以<strong>缓存无法在 mybatis-spring 中使用</strong>。</li>
+</ul>
+</li>
+</ul>
+<h3 id="123-二级缓存">12.3 二级缓存</h3>
+<ul>
+<li>
+<p>概述</p>
+<ul>
+<li>二级缓存是跨 sqlSession 的，是 mapper 级别的缓存。</li>
+<li>开启后与一级缓存类似，一般没有事务操作、仅查询的前提下，不会向数据库发出新的查询请求，而是直接从数据库获取数据。</li>
+</ul>
+</li>
+<li>
+<p>开启方式</p>
+<ul>
+<li>
+<p>相关实体类实现 Serializable 接口</p>
+</li>
+<li>
+<p>在 SqlMapConfig.xml 文件中添加配置，如下：</p>
+</li>
+</ul>
+<p>SqlMapConfig.xml</p>
+<pre><code class="language-xml">&lt;settings&gt;
+	&lt;Setting name=&quot;cacheEnabled&quot; value=&quot;true&quot; /&gt;
+&lt;/settings&gt;
+</code></pre>
+<ul>
+<li>在 mapper 映射文件中添加标签 <code>&lt;cache&gt;&lt;/cache&gt;</code></li>
+</ul>
+<p>UserDao.xml</p>
+<pre><code class="language-xml">&lt;?xml ...&gt;
+&lt;...&gt;
+&lt;mapper namespace=&quot;io.pz.github.xxxx&quot;&gt;
+	&lt;cache&gt;&lt;/cache&gt;
+&lt;/mapper&gt;
+</code></pre>
+<ul>
+<li>在需要使用缓存的 statement 上添加属性 <code>useCache=&quot;true&quot;</code></li>
+</ul>
+<pre><code class="language-xml">&lt;select id=&quot;findById&quot; resultType=&quot;user&quot; parameterType=&quot;int&quot; useCache=&quot;true&quot;&gt;
+	select * from user where id = #{uid}
+&lt;/select&gt;
+</code></pre>
+</li>
+<li>
+<p>在 spring boot 工程中开启</p>
+<ul>
+<li>配置文件添加配置</li>
+</ul>
+<pre><code class="language-properties">mybatis.configuration.cache-enabled = true
+</code></pre>
+<ul>
+<li>其他步骤与上文相同</li>
+</ul>
+</li>
+</ul>
+<h2 id="-mapper注解方式">#. Mapper：注解方式</h2>
+<h2 id="-mybatisgenerator">#. MyBatis：Generator</h2>
+<h3 id="1-概述">#.1 概述</h3>
+<ul>
+<li>MyBatis 官方提供了一个逆向工程，可用于从数据库自动生成映射器的代码。</li>
+</ul>
+<h3 id="2-使用">#.2 使用</h3>
+<ul>
+<li>
+<p>导入包</p>
+<p>至少需要以下包：</p>
+<ul>
+<li>mybatis</li>
+<li>mybatis-generator-core</li>
+<li>数据库驱动</li>
+</ul>
+</li>
+<li>
+<p>编写（粘贴修改）配置文件</p>
+<p>下载的 jar 包中的帮助文档中有 generatorConfig.xml 配置文档的模板。</p>
+<p>generatorConfig.xml</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE generatorConfiguration
+PUBLIC &quot;-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN&quot;
+&quot;http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd&quot;&gt;
+
+&lt;generatorConfiguration&gt;
+  &lt;context id=&quot;testTables&quot; targetRuntime=&quot;MyBatis3&quot;&gt;
+      &lt;commentGenerator&gt;
+          &lt;!-- 是否去除自动生成的注释 true：是 ： false:否 --&gt;
+          &lt;property name=&quot;suppressAllComments&quot; value=&quot;true&quot; /&gt;
+      &lt;/commentGenerator&gt;
+      &lt;!--数据库连接的信息：驱动类、连接地址、用户名、密码 --&gt;
+      &lt;jdbcConnection driverClass=&quot;com.mysql.jdbc.Driver&quot;
+          connectionURL=&quot;jdbc:mysql://localhost:3306/mybatis&quot; userId=&quot;root&quot;
+          password=&quot;root&quot;&gt;
+      &lt;/jdbcConnection&gt;
+      &lt;!-- &lt;jdbcConnection driverClass=&quot;oracle.jdbc.OracleDriver&quot;
+          connectionURL=&quot;jdbc:oracle:thin:@127.0.0.1:1521:demo&quot; 
+          userId=&quot;demo&quot;
+          password=&quot;demopasswd&quot;&gt;
+      &lt;/jdbcConnection&gt; --&gt;
+
+      &lt;!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer，为 true时把JDBC DECIMAL和NUMERIC类型解析为java.math.BigDecimal --&gt;
+      &lt;javaTypeResolver&gt;
+          &lt;property name=&quot;forceBigDecimals&quot; value=&quot;false&quot; /&gt;
+      &lt;/javaTypeResolver&gt;
+
+      &lt;!-- targetProject:生成PO类的位置，重要！！ --&gt;
+      &lt;javaModelGenerator targetPackage=&quot;mybatis.po&quot;
+          targetProject=&quot;.\src&quot;&gt;
+          &lt;!-- enableSubPackages:是否让schema作为包的后缀 --&gt;
+          &lt;property name=&quot;enableSubPackages&quot; value=&quot;false&quot; /&gt;
+          &lt;!-- 从数据库返回的值被清理前后的空格 --&gt;
+          &lt;property name=&quot;trimStrings&quot; value=&quot;true&quot; /&gt;
+      &lt;/javaModelGenerator&gt;
+      &lt;!-- targetProject:mapper映射文件生成的位置，重要！！ --&gt;
+      &lt;sqlMapGenerator targetPackage=&quot;mybatis.mapper&quot; 
+          targetProject=&quot;.\src&quot;&gt;
+          &lt;property name=&quot;enableSubPackages&quot; value=&quot;false&quot; /&gt;
+      &lt;/sqlMapGenerator&gt;
+      &lt;!-- targetPackage：mapper接口生成的位置，重要！！ --&gt;
+      &lt;javaClientGenerator type=&quot;XMLMAPPER&quot;
+          targetPackage=&quot;mybatis.mapper&quot; 
+          targetProject=&quot;.\src&quot;&gt;
+          &lt;property name=&quot;enableSubPackages&quot; value=&quot;false&quot; /&gt;
+      &lt;/javaClientGenerator&gt;
+      &lt;!-- 指定数据库表，要生成哪些表，就写哪些表，要和数据库中对应，不能写错！ --&gt;
+      &lt;table tableName=&quot;items&quot;&gt;&lt;/table&gt;
+      &lt;table tableName=&quot;orders&quot;&gt;&lt;/table&gt;
+      &lt;table tableName=&quot;orderdetail&quot;&gt;&lt;/table&gt;
+      &lt;table tableName=&quot;user&quot;&gt;&lt;/table&gt;        
+  &lt;/context&gt;
+&lt;/generatorConfiguration&gt;
+</code></pre>
+<p><strong>说明</strong>：</p>
+<p>配置文件主要包含：</p>
+<ul>
+<li>数据库连接信息</li>
+<li>生成代码的位置</li>
+<li>指定要生成代码的表</li>
+</ul>
+</li>
+<li>
+<p>执行生成</p>
+<p>Generate.java</p>
+<pre><code class="language-java">public class GeneratorSqlmap {
+
+  public void generator() throws Exception{
+
+      List&lt;String&gt; warnings = new ArrayList&lt;String&gt;();
+      boolean overwrite = true;
+      //指向逆向工程配置文件
+      File configFile = new File(&quot;generatorConfig.xml&quot;); 
+      ConfigurationParser cp = new ConfigurationParser(warnings);
+      Configuration config = cp.parseConfiguration(configFile);
+      DefaultShellCallback callback = new DefaultShellCallback(overwrite);
+      MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config,
+              callback, warnings);
+      myBatisGenerator.generate(null);
+
+  } 
+  public static void main(String[] args) throws Exception {
+      try {
+          GeneratorSqlmap generatorSqlmap = new GeneratorSqlmap();
+          generatorSqlmap.generator();
+      } catch (Exception e) {
+          e.printStackTrace();
+      }
+
+  }
+
+}
+</code></pre>
+</li>
+</ul>
+<h2 id="-插件pagehelper">#. 插件：PageHelper</h2>
+
+
+</body>
+</html>

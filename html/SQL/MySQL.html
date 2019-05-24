@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>MySQL</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="mysql学习笔记">MySQL学习笔记</h1>
+<ul>
+<li><a href="#1sql概述">1.SQL概述</a></li>
+<li><a href="#2mysql安装过程的注意事项">2.MySQL安装过程的注意事项</a></li>
+<li><a href="#3mysql常用操作">3.MySQL常用操作</a>
+<ul>
+<li><a href="#31-启动与停止服务">3.1 启动与停止服务</a></li>
+<li><a href="#32-登录">3.2 登录</a></li>
+<li><a href="#33-退出">3.3 退出</a></li>
+<li><a href="#34-查看mysql版本">3.4 查看MySQL版本</a></li>
+<li><a href="#35-显示所有数据库database表table">3.5 显示所有数据库（database）/表（table）</a></li>
+<li><a href="#36-创建数据库">3.6 创建数据库</a></li>
+<li><a href="#37-编码相关">3.7 编码相关</a></li>
+<li><a href="#38-关于sql脚本">3.8 关于SQL脚本</a></li>
+<li><a href="#39-获取当前系统时间">3.9 获取当前系统时间</a></li>
+<li><a href="#310-注释">3.10 注释</a></li>
+</ul>
+</li>
+<li><a href="#4表">4.表</a>
+<ul>
+<li><a href="#41-概述">4.1 概述</a></li>
+<li><a href="#42-表相关常用操作">4.2 表相关常用操作</a></li>
+</ul>
+</li>
+<li><a href="#5sql语句的分类">5.SQL语句的分类</a></li>
+<li><a href="#6数据处理函数单行处理函数">6.数据处理函数/单行处理函数</a>
+<ul>
+<li><a href="#61-str-to-date函数">6.1 str_to_date函数</a></li>
+</ul>
+</li>
+<li><a href="#7分组函数聚合函数多行处理函数">7.分组函数/聚合函数/多行处理函数</a></li>
+<li><a href="#8重要关键字">8.重要关键字</a></li>
+<li><a href="#9查询dql语句">9.查询(DQL语句)</a></li>
+<li><a href="#10连接查询">10.连接查询</a></li>
+<li><a href="#11子查询">11.子查询</a></li>
+<li><a href="#12创建表">12.创建表</a></li>
+<li><a href="#13删除表">13.删除表</a></li>
+<li><a href="#14mysql常用数据类型">14.MySQL常用数据类型</a></li>
+<li><a href="#15向表格中插入数据">15.向表格中插入数据</a></li>
+<li><a href="#16复制表">16.复制表</a></li>
+<li><a href="#17将查询结果插入到某张表中">17.将查询结果插入到某张表中</a></li>
+<li><a href="#18增删改表的结构">18.增/删/改表的结构</a></li>
+<li><a href="#19删改表中的数据">19.删/改表中的数据</a>
+<ul>
+<li><a href="#191-修改表中的数据">19.1 修改表中的数据</a></li>
+<li><a href="#192-删除表中的数据">19.2 删除表中的数据</a></li>
+</ul>
+</li>
+<li><a href="#20约束">20.约束</a>
+<ul>
+<li><a href="#201-添加约束">20.1 添加约束</a></li>
+<li><a href="#202-删除约束">20.2 删除约束</a></li>
+<li><a href="#203-修改约束">20.3 修改约束</a></li>
+<li><a href="#204-约束类型">20.4 约束类型</a></li>
+<li><a href="#205-相关事项">20.5 相关事项</a></li>
+</ul>
+</li>
+<li><a href="#21级联更新删除">21.级联更新/删除</a></li>
+<li><a href="#22存储引擎">22.存储引擎</a></li>
+<li><a href="#23事务">23.事务</a></li>
+<li><a href="#24事务的隔离级别">24.事务的隔离级别</a></li>
+<li><a href="#25数据库设计的范式">25.数据库设计的范式</a></li>
+</ul>
+<h2 id="1sql概述">1.SQL概述</h2>
+<ul>
+<li>
+<p><strong>MySQL概述：</strong></p>
+<p>SQL（Structed Query Language）</p>
+<p>数据库就是存储数据的仓库。从硬件上来说，数据库是一台安装了DBMS（数据库管理系统）的计算机；从软件上来说，数据库是一个文件系统。</p>
+<p>MySQL最初是由“MySQL AB”公司开发的一套关系型数据库管理系统，是流行的开源数据库管理系统。</p>
+<p>2008年Sun公司收购了MySQL AB公司，2009年Oracle公司收购了Sun公司，MySQL已并入Oracle的数据库产品线。</p>
+</li>
+<li>
+<p><strong>关系型数据库和非关系型数据库的区别：</strong></p>
+<ul>
+<li>关系型数据库：</li>
+</ul>
+<p>增加、删除、修改的操作较快，查询较慢。</p>
+<ul>
+<li>非关系型数据库：</li>
+</ul>
+<p>在关系型数据库的基础上“阉割”了约束等部分功能。</p>
+<p>查询非常快，增删改较为麻烦。</p>
+</li>
+</ul>
+<h2 id="2mysql安装过程的注意事项">2.MySQL安装过程的注意事项</h2>
+<ul>
+<li>MySQL的经典端口号是3306</li>
+<li>最好指定一个数据库的字符集，如UTF-8</li>
+</ul>
+<h2 id="3mysql常用操作">3.MySQL常用操作</h2>
+<h3 id="31-启动与停止服务">3.1 启动与停止服务</h3>
+<p>一般MySQL服务是自动启动的，不过在Windows下可以找到“服务”中的“MySQL”手动关闭与开启。</p>
+<p>Windows下也可以：</p>
+<ul>
+<li>net start mysql 启动</li>
+<li>net stop mysql 停止</li>
+</ul>
+<h3 id="32-登录">3.2 登录</h3>
+<p>在CMD窗口：</p>
+<ul>
+<li>mysql -h&lt; ip:port &gt; -u&lt; username &gt; -p&lt; password &gt;</li>
+</ul>
+<pre><code>mysql -uroot -p123
+</code></pre>
+<ul>
+<li>mysql -u用户名 -p</li>
+</ul>
+<p>回车后再输入密码，可避免显示密码</p>
+<h3 id="33-退出">3.3 退出</h3>
+<ul>
+<li>输入exit</li>
+</ul>
+<h3 id="34-查看mysql版本">3.4 查看MySQL版本</h3>
+<ul>
+<li>mysql -version</li>
+<li>mysql --V</li>
+<li>登录后select version();</li>
+</ul>
+<h3 id="35-显示所有数据库database表table">3.5 显示所有数据库（database）/表（table）</h3>
+<ul>
+<li>show databases;    //显示所有数据库</li>
+<li>show tables;    //显示所有表</li>
+<li>select database();    //可显示当前正在使用的数据库</li>
+<li>show tables from 数据库名;    //在一个库中查看其他库中的表</li>
+</ul>
+<h3 id="36-创建数据库">3.6 创建数据库</h3>
+<ul>
+<li>create database &lt; databaseName... &gt;;</li>
+<li>create database if not exists &lt; databaseName... &gt;;</li>
+<li>use &lt; databaseName... &gt;;    //选择当前操作的数据库</li>
+</ul>
+<h3 id="37-编码相关">3.7 编码相关</h3>
+<ul>
+<li><code>set character_set_results = 'GBK'</code>，设置查询结果的编码方式，注意重新通过DOS登录后将失效</li>
+<li><code>show variables like '%char%';</code>查看MySQL相关字符编码方式</li>
+</ul>
+<h3 id="38-关于sql脚本">3.8 关于SQL脚本</h3>
+<ul>
+<li>将SQL语句依次写入一个.sql文件可以创建一个SQL脚本</li>
+<li><code>source xxx.sql</code>可以执行SQL脚本（快速的逐行执行脚本中的语句）</li>
+</ul>
+<h3 id="39-获取当前系统时间">3.9 获取当前系统时间</h3>
+<ul>
+<li>使用函数<code>now()</code>，返回的是当前时间的date对象</li>
+</ul>
+<h3 id="310-注释">3.10 注释</h3>
+<ul>
+<li><code>-- 注释内容</code></li>
+<li><code># 注释内容</code>（MySQL特有）</li>
+<li><code>/* 注释内容 */</code>（多行注释）</li>
+</ul>
+<h2 id="4表">4.表</h2>
+<h3 id="41-概述">4.1 概述</h3>
+<p>表（table）是一种结构化的文件，用来存储特定类型的数据。</p>
+<p>每个表都有特定名称，且不能重复。</p>
+<p>表中的重要概念：列、行、主键，其中列（column）叫做字段，行叫做表中的记录。</p>
+<p>每一个字段都有：字段名称、字段数据类型、字段长度、字段约束。</p>
+<h3 id="42-表相关常用操作">4.2 表相关常用操作</h3>
+<ul>
+<li>desc 表名;    //查看表的结构（查看字段等信息）</li>
+<li>show create table 表名;    //查看表的创建语句</li>
+</ul>
+<h2 id="5sql语句的分类">5.SQL语句的分类</h2>
+<ol>
+<li>
+<p>数据查询语言（DQL-Data Query Language）</p>
+<p>代表关键字：select</p>
+</li>
+<li>
+<p>数据操纵语言（DML-Data Manipulation Language）（针对表的<strong>内容</strong>）</p>
+<p>代表关键字：insert、delete、update</p>
+</li>
+<li>
+<p>数据定义语言（DDL-Data Definition Language）（针对表的<strong>结构</strong>）</p>
+<p>代表关键字：create、drop、alter</p>
+</li>
+<li>
+<p>事务控制语言（TCL-Transactional Control Language）</p>
+<p>代表关键字：commit、rollback</p>
+</li>
+<li>
+<p>数据控制语言（DCL-Data Control Language）</p>
+<p>代表关键字：grant、revolve</p>
+</li>
+</ol>
+<h2 id="6数据处理函数单行处理函数">6.数据处理函数/单行处理函数</h2>
+<p>常用：</p>
+<table>
+<thead>
+<tr><th align="center">函数名</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">lower(内容)</td><td align="center">转成小写</td></tr>
+<tr><td align="center">upper(内容)</td><td align="center">转成大写</td></tr>
+<tr><td align="center">substr(内容, 起始下标, 长度)</td><td align="center">截取字符串</td></tr>
+<tr><td align="center">trim(内容)</td><td align="center">去除前后空格</td></tr>
+<tr><td align="center">length(内容)</td><td align="center">取长度</td></tr>
+<tr><td align="center">round(内容,位数)</td><td align="center">四舍五入</td></tr>
+<tr><td align="center">rand()</td><td align="center">生成0~1之间的随机数</td></tr>
+<tr><td align="center">ifnull(内容,替换值)</td><td align="center">将null转换成具体值</td></tr>
+<tr><td align="center">str_to_date('日期字符串'，'日期格式字符串')</td><td align="center">将varchar（字符串）转换成date（日期类型）</td></tr>
+<tr><td align="center">date_format(日期类型,'日期格式字符串')</td><td align="center">将date（日期类型）转换成varchar（特定格式字符串）</td></tr>
+</tbody>
+</table>
+<h3 id="61-str-to-date函数">6.1 str_to_date函数</h3>
+<p>MySql默认的日期格式如下：</p>
+<table>
+<thead>
+<tr><th align="center">格式</th><th align="center">含义</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">%Y</td><td align="center">年</td></tr>
+<tr><td align="center">%m</td><td align="center">月</td></tr>
+<tr><td align="center">%d</td><td align="center">日</td></tr>
+<tr><td align="center">%H</td><td align="center">时</td></tr>
+<tr><td align="center">%i</td><td align="center">分</td></tr>
+<tr><td align="center">%s</td><td align="center">秒</td></tr>
+</tbody>
+</table>
+<p>举例：</p>
+<pre><code class="language-sql">'%Y-%m-%d'    //MySQL默认日期格式
+</code></pre>
+<h2 id="7分组函数聚合函数多行处理函数">7.分组函数/聚合函数/多行处理函数</h2>
+<p>常用：</p>
+<table>
+<thead>
+<tr><th align="center">函数名</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">count</td><td align="center">取得记录数</td></tr>
+<tr><td align="center">sum</td><td align="center">求和</td></tr>
+<tr><td align="center">avg</td><td align="center">取平均</td></tr>
+<tr><td align="center">max</td><td align="center">取最大的数</td></tr>
+<tr><td align="center">min</td><td align="center">取最小的数</td></tr>
+</tbody>
+</table>
+<p>注意事项：</p>
+<ul>
+<li>分组函数会忽略NULL（空值）</li>
+<li>分组函数若处理了*值，则一般不忽略NULL</li>
+<li>分组函数不能直接用于where后面（选择语句中）</li>
+</ul>
+<h2 id="8重要关键字">8.重要关键字</h2>
+<ul>
+<li>
+<p>distinct</p>
+<p>放在字段前面，可以去除查询结果中的重复记录。举例：</p>
+<pre><code class="language-sql">select distinct job from emp;	//查询员工有多少种职位
+</code></pre>
+<p>注意distinct前面不能有其他字段，distinct作用于后面的多个字段。</p>
+</li>
+<li>
+<p>in</p>
+<p>后跟括号，括号内写多个字段值，用于过滤查询结果。</p>
+<pre><code class="language-sql">select ename,job from emp where job in('MANAGER','SALESMAN');
+//查询工作为MANAGER和SALESMAN的员工
+</code></pre>
+</li>
+<li>
+<p>union</p>
+<p>用于将两个查询结果进行合并。</p>
+<p>将union关键字放在两条select语句之间即可。</p>
+<p>两条select语句查询的<strong>字段数必须相等</strong>。若是在oracle数据库中，字段的<strong>类型也必须相等</strong>。</p>
+<pre><code class="language-sql">select ename,job from emp where job='MANAGER'
+union
+select ename,job from emp where job='SALSEMAN';
+//查询职位为MANAGER和SALESMAN的员工
+</code></pre>
+</li>
+<li>
+<p>limit</p>
+<p>limit只在MySQL数据库中存在，用来获取一张表的部分数据。</p>
+<p>在select语句的最后加上<code>limit 起始下标(从0开始),条目个数;</code>即可。</p>
+<pre><code class="language-sql">select ename,sal from emp order by sal desc limit 0,5;
+//查询工资排名前五名的员工
+//此处的[limit 0,5]也可以写作[limit 5]
+</code></pre>
+</li>
+</ul>
+<h2 id="9查询dql语句">9.查询(DQL语句)</h2>
+<ul>
+<li>
+<p><strong>查询表中单个字段</strong>：</p>
+<pre><code class="language-sql">select 字段名 from 表名;
+</code></pre>
+</li>
+<li>
+<p><strong>查询表中多个字段</strong>：</p>
+<pre><code class="language-sql">select 字段名1,字段名2,字段... from 表名;
+// 若查询所有字段可以用*代替字段名
+// select * from 表名;
+</code></pre>
+</li>
+<li>
+<p><strong>常用操作</strong>：</p>
+<ul>
+<li><code>distinct</code>查询结果中去除重复记录</li>
+<li><code>&lt;field...&gt; as &lt;newName...&gt;</code>可以取别名</li>
+</ul>
+</li>
+<li>
+<p><strong>条件查询</strong>：</p>
+<ol>
+<li>查询语句后跟<code>where 条件语句</code>即可，举例：</li>
+</ol>
+<pre><code class="language-sql">select salary from employee where salary&gt;=3000;
+</code></pre>
+<p>常用条件查询运算符：</p>
+<table>
+<thead>
+<tr><th align="center">运算符</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">= , &lt;&gt;/!=, &lt;, &gt;, &lt;=, &gt;=</td><td align="center">等于，不等于，小于，大于，小于等于，大于等于</td></tr>
+<tr><td align="center">between ... and ...</td><td align="center">在...和...之间</td></tr>
+<tr><td align="center">is null</td><td align="center">判断是否没有值</td></tr>
+<tr><td align="center">and</td><td align="center">与，优先级大于or</td></tr>
+<tr><td align="center">or</td><td align="center">或，可使用括号改变优先级</td></tr>
+<tr><td align="center">in</td><td align="center">包含</td></tr>
+<tr><td align="center">not</td><td align="center">非</td></tr>
+<tr><td align="center">like</td><td align="center">模糊查询</td></tr>
+</tbody>
+</table>
+<ol>
+<li>
+<p>查询语句后跟having...</p>
+<p>这种方式先分组后过滤，不像where是先过滤再分组因而不能包含多行处理函数（分组函数）。</p>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>排序查询</strong>：</p>
+<p>显示排序后的查询结果。</p>
+<p>查询语句后跟<code>order by 排序字段1 方式1,排序字段2 方式2,...;</code></p>
+<p>排序方式有esc（升序）、desc（降序），默认为升序。</p>
+<p>越靠前的字段作用越大。</p>
+</li>
+<li>
+<p><strong>分组查询</strong>：</p>
+<p>分组查询使用group by子句，后跟字段，根据字段不同的值来分组。</p>
+<p>举例：</p>
+<p>​	查询从事各个工作的员工人数。</p>
+<pre><code class="language-sql">select count(*) from emp group by job;
+</code></pre>
+<p>注意事项：</p>
+<p>若一条DQL与剧中有group by子句，那么select后面只能跟参与分组的字段和分组函数。</p>
+</li>
+<li>
+<p><strong>模糊查询：</strong></p>
+<p>模糊查询的运作类似正则表达式，重要规则如下：</p>
+<ul>
+<li><code>_</code>表示<strong>单个任意字符</strong></li>
+<li><code>%</code>表示<strong>任意个任意字符</strong></li>
+</ul>
+<p>使用举例如下：</p>
+<pre><code class="language-sql">select * from emp where job like &quot;%员&quot;;			-- 可查出'文员'和'销售员'等
+</code></pre>
+</li>
+</ul>
+<p><strong>总结</strong>：</p>
+<pre><code>完整的DQL语句具有如下顺序：
+</code></pre>
+<pre><code class="language-sql">-- 执行顺序：
+select
+	...
+from
+	...
+where
+	...
+group by
+	...
+having
+	...
+order by
+	...;
+</code></pre>
+<ol>
+<li>from			//从某张表中检索数据</li>
+<li>where                     //通过某条件进行过滤</li>
+<li>group by                //分组</li>
+<li>having                    //分组后再过滤（只能写聚合函数）</li>
+<li>select                      //查询出来</li>
+<li>order by                 //排序输出</li>
+</ol>
+<p><strong>注意事项</strong>：</p>
+<ol>
+<li>查询语句中字段名后可跟计算表达式，例如<code>select 字段*12 from table1;</code>，将显示计算后的表。<strong>不会</strong>修改表中的数据。</li>
+<li>可在变量名后跟<code>as 重命名</code>来让查询结果显示重命名的字段名，不用as也可以。<strong>不会</strong>修改表中的数据。</li>
+<li>若要显示中文的重命名，中文需要用单引号<code>'</code>括起来。MySQL中双引号<code>&quot;</code>也可以。</li>
+<li>between...and...语句中，若判断的是数字，则左右皆包；若判断的是字符，则包左不包右。所以主要用于判断数字。</li>
+</ol>
+<h2 id="10连接查询">10.连接查询</h2>
+<p><strong>概述</strong>：</p>
+<p>​	通过多张表连接起来获得有效数据，又称为跨表查询。</p>
+<p><strong>根据连接方式分类</strong>：</p>
+<ul>
+<li>
+<p><strong>内连接</strong></p>
+<p>概述：将A表和B表<strong>能够完全匹配的记录</strong>查询出来</p>
+<ul>
+<li>等值连接</li>
+<li>非等值连接</li>
+<li>自连接</li>
+</ul>
+</li>
+<li>
+<p><strong>外连接</strong></p>
+<p>概述：除了查询出A表和B表<strong>能够完全匹配的记录</strong>外，无条件地将<strong>其中一张表的记录完全查询出来</strong>。若对方表没有匹配记录，则自动模拟出null值与之匹配。</p>
+<ul>
+<li>左外连接（左连接）</li>
+<li>右外连接（右连接）</li>
+</ul>
+</li>
+<li>
+<p>全连接（很少使用）</p>
+</li>
+</ul>
+<p><strong>注意事项</strong>：</p>
+<ol>
+<li>
+<p>连接查询的时候可以给表名起别名，例如：</p>
+<pre><code class="language-sql">select e.ename,d.dname from emp e,dept d where e.deptno=d.deptno;
+// SQL92
+// 通过部门编号对应部门名称表和员工部门编号表，查询员工对应的部门名称
+</code></pre>
+</li>
+<li>
+<p>SQL92语句与SQL99语句的不同：</p>
+<p>SQL99的语句格式为：</p>
+<pre><code class="language-sql">select ...,... from ... (inner/outer) (left/right) join ... on 限制/过滤条件 join ... on 限制/过滤条件;
+</code></pre>
+<p>若在join前加上left/right，则为<strong>左/右外连接</strong>，分别表示无条件显示左/右表中的全部记录。</p>
+<p>相比于SQL92语句，SQL99后可跟where继续过滤，结构也更清晰。</p>
+<p>内连接中的<strong>inner可以省略</strong>。</p>
+<p>同理外连接中的<strong>outer也可以省略</strong>。</p>
+</li>
+<li>
+<p>若要进行多于两张表的连接，格式见上条。</p>
+<p>注意是<strong>第一个表分别与后面的多张表进行连接</strong>，而不是后面的表进行连接。</p>
+</li>
+<li>
+<p>可以给一张表起不同的别名，来进行<strong>自连接</strong>。</p>
+</li>
+</ol>
+<h2 id="11子查询">11.子查询</h2>
+<p>子查询就是将select语句嵌套在select语句中。</p>
+<p>相当于将select语句的结果当作一张临时新表，参与到大的select语句中。</p>
+<p>将子select语句左右加上括号即可（句尾不要分号）。</p>
+<h2 id="12创建表">12.创建表</h2>
+<p>MySQL的建表语句如下：</p>
+<pre><code class="language-sql">create table tableName(
+	columnName dataType(length),
+	columnName dataType(length),
+	...
+	columnName dataType(length) default defaultValue	//设置具有默认值的字段
+);
+</code></pre>
+<p>注意事项：</p>
+<ol>
+<li>表格的名字最好以<code>t_</code>或者<code>tbl_</code>开头，增强可读性。</li>
+<li>需要存储中文的地方的varchar，其长度最好是2的倍数。</li>
+<li>定义字段语句后跟default+默认值，可以设置某一字段的默认值，实例见上。</li>
+</ol>
+<h2 id="13删除表">13.删除表</h2>
+<p>删除表的语句如下：</p>
+<pre><code class="language-sql">drop table 表名;	//若数据库中没有这张表，则报错
+drop table if exists 表名;	//为MySQL特有，如果存在这张表则删除，不会报错
+</code></pre>
+<h2 id="14mysql常用数据类型">14.MySQL常用数据类型</h2>
+<ul>
+<li>
+<p>varchar</p>
+<p>可变长度字符串。</p>
+<p>其会<strong>自动判断内容的长度</strong>，以决定占用的存储空间。不过判断过程会消耗一些系统资源。</p>
+<p>适合于长度在<strong>一定范围内变化</strong>的内容。</p>
+</li>
+<li>
+<p>char</p>
+<p>定长字符串。</p>
+<p>长度<strong>固定不变</strong>，若实际长度不足则会自动补充空格。</p>
+<p>适合于<strong>定长</strong>的内容。</p>
+</li>
+<li>
+<p>int</p>
+<p>整数型</p>
+</li>
+<li>
+<p>bigint</p>
+<p>长整型</p>
+</li>
+<li>
+<p>float</p>
+<p>单精度浮点型</p>
+</li>
+<li>
+<p>double</p>
+<p>双精度浮点型。</p>
+<p>（arg1, arg2）,arg1表示小数最大有几位，arg2表示保留几位小数。</p>
+</li>
+<li>
+<p>decimal</p>
+<p>（arg1, arg2）,更加精确。</p>
+</li>
+<li>
+<p>date</p>
+<p>日期类型（一般用字符串取代），只包含年月日：yyyy-MM-dd</p>
+</li>
+<li>
+<p>datetime</p>
+<p>日期类型，包含年月日时分秒：yyyy-MM-dd HH:mm:ss</p>
+<p>不会自动生成值。</p>
+</li>
+<li>
+<p>timestamp</p>
+<p>时间戳类型，包含年月日时分秒</p>
+<p>会自动指定值。</p>
+</li>
+<li>
+<p>blob</p>
+<p>Binary Large Object 二进制大对象</p>
+<p>一般用来存储视频、图片等大文件。</p>
+</li>
+<li>
+<p>clob</p>
+<p>Character Large Object 字符大对象</p>
+<p>可以存储比较大的文本。</p>
+</li>
+</ul>
+<h2 id="15向表格中插入数据">15.向表格中插入数据</h2>
+<p>使用insert语句(DML)，格式：</p>
+<pre><code>insert into 表名(字段名1,字段名2,...) values(值1,值2,...);
+</code></pre>
+<p>注意事项：</p>
+<ol>
+<li>字段和值必须一一对应，个数必须相同，类型必须匹配。</li>
+<li>若插入数据的时候没有给出某个字段的值，且该字段没有约束的话，默认为null。</li>
+<li>若省略表名后的括号，则相当于<strong>按照顺序包含了全部字段</strong>。<strong>不建议省略</strong>这个括号，若省略了这条语句会因为表扩充字段而失效（报错），不利于健壮性。</li>
+</ol>
+<h2 id="16复制表">16.复制表</h2>
+<p>使用以下格式复制表：</p>
+<pre><code class="language-sql">create table tableName as select columnName1,columnName ... from tableName;
+//将select语句返回的表直接赋值给新表
+</code></pre>
+<h2 id="17将查询结果插入到某张表中">17.将查询结果插入到某张表中</h2>
+<p>使用以下格式：</p>
+<pre><code class="language-sql">insert into 表名 select语句;
+</code></pre>
+<h2 id="18增删改表的结构">18.增/删/改表的结构</h2>
+<ol>
+<li>
+<p>给表增加一个字段：</p>
+<pre><code class="language-sql">alter table 表名 add 字段名 数据类型(长度);
+</code></pre>
+</li>
+<li>
+<p>更改某个字段的数据类型：</p>
+<pre><code class="language-sql">alter table 表名 modify 字段名 新的数据类型(新的长度);
+</code></pre>
+</li>
+<li>
+<p>删除表中某字段：</p>
+<pre><code class="language-sql">alter table 表名 drop 字段名;
+</code></pre>
+</li>
+</ol>
+<h2 id="19删改表中的数据">19.删/改表中的数据</h2>
+<h3 id="191-修改表中的数据">19.1 修改表中的数据</h3>
+<pre><code class="language-sql">update 表名 set 字段名1=值1,字段名2=值2,... where 条件;
+</code></pre>
+<p>注意事项：</p>
+<ol>
+<li>若没有where限制条件，则会修改表中<strong>所有记录</strong>。</li>
+</ol>
+<h3 id="192-删除表中的数据">19.2 删除表中的数据</h3>
+<pre><code class="language-sql">delete from 表名 where 条件;
+</code></pre>
+<p>注意事项：</p>
+<ol>
+<li>若没有where限制条件，则会删除表中<strong>所有记录</strong>。</li>
+</ol>
+<h2 id="20约束">20.约束</h2>
+<p>约束（constraint），对表中字段进行<strong>限制</strong>。</p>
+<p>约束分为<strong>列级约束</strong>和<strong>表级约束</strong>，列级约束跟在建表语句字段定义后面，表级约束独占建表语句一行，具体如下。</p>
+<h3 id="201-添加约束">20.1 添加约束</h3>
+<ul>
+<li>
+<p>列级约束：在建表语句中将约束条件加在字段描述的后面，举例：</p>
+<pre><code class="language-sql">create table tbl_student(
+name int(10) not null,
+num int(10) unique
+)
+</code></pre>
+</li>
+<li>
+<p>表级约束：在建表语句中独占一行，可对多个字段联合添加约束，也可以给约束起名字</p>
+<pre><code class="language-sql">create table xxx(
+...,
+(constraint 约束名) 约束类型(约束字段1,约束字段2,...)
+)
+</code></pre>
+</li>
+<li>
+<p>使用alter语句</p>
+<pre><code class="language-sql">alter table 表名 add cnostraint 约束名 约束类型(约束字段) 附加信息;
+</code></pre>
+</li>
+</ul>
+<h3 id="202-删除约束">20.2 删除约束</h3>
+<ul>
+<li>
+<p>使用alter语句</p>
+<pre><code class="language-sql">alter table 表名 drop primary key;		//删除主键约束
+alter table 表名 drop foreign key 约束名;	//删除外键约束
+</code></pre>
+</li>
+</ul>
+<h3 id="203-修改约束">20.3 修改约束</h3>
+<ul>
+<li>
+<p>其实就是修改字段：</p>
+<pre><code class="language-sql">alter table 表名 modify 字段名 新的字段数据类型(新的长度) 新的约束信息;
+</code></pre>
+</li>
+<li>
+<p>还可以删除字段重新添加（感觉不太好）</p>
+</li>
+</ul>
+<h3 id="204-约束类型">20.4 约束类型</h3>
+<ul>
+<li>
+<p><strong>非空约束：not null</strong></p>
+<p>not null和unique约束可以同时存在。</p>
+</li>
+<li>
+<p><strong>唯一性约束：unique</strong></p>
+<p>注意unique约束的字段不能重复，不过可以存在多个null。</p>
+</li>
+<li>
+<p><strong>主键约束（PK，primary key）</strong></p>
+<p><strong>概述：</strong></p>
+<ul>
+<li>表中某个字段在添加<strong>主键约束</strong>后，该字段就被成为<strong>主键字段</strong>，该字段中的每一个数据都被成为<strong>主键值</strong>。</li>
+<li>“<strong>主键值</strong>”是表中<strong>当前行的唯一标识</strong>，相当于“身份证号”。</li>
+<li>主键字段自带not null unique（非空唯一），不过其不完全相同于not null unique修饰的字段。</li>
+<li>一张表应该要有主键字段，若没有，表示这张表是无效的。</li>
+</ul>
+<p><strong>分类：</strong></p>
+<ul>
+<li>按照约束的字段数量分：</li>
+<li>单一主键：即给单一字段添加主键约束</li>
+<li>复合主键：给多个字段联合添加约束</li>
+<li>根据主键性质分：</li>
+<li>自然主键：主键为自然数，和当前表的业务没有任何任何关系</li>
+<li>业务主键：主键值和当前表的业务紧密相关，使用较少</li>
+</ul>
+<p><strong>添加方式：</strong></p>
+<ul>
+<li>单一主键约束：建表语句中，在某个字段后添加<code>primary key</code>，也可以使用表级约束的方法。</li>
+</ul>
+<pre><code class="language-sql">create table tbl_student(
+	id int(10) primary key,		//向学生的id添加主键标识
+	name varchar(20)
+)
+
+create table tbl_student(
+	id int(10),
+	name varchar(20),
+	(constraint xxx) primary key(id)
+							//也可以使用表级约束的方法添加
+)
+</code></pre>
+<ul>
+<li>复合主键约束：只能使用表级约束的方法添加（因为有多个字段）。</li>
+</ul>
+<pre><code class="language-sql">create table tbl_student(
+	id int(10),
+	name varchar(20),
+	email varchar(40),
+	(constraint xxx) primary key(id,name)		//添加复合主键约束
+)
+</code></pre>
+<p><strong>其他事项：</strong></p>
+<ol>
+<li>
+<p>MySQL提供了一个自增的数字，用来自动生成主键值。</p>
+<pre><code class="language-sql">create table tbl_student(
+id int(10) primary key auto_increment,	//自增的id
+name varchar(20)
+)
+</code></pre>
+<p>自增的数字默认从1开始，以1递增，每个数字只能使用一次（即若删除了某条记录，对后续记录没有影响）。</p>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>外键约束（FK，foreign key）</strong></p>
+<p><strong>概述：</strong></p>
+<ul>
+<li>外键约束用于将表中<strong>某个字段的值</strong>限制在<strong>另一张表中某个字段值</strong>的范围之内（例如学生表中有个字段班级编号，范围限制在班级编号与班级名对应表中）。</li>
+<li>某个字段添加<strong>外键约束</strong>之后，这个字段就称为<strong>外键字段</strong>，该字段下所有值成为<strong>外键值</strong>。</li>
+<li>外键约束的好处是减少了数据冗(rong3)余。</li>
+</ul>
+<p><strong>添加方式：</strong></p>
+<pre><code class="language-sql">create table tbl_student(
+id int(10) primary key,
+name varchar(20),
+classno int(3),
+(constraint 约束名) foreign key(字段名) references 表名(被参考字段名)
+//添加外键约束，若参考多个字段，用逗号分隔即可
+)
+</code></pre>
+<p>外键约束只能以表级约束的方式添加，不能用列级约束。</p>
+<p><strong>注意事项：</strong></p>
+<ul>
+<li>外键值<strong>可以为NULL</strong>。</li>
+<li>外键字段所引用的另一张表中的字段，必须具有<strong>unique</strong>约束。</li>
+<li>引用外键的表称为子表，被引用的表称为父表。创建表时应先创建父表后创建子表，插入数据的顺序也应是先父后子，而删除数据的时候应先删除子表中的数据。</li>
+</ul>
+</li>
+</ul>
+<h3 id="205-相关事项">20.5 相关事项</h3>
+<ol>
+<li>带有名字的表级约束，可以在MySQL自带数据库information_schema中的表table_constraints中进行相关操作。</li>
+</ol>
+<h2 id="21级联更新删除">21.级联更新/删除</h2>
+<p>概述：</p>
+<pre><code>一个关于外键约束中父子表关系的概念。
+
+在更新/删除父表中数据的时候，级联更新/删除子表中的数据。
+
+谨慎使用。
+</code></pre>
+<p>使用：</p>
+<ul>
+<li>
+<p>建表时在约束定义后加上附加信息：on delete/update cascade</p>
+<pre><code class="language-sql">create table 表名(
+...,
+constraint 约束名 foreign key(字段名) references 表名(被参考字段) on delete/update cascade
+)
+</code></pre>
+</li>
+<li>
+<p>建表时在约束定义后加上附加信息：on delete/update set null</p>
+<p>被依赖的数据更新/删除时，将所有相关的数据置null，而不是级联更新/删除。</p>
+</li>
+<li>
+<p>也可以直接（删除约束之后重新）添加约束</p>
+<pre><code class="language-sql">alter table 表名 add constraint 约束名 foreign key(字段名) references 表名(被参考字段) on delete/update cascade;
+</code></pre>
+</li>
+</ul>
+<h2 id="22存储引擎">22.存储引擎</h2>
+<p><strong>概述：</strong></p>
+<pre><code>MySQL特色，在创建表的时候可以指定这张表的存储引擎（即数据的存储方式）。
+
+Java程序员需要了解的常用存储引擎有MyISAM、MEMORY和InnoDB。
+</code></pre>
+<p><strong>常用操作：</strong></p>
+<ul>
+<li>
+<p>查看有哪些存储引擎可用：</p>
+<pre><code class="language-sql">show engines\G
+</code></pre>
+</li>
+<li>
+<p>查看某张表所用的存储引擎， 可以通过show create：</p>
+<pre><code class="language-sql">show create table 表名;
+</code></pre>
+</li>
+</ul>
+<p><strong>常用存储引擎：</strong></p>
+<ul>
+<li>MyISAM
+<ul>
+<li>每张表使用三个文件表示：mytable.frm（存储表结构定义），mytable.MYD（存储表行的内容），mytable.MYI（存储表上的索引）</li>
+<li>可以压缩、设置成只读表来节省空间</li>
+</ul>
+</li>
+<li>InnoDB
+<ul>
+<li>MySQL默认存储引擎</li>
+<li>支持事务</li>
+<li>支持级联更新、级联删除，支持外键及引用的完整性</li>
+<li>每个表以.frm文件表示</li>
+<li>在MySQL服务器崩溃后提供自动恢复</li>
+</ul>
+</li>
+<li>MEMORY
+<ul>
+<li>每个表以.frm文件表示</li>
+<li>表数据及索引存储在内存中，速度快</li>
+</ul>
+</li>
+</ul>
+<h2 id="23事务">23.事务</h2>
+<p><strong>概述：</strong></p>
+<pre><code>事务（Transaction），是一个最小的不可再分的工作单元，一个事务通常对应了一个完整的业务。
+
+一个完整的业务需要批量的DML（insert, delete, update）语句来协同完成，事务只和DML语句有关，只有DML语句才有事务。
+
+事务中的DML语句执行后只能同时成功，或同时失败。在使用事务进行操作时，操作的结果暂时在内存中；直到最后一条DML语句执行成功，才会将内存中的结果同步到数据库，若有DML语句执行失败，则删除所有的操作记录（不同步）。
+</code></pre>
+<p><strong>事务的四个特性：</strong></p>
+<ul>
+<li>
+<p>原子性（A）</p>
+<p>事务是最小的工作单元，不可再分。</p>
+</li>
+<li>
+<p>一致性（C）</p>
+<p>事务种的DML语句必须同时成功或同时失败。</p>
+</li>
+<li>
+<p>隔离性（I）</p>
+<p>事务A和事务B之间具有隔离。</p>
+</li>
+<li>
+<p>持久性（D）</p>
+<p>是事务的保证，事务终结的标志。</p>
+</li>
+</ul>
+<p><strong>提交和回滚：</strong></p>
+<ul>
+<li>
+<p>提交（commit）：</p>
+<p>提交标志着一个事务成功的结束，将事务中DML语句的操作记录同步到硬盘上的文件。</p>
+</li>
+<li>
+<p>回滚（rollback）：</p>
+<p>回滚标志着一个事务失败的结束，清空事务中所有DML语句的操作记录。</p>
+<p>事务中任何一条DML语句执行标志着事务的开始，而提交和回滚都标志着事务的结束。</p>
+</li>
+</ul>
+<p><strong>使用方法：</strong></p>
+<pre><code>MySQL中默认是开启自动提交的，即正常执行一条DML语句相当于开启了一个事务并进行了提交。使用下面几个方法来使用事务：
+</code></pre>
+<ol>
+<li>
+<p>手动开启事务：</p>
+<pre><code class="language-sql">start transaction;
+DML语句...;
+commit/rollback;
+</code></pre>
+</li>
+<li>
+<p>在当前窗口中关闭自动提交：</p>
+<pre><code class="language-sql">set autocommit = 0;
+</code></pre>
+</li>
+<li>
+<p>重新打开自动提交：</p>
+<pre><code class="language-sql">set autocommit = 1;
+</code></pre>
+</li>
+</ol>
+<h2 id="24事务的隔离级别">24.事务的隔离级别</h2>
+<p>MySQL数据库的隔离级别有如下四种：</p>
+<ul>
+<li><strong>read uncommited（读未提交）</strong>
+<ul>
+<li>事务A未提交的数据，事务B可以读取到</li>
+<li>可能会引发“脏读”</li>
+<li>这种事务的隔离级别是最低级的，一般都采用高于这种的隔离级别</li>
+</ul>
+</li>
+<li><strong>read commited（读已提交）</strong>
+<ul>
+<li>事务A提交的数据，事务B才能读取到</li>
+<li>可以避免“脏读”，却可能会引发“不可重复读”</li>
+<li><strong>Oracle数据库的默认隔离级别是这种</strong></li>
+</ul>
+</li>
+<li><strong>repeatable read（可重复度）</strong>
+<ul>
+<li>事务A提交的数据，事务B读取不到</li>
+<li>可以避免“不可重复读”，却可能导致“幻象读”</li>
+<li><strong>MySQL数据库的默认隔离级别是这种</strong></li>
+</ul>
+</li>
+<li><strong>serializable（串行化）</strong>
+<ul>
+<li>事务A在处理数据库表中的数据的时候，事务B只能排队等待</li>
+<li>这种隔离级别可以避免“幻象读”</li>
+<li>这种隔离级别吞吐量很低，一般很少使用</li>
+</ul>
+</li>
+</ul>
+<h2 id="25数据库设计的范式">25.数据库设计的范式</h2>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<p>范式就是数据库设计的规范。</p>
+<p>数据库的设计范式一共有6种，不过只要遵循前三范式就可以解决大部分问题。</p>
+</li>
+<li>
+<p><strong>常用范式的概述</strong>：</p>
+<ul>
+<li><strong>第一范式</strong>：</li>
+</ul>
+<p>每一列的字段需为原子性的、不可分割的。</p>
+<ul>
+<li><strong>第二范式</strong>：</li>
+</ul>
+<p>在第一范式的基础上：非主属性需要完全依赖于主键（主属性），不能出现非完全依赖。</p>
+<ul>
+<li><strong>第三范式</strong>：</li>
+</ul>
+<p>在第一范式的基础上：属性不依赖于其它非主属性（消除传递依赖）。</p>
+</li>
+</ul>
+
+
+</body>
+</html>

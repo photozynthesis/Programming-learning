@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>Redis</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="redis">Redis</h1>
+<ul>
+<li><a href="#1-nosql概述">1. *NOSQL概述</a>
+<ul>
+<li><a href="#11-nosql概述">1.1 NOSQL概述</a></li>
+<li><a href="#12-nosql与关系型数据库的比较">1.2 NOSQL与关系型数据库的比较</a></li>
+<li><a href="#13-主流的nosql">1.3 主流的NOSQL</a></li>
+</ul>
+</li>
+<li><a href="#2-redis概述">2. Redis概述</a>
+<ul>
+<li><a href="#21-概述">2.1 概述</a></li>
+<li><a href="#22-下载与安装">2.2 下载与安装</a></li>
+</ul>
+</li>
+<li><a href="#3-redis数据类型与操作">3. Redis数据类型与操作</a>
+<ul>
+<li><a href="#31-string字符串类型">3.1 string：字符串类型</a></li>
+<li><a href="#32-hash哈希类型">3.2 hash：哈希类型</a></li>
+<li><a href="#33-list列表类型">3.3 List：列表类型</a></li>
+<li><a href="#34-set集合类型">3.4 set：集合类型</a></li>
+<li><a href="#35-sortedset有序集合类型">3.5 sortedset：有序集合类型</a></li>
+</ul>
+</li>
+<li><a href="#4-redis通用命令">4. Redis通用命令</a></li>
+<li><a href="#5-redis数据持久化">5. Redis数据持久化</a></li>
+<li><a href="#6-jedis概述">6. Jedis概述</a></li>
+<li><a href="#7-jedis操作数据">7. Jedis操作数据</a>
+<ul>
+<li><a href="#71-操作string">7.1 操作string</a></li>
+<li><a href="#72-操作hash">7.2 操作hash</a></li>
+<li><a href="#73-操作list">7.3 操作list</a></li>
+<li><a href="#73-操作set">7.3 操作set</a></li>
+<li><a href="#74-操作sortedset">7.4 操作sortedset</a></li>
+</ul>
+</li>
+<li><a href="#8-jedis连接池">8. Jedis：连接池</a>
+<ul>
+<li><a href="#81-入门">8.1 入门</a></li>
+<li><a href="#82-示范工具类">8.2 示范工具类</a></li>
+</ul>
+</li>
+<li><a href="#9-事务">9. 事务</a></li>
+<li><a href="#10-spring-data-redis">10. spring-data-redis</a>
+<ul>
+<li><a href="#101-概述">10.1 概述</a></li>
+<li><a href="#102-使用准备工作">10.2 使用准备工作</a></li>
+<li><a href="#103-基本使用通过-redistemplate">10.3 基本使用（通过 RedisTemplate）</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="1-nosql概述">1. *NOSQL概述</h2>
+<h3 id="11-nosql概述">1.1 NOSQL概述</h3>
+<p>NOSQL（Not Only SQL），“不仅仅是SQL”，泛指非关系型数据库，是一项全新的数据库理念。NOSQL数据库可以解决一些传统数据库难以解决的问题。</p>
+<h3 id="12-nosql与关系型数据库的比较">1.2 NOSQL与关系型数据库的比较</h3>
+<ul>
+<li><strong>优点</strong>：
+<ul>
+<li><strong>成本</strong>：NOSQL数据库简单易部署，基本都是开源软件，不需要像使用oracle那样花费大量成本购买使用，相比关系型数据库价格便宜。</li>
+<li><strong>查询速度</strong>：NOSQL数据库将数据存储于<strong>内存</strong>之中，关系型数据库将数据存储在硬盘中，NOSQL的查询速度明显更快。</li>
+<li><strong>存储数据的格式</strong>：nosql的存储格式是key,value形式、文档形式、图片形式等等，所以可以存储基础类型以及对象或者是集合等各种格式，而数据库则只支持基础类型。</li>
+<li><strong>扩展性</strong>：基于键值对，数据之间没有耦合性，所以非常容易水平扩展。</li>
+<li><strong>性能</strong>：NOSQL是基于键值对的，可以想象成表中的主键和值的对应关系，而且不需要经过SQL层的解析，所以性能非常高。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：
+<ul>
+<li>维护的工具和资料有限，因为nosql是属于新的技术，不能和关系型数据库10几年的技术同日而语。</li>
+<li>不提供对sql的支持，如果不支持sql这样的工业标准，将产生一定用户的学习和使用成本。</li>
+<li>不提供关系型数据库对事务的处理。</li>
+</ul>
+</li>
+<li><strong>总结</strong>：
+<ul>
+<li>关系型数据库与NoSQL数据库并非对立而是<strong>互补的关系</strong>，即通常情况下使用关系型数据库，在适合使用NoSQL的时候使用NoSQL数据库，让NoSQL数据库对关系型数据库的不足进行弥补。</li>
+<li>一般会将数据存储在关系型数据库中，<strong>在nosql数据库中备份存储关系型数据库的数据</strong>。</li>
+</ul>
+</li>
+</ul>
+<h3 id="13-主流的nosql">1.3 主流的NOSQL</h3>
+<ul>
+<li><strong>键值(Key-Value)存储数据库</strong>：
+<ul>
+<li>相关产品：Tokyo Cabinet/Tyrant、Redis、Voldemort、Berkeley DB</li>
+<li>典型应用：内容<strong>缓存</strong>，主要用于处理大量数据的高<strong>访问</strong>负载。</li>
+<li>优势： 快速查询</li>
+<li>劣势： 存储的数据缺少结构化</li>
+</ul>
+</li>
+<li><strong>列存储数据库</strong>：
+<ul>
+<li>相关产品：Cassandra, HBase, Riak</li>
+<li>典型应用：分布式的文件系统</li>
+<li>数据模型：以列簇式存储，将同一列数据存在一起</li>
+<li>优势：查找速度快，可扩展性强，更容易进行分布式扩展</li>
+<li>劣势：功能相对局限</li>
+</ul>
+</li>
+<li><strong>文档型数据库</strong>：
+<ul>
+<li>相关产品：CouchDB、MongoDB</li>
+<li>典型应用：Web应用（与Key-Value类似，Value是结构化的）</li>
+<li>数据模型： 一系列键值对</li>
+<li>优势：数据结构要求不严格</li>
+<li>劣势： 查询性能不高，而且缺乏统一的查询语法</li>
+</ul>
+</li>
+<li><strong>图形(Graph)数据库</strong>：
+<ul>
+<li>相关数据库：Neo4J、InfoGrid、Infinite Graph</li>
+<li>典型应用：社交网络</li>
+<li>数据模型：图结构</li>
+<li>优势：利用图结构相关算法。</li>
+<li>劣势：需要对整个图做计算才能得出结果，不容易做分布式的集群方案。</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-redis概述">2. Redis概述</h2>
+<h3 id="21-概述">2.1 概述</h3>
+<ul>
+<li>Redis是用C语言开发的一个开源的高性能<strong>键值对（key-value）数据库</strong>。</li>
+<li>官方提供测试数据，50个并发执行100000个请求,读的速度是110000次/s,写的速度是81000次/s 。</li>
+<li>Redis通过提供多种键值数据类型来适应不同场景下的存储需求.</li>
+<li><strong>应用场景</strong>：
+<ul>
+<li><strong>缓存</strong>（数据查询、短连接、新闻内容、商品内容等等）</li>
+<li>聊天室的在线好友列表</li>
+<li>任务队列（秒杀、抢购、12306等等）</li>
+<li>应用排行榜</li>
+<li>网站访问统计</li>
+<li>数据过期处理（可以精确到毫秒）</li>
+<li>分布式集群架构中的session分离</li>
+</ul>
+</li>
+</ul>
+<h3 id="22-下载与安装">2.2 下载与安装</h3>
+<ul>
+<li>下载地址：
+<ul>
+<li>官网：https://redis.io/</li>
+<li>中文网：http://www.redis.net.cn/</li>
+</ul>
+</li>
+<li>解压下载的压缩包即可。</li>
+<li>相关文件说明：
+<ul>
+<li>redis.windows.conf：配置文件</li>
+<li>redis-cli.exe：redis的客户端</li>
+<li>redis-server.exe：redis服务器端</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-redis数据类型与操作">3. Redis数据类型与操作</h2>
+<p>redis存储的是<strong>key,value格式</strong>的数据，其中<strong>key都是字符串</strong>，value有<strong>5种</strong>不同的数据结构。</p>
+<p>以下列举value的5种数据结构及其命令操作方式。</p>
+<h3 id="31-string字符串类型">3.1 string：字符串类型</h3>
+<ul>
+<li>
+<p>存储：</p>
+<pre><code>&gt; set username zhangsan/&quot;zhangsan&quot;
+OK
+</code></pre>
+</li>
+<li>
+<p>获取：</p>
+<pre><code>&gt; get username
+&quot;zhangsan&quot;
+</code></pre>
+</li>
+<li>
+<p>删除：</p>
+<pre><code>&gt; del username
+(integer) 1
+</code></pre>
+</li>
+</ul>
+<h3 id="32-hash哈希类型">3.2 hash：哈希类型</h3>
+<p>hash 是一个string类型的field和value的映射表，hash特别<strong>适合用于存储对象</strong>。</p>
+<p>类似Map类型。</p>
+<ul>
+<li>
+<p>存储：</p>
+<pre><code>// hset key field value
+&gt; hset myhash username &quot;zhangsan&quot;
+(integer) 1
+&gt; hset myhash password 123
+(integer) 1
+</code></pre>
+</li>
+<li>
+<p>获取：</p>
+<pre><code>// 根据指定field获取值
+// hget key field
+&gt; hget myhash username
+&quot;zhangsan&quot;
+
+// 获取所有field和value
+// hgetall key
+&gt; hgetall myhash
+1) &quot;username&quot;
+2) &quot;zhangsan&quot;
+3) &quot;password&quot;
+4) &quot;123&quot;
+</code></pre>
+</li>
+<li>
+<p>删除：</p>
+<pre><code>// hdel key field
+&gt; hdel myhash username
+(integer) 1
+</code></pre>
+</li>
+</ul>
+<h3 id="33-list列表类型">3.3 List：列表类型</h3>
+<p>可以添加一个元素到列表的头部（左边）或者尾部（右边）。</p>
+<ul>
+<li>
+<p>添加：</p>
+<pre><code>// 将元素添加到列表左/右边
+// lpush/rpush key value
+&gt; lpush myList a
+(integer) 1
+&gt; lpush myList b
+(integer) 2
+&gt; lpush myList c
+(integer) 3
+</code></pre>
+</li>
+<li>
+<p>获取：</p>
+<pre><code>// 范围获取
+// lrange key start end
+&gt; lrange myList 0 -1
+1) &quot;a&quot;
+2) &quot;b&quot;
+3) &quot;c&quot;
+</code></pre>
+</li>
+<li>
+<p>删除：</p>
+<pre><code>// 删除列表最左边的元素，并将元素返回
+// lpop key
+
+// 删除列表最右边的元素，并将元素返回
+// rpop key
+</code></pre>
+</li>
+</ul>
+<h3 id="34-set集合类型">3.4 set：集合类型</h3>
+<p>set<strong>不允许</strong>重复元素。</p>
+<ul>
+<li>
+<p>存储：</p>
+<pre><code>// sadd key value
+&gt; sadd myset a
+(integer) 1
+&gt; sadd myset a
+(integer) 0
+&gt; sadd myset b
+(integer) 1
+</code></pre>
+</li>
+<li>
+<p>获取：</p>
+<pre><code>// smembers key
+&gt; smembers mySet
+1) &quot;a&quot;
+2) &quot;b&quot;
+</code></pre>
+</li>
+<li>
+<p>删除：</p>
+<pre><code>// 删除set中的某个元素
+// srem key value
+&gt; srem mySet a
+(integer) 1
+</code></pre>
+</li>
+</ul>
+<h3 id="35-sortedset有序集合类型">3.5 sortedset：有序集合类型</h3>
+<p><strong>不允许重复</strong>元素，且元素<strong>有顺序</strong>。</p>
+<p>每个元素都会关联一个double类型的分数（score）。redis正是通过分数来为集合中的成员进行从小到大的排序。</p>
+<ul>
+<li>
+<p>存储：</p>
+<pre><code>// zadd key score value
+&gt; zadd mysort 60 zhangsan
+(integer) 1
+&gt; zadd mysort 80 lisi
+(integer) 1
+&gt; zadd mysort 70 wangwu
+(integer) 1
+&gt; zadd mysort 90 zhangsan
+(integer) 0
+</code></pre>
+</li>
+<li>
+<p>获取：</p>
+<pre><code>// 可选是否获取分数
+// zrange key start end [withscores]
+&gt; zrange mysort 0 -1
+1) &quot;wangwu&quot;
+2) &quot;lisi&quot;
+3) &quot;zhangsan&quot;
+&gt; zrange mysort 0 -1 withscores
+1) &quot;wangwu&quot;
+2) &quot;70&quot;
+3) &quot;lisi&quot;
+4) &quot;80&quot;
+5) &quot;zhangsan&quot;
+6) &quot;90&quot;
+</code></pre>
+</li>
+<li>
+<p>删除：</p>
+<pre><code>// zrem key value
+&gt; zrem mysort wangwu
+(integer) 1
+</code></pre>
+</li>
+</ul>
+<h2 id="4-redis通用命令">4. Redis通用命令</h2>
+<ul>
+<li>
+<p>查询所有的键</p>
+<blockquote>
+<p>keys *</p>
+</blockquote>
+</li>
+<li>
+<p>获取键对应的value的类型</p>
+<blockquote>
+<p>type key</p>
+</blockquote>
+</li>
+<li>
+<p>删除指定的key-value</p>
+<blockquote>
+<p>del key</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="5-redis数据持久化">5. Redis数据持久化</h2>
+<p>Redis是一个内存数据库，当Redis服务器重启后数据会丢失，不过可以将内存中的数据持久化保存到硬盘的文件中。</p>
+<p>Redis提供了两种持久化的方式：</p>
+<ul>
+<li>
+<p><strong>RDB</strong>：</p>
+<ul>
+<li>
+<p>RDB是<strong>默认</strong>的持久化方式，在一定的间隔时间中，检测key的变化情况，然后持久化数据。</p>
+</li>
+<li>
+<p>使用方式：</p>
+</li>
+</ul>
+<p>编辑redis.windows.conf文件，查找一下内容并编辑：</p>
+<pre><code>#   after 900 sec (15 min) if at least 1 key changed
+save 900 1
+#   after 300 sec (5 min) if at least 10 keys changed
+save 300 10
+#   after 60 sec if at least 10000 keys changed
+save 60 10000
+</code></pre>
+</li>
+<li>
+<p><strong>AOF</strong>：</p>
+<ul>
+<li>
+<p>日志记录方式，具体见下方。</p>
+</li>
+<li>
+<p>非默认模式，启用后服务器将使用这种模式。</p>
+</li>
+<li>
+<p>开启方法：</p>
+</li>
+</ul>
+<p>编辑redis.windows.conf文件，更改以下配置项：</p>
+<pre><code>appendonly no --&gt; appendonly yes
+</code></pre>
+<ul>
+<li>更改配置：</li>
+</ul>
+<pre><code># appendfsync always	#每一次操作都进行持久化
+appendfsync everysec	#每隔一秒进行一次持久化
+# appendfsync no		#不进行持久化
+</code></pre>
+</li>
+</ul>
+<h2 id="6-jedis概述">6. Jedis概述</h2>
+<p>Jedis是一款Java操作Redis数据库的工具。</p>
+<p>简要入门如下：</p>
+<ul>
+<li>
+<p>导入Jedis包/添加依赖</p>
+</li>
+<li>
+<p>使用：</p>
+<pre><code class="language-java">// 获取连接
+Jedis jedis = new Jedis(&quot;localhost&quot;, 6379);
+// 操作
+...
+// 关闭连接
+jedis.close();
+</code></pre>
+</li>
+</ul>
+<h2 id="7-jedis操作数据">7. Jedis操作数据</h2>
+<p>Jedis操作五类数据结构的方式如下：</p>
+<h3 id="71-操作string">7.1 操作string</h3>
+<pre><code class="language-java">// 存储
+jedis.set(&quot;username&quot;, &quot;zhangsan&quot;);
+// 获取
+String username = jedis.get(&quot;username&quot;);
+// 存储指定秒数后过期的key value
+jdeis.setex(&quot;activecode&quot;, 20, &quot;hehe&quot;);	// 20s后删除
+</code></pre>
+<h3 id="72-操作hash">7.2 操作hash</h3>
+<pre><code class="language-java">// 存储
+jedis.hset(&quot;user&quot;, &quot;name&quot;, &quot;zhangsan&quot;);
+jedis.hset(&quot;user&quot;, &quot;age&quot;, &quot;23&quot;);
+jedis.hset(&quot;user&quot;, &quot;gender&quot;, &quot;male&quot;);
+// 获取
+String name = jedis.hget(&quot;user&quot;, &quot;name&quot;);
+// 获取为Map
+Map&lt;String, String&gt; user = jedis.hgetAll(&quot;user&quot;);
+</code></pre>
+<h3 id="73-操作list">7.3 操作list</h3>
+<pre><code class="language-java">// 存储
+jedis.lpush(&quot;myList&quot;, &quot;a&quot;, &quot;b&quot;, &quot;c&quot;);	//从左边存
+jedis.rpush(&quot;myList&quot;, &quot;a&quot;, &quot;b&quot;, &quot;c&quot;);	//从右边存
+// 范围获取为List
+List&lt;String&gt; myList = jedis.lrange(&quot;myList&quot;, 0, -1);
+// 弹出
+String element1 = jedis.lpop(&quot;myList&quot;);
+String element2 = dedis.rpop(&quot;myList&quot;);
+</code></pre>
+<h3 id="73-操作set">7.3 操作set</h3>
+<pre><code class="language-java">// 存储
+jedis.sadd(&quot;mySet&quot;, &quot;java&quot;, &quot;php&quot;, &quot;c++&quot;);
+// 获取为set
+Set&lt;String&gt; mySet = jedis.smembers(&quot;mySet&quot;);
+</code></pre>
+<h3 id="74-操作sortedset">7.4 操作sortedset</h3>
+<pre><code class="language-java">// 存储
+jedis.zadd(&quot;mySortedset&quot;, 10, &quot;zhangsan&quot;);
+jedis.zadd(&quot;mySortedset&quot;, 20, &quot;lisi&quot;);
+jedis.zadd(&quot;mySortedset&quot;, 30, &quot;wangwu&quot;);
+// 范围获取为Set
+Set&lt;String&gt; mySortedset = jedis.zrange(&quot;mysortedSet&quot;, 0, -1);
+</code></pre>
+<h2 id="8-jedis连接池">8. Jedis：连接池</h2>
+<p>JedisPool</p>
+<h3 id="81-入门">8.1 入门</h3>
+<ul>
+<li>
+<p>使用步骤：</p>
+<ol>
+<li>
+<p>创建配置对象</p>
+</li>
+<li>
+<p>创建连接池对象</p>
+</li>
+<li>
+<p>获取连接</p>
+</li>
+<li>
+<p>使用</p>
+</li>
+<li>
+<p>关闭连接（归还到连接池）</p>
+</li>
+</ol>
+</li>
+<li>
+<p>示范：</p>
+<pre><code class="language-java">// 1.创建配置对象
+JedisPoolConfig config = new JedisPoolConfig();
+config.setMaxTotal(50);
+config.setMaxIdle(10);
+
+// 2.创建连接池对象
+JedisPool jedisPool = new JedisPool(config, &quot;localhost&quot;, 6379);
+
+// 3.获取连接
+Jedis jedis = jedisPool.getResource();
+
+// 4.使用
+...
+
+// 5.关闭（归还）
+jedis.close();
+</code></pre>
+</li>
+</ul>
+<h3 id="82-示范工具类">8.2 示范工具类</h3>
+<ul>
+<li>
+<p>JedisPoolUtils.java</p>
+<pre><code class="language-java">public class JedisPoolUtils {
+
+  private static JedisPool jedisPool;
+
+  static {
+      // get config from properties
+      InputStream is = JedisPoolUtils.class.getClassLoader()
+      	.getResourceAsStream(&quot;jedis.properties&quot;);
+      Properties prop = new Properties();
+      try {
+          prop.load(is);
+      } catch (IOException e) {
+          e.printStackTrace();
+      }
+      JedisPoolConfig config = new JedisPoolConfig();
+      config.setMaxTotal(Integer.parseInt(
+          prop.getProperty(&quot;maxTotal&quot;)));
+      config.setMaxIdle(Integer.parseInt(
+          prop.getProperty(&quot;maxIdle&quot;)));
+      jedisPool = new JedisPool(config, 
+      	prop.getProperty(&quot;host&quot;), 
+          Integer.parseInt(prop.getProperty(&quot;port&quot;)));
+  }
+
+  public static Jedis getJedis () {
+      return jedisPool.getResource();
+  }
+
+}
+</code></pre>
+</li>
+<li>
+<p>jedis.properties</p>
+<pre><code class="language-properties">maxTotal = 50
+maxIdle = 10
+host = localhost
+port = 6379
+</code></pre>
+</li>
+</ul>
+<h2 id="9-事务">9. 事务</h2>
+<h2 id="10-spring-data-redis">10. spring-data-redis</h2>
+<h3 id="101-概述">10.1 概述</h3>
+<ul>
+<li>spring-data-redis 是 spring 家族的一员，封装了 Jedis 等操作 Redis 的库，提供了诸多接口简化使用。</li>
+</ul>
+<h3 id="102-使用准备工作">10.2 使用准备工作</h3>
+<ul>
+<li>
+<p>引入 spring 基础依赖</p>
+<ul>
+<li>spring-context</li>
+<li>spring-beans</li>
+</ul>
+<p>示例略</p>
+</li>
+<li>
+<p>引入包/依赖坐标</p>
+<pre><code class="language-xml">&lt;dependency&gt;  
+  &lt;groupId&gt;redis.clients&lt;/groupId&gt;  
+  &lt;artifactId&gt;jedis&lt;/artifactId&gt;  
+  &lt;version&gt;2.8.1&lt;/version&gt;  
+&lt;/dependency&gt;  
+&lt;dependency&gt;  
+  &lt;groupId&gt;org.springframework.data&lt;/groupId&gt;  
+  &lt;artifactId&gt;spring-data-redis&lt;/artifactId&gt;  
+  &lt;version&gt;1.7.2.RELEASE&lt;/version&gt;  
+&lt;/dependency&gt; 
+</code></pre>
+</li>
+<li>
+<p>创建 properties 配置文件</p>
+<pre><code class="language-properties">redis.host=127.0.0.1  
+redis.port=6379  
+redis.pass=  
+redis.database=0  
+redis.maxIdle=300  
+redis.maxWait=3000  
+redis.testOnBorrow=true
+</code></pre>
+</li>
+<li>
+<p>创建 spring 配置文件 applicationContext-redis.xml</p>
+<pre><code class="language-xml">&lt;context:property-placeholder location=&quot;classpath*:properties/*.properties&quot; /&gt;    
+&lt;!-- redis 相关配置 --&gt;  
+&lt;bean id=&quot;poolConfig&quot; class=&quot;redis.clients.jedis.JedisPoolConfig&quot;&gt;   
+  &lt;property name=&quot;maxIdle&quot; value=&quot;${redis.maxIdle}&quot; /&gt;    
+  &lt;property name=&quot;maxWaitMillis&quot; value=&quot;${redis.maxWait}&quot; /&gt;   
+  &lt;property name=&quot;testOnBorrow&quot; value=&quot;${redis.testOnBorrow}&quot; /&gt;   
+&lt;/bean&gt;   
+&lt;bean id=&quot;JedisConnectionFactory&quot; 
+    class=&quot;org.springframework.data.redis.connection.jedis.JedisConnectionFactory&quot;  
+    p:host-name=&quot;${redis.host}&quot; p:port=&quot;${redis.port}&quot; p:password=&quot;${redis.pass}&quot; 
+    p:pool-config-ref=&quot;poolConfig&quot;/&gt;   
+
+&lt;bean id=&quot;redisTemplate&quot; 
+    class=&quot;org.springframework.data.redis.core.RedisTemplate&quot;&gt;   
+  &lt;property name=&quot;connectionFactory&quot; ref=&quot;JedisConnectionFactory&quot; /&gt;   
+&lt;/bean&gt; 
+</code></pre>
+</li>
+</ul>
+<h3 id="103-基本使用通过-redistemplate">10.3 基本使用（通过 RedisTemplate）</h3>
+<ul>
+<li>
+<p>由于已配置该对象的 bean，可以直接通过 @AutoWired 注入。</p>
+</li>
+<li>
+<p>删除键值对</p>
+<pre><code class="language-java">redisTemplate.delete(&quot;主键&quot;);
+</code></pre>
+</li>
+<li>
+<p>操作 string</p>
+<pre><code class="language-java">// 新增
+redisTemplate.boundValueOps(&quot;主键&quot;).set(&quot;值&quot;);
+
+// 还有 get() 拿值
+</code></pre>
+</li>
+<li>
+<p>操作 hash</p>
+<pre><code class="language-java">// 新增 其他三个师弟未添加
+redisTemplate.boundHashOps(&quot;主键&quot;).put(&quot;a&quot;, &quot;唐僧&quot;); 
+
+// 还有 keys() 和 values() 拿到所有键和值的集合
+// 还有 get(&quot;键&quot;) 拿到值
+// 还有 delete(&quot;键&quot;) 删除键值对
+</code></pre>
+</li>
+<li>
+<p>操作 set</p>
+<pre><code class="language-java">// 添加
+redisTemplate.boundSetOps(&quot;主键&quot;).add(&quot;曹操&quot;); 
+
+// 还有 members() 拿到所有值的集合
+// 还有 remove(&quot;值&quot;)
+</code></pre>
+</li>
+<li>
+<p>操作 list</p>
+<pre><code class="language-java">redisTemplate.boundListOps(&quot;namelist1&quot;).rightPush(&quot;刘备&quot;); 
+// 还有 leftPush(&quot;值&quot;)
+// 还有 range(索引1, 索引2) 范围拿值的集合
+// 还有 index(索引) 拿值
+</code></pre>
+</li>
+</ul>
+
+
+</body>
+</html>

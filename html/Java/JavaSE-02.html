@@ -1,0 +1,2180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>JavaSE-02</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="javase学习笔记-part-02">JavaSE学习笔记-PART-02</h1>
+<h2 id="目录">目录：</h2>
+<ul>
+<li><a href="#目录">目录：</a></li>
+<li><a href="#8-异常">8. 异常</a>
+<ul>
+<li><a href="#81-异常的概述">8.1 异常的概述</a></li>
+<li><a href="#82-java异常体系">8.2 Java异常体系</a></li>
+<li><a href="#83-异常的处理">8.3 异常的处理</a></li>
+<li><a href="#84-throwable重要方法">8.4 Throwable重要方法</a></li>
+<li><a href="#85-自定义异常">8.5 自定义异常</a></li>
+<li><a href="#86-异常中涉及到继承的注意事项">8.6 异常中涉及到继承的注意事项</a></li>
+</ul>
+</li>
+<li><a href="#9-io流">9. IO流</a>
+<ul>
+<li><a href="#91-file类">9.1 File类</a></li>
+<li><a href="#92-io流概述">9.2 IO流概述</a></li>
+<li><a href="#93-fileoutputstream文件字节输出流">9.3 FileOutputStream文件字节输出流</a></li>
+<li><a href="#94-fileinputstream文件字节输入流">9.4 FileInputStream文件字节输入流</a></li>
+<li><a href="#95-缓冲流bufferedinputstreambufferedoutputstream">9.5 缓冲流BufferedInputStream/BufferedOutputStream</a></li>
+<li><a href="#96-字符流outputstreamwriterinputstreamreader">9.6 字符流OutputStreamWriter/InputStreamReader</a></li>
+<li><a href="#97-字符缓冲流bufferedwriterbufferedreader">9.7 字符缓冲流BufferedWriter/BufferedReader</a></li>
+<li><a href="#98-数据输入输出流datainputstreamdataoutputstream">9.8 数据输入/输出流DataInputStream/DataOutputStream</a></li>
+<li><a href="#99-内存操作流">9.9 内存操作流</a></li>
+<li><a href="#910-打印流">9.10 打印流</a></li>
+<li><a href="#911-标准输入输出流">9.11 标准输入/输出流</a></li>
+<li><a href="#912-随机访问流randomaccessfile">9.12 随机访问流RandomAccessFile</a></li>
+<li><a href="#913-合并流">9.13 合并流</a></li>
+<li><a href="#914-序列化流objectinputstreamobjectoutputstream">9.14 序列化流ObjectInputStream/ObjectOutputStream</a></li>
+<li><a href="#915-属性集合类properties">9.15 属性集合类Properties</a></li>
+<li><a href="#916-nio新io">9.16 NIO（新IO）</a></li>
+</ul>
+</li>
+<li><a href="#10-多线程">10. 多线程</a>
+<ul>
+<li><a href="#101-多线程的概述">10.1 多线程的概述</a></li>
+<li><a href="#102-多线程的实现">10.2 多线程的实现</a></li>
+<li><a href="#103-thread类">10.3 Thread类</a></li>
+<li><a href="#104-线程调度优先级">10.4 线程调度/优先级</a></li>
+<li><a href="#105-线程控制">10.5 线程控制</a></li>
+<li><a href="#106-线程生命周期">10.6 线程生命周期</a></li>
+<li><a href="#107-线程安全问题线程同步">10.7 线程安全问题/线程同步</a></li>
+<li><a href="#108-lock锁jdk5">10.8 Lock锁（JDK5）</a></li>
+<li><a href="#109-线程死锁问题">10.9 线程死锁问题</a></li>
+<li><a href="#1010-等待唤醒机制">10.10 等待唤醒机制</a></li>
+<li><a href="#1011-线程组">10.11 线程组</a></li>
+<li><a href="#1012-线程池">10.12 线程池</a></li>
+<li><a href="#1013-定时器">10.13 定时器</a></li>
+</ul>
+</li>
+<li><a href="#11-设计模式">11. 设计模式</a>
+<ul>
+<li><a href="#111-概述">11.1 概述</a></li>
+<li><a href="#112-简单工厂模式">11.2 简单工厂模式</a></li>
+<li><a href="#113-工厂方法模式">11.3 工厂方法模式</a></li>
+<li><a href="#114-单例模式">11.4 单例模式</a></li>
+<li><a href="#115-适配器设计模式">11.5 适配器设计模式</a></li>
+<li><a href="#116-模板设计模式">11.6 模板设计模式</a></li>
+<li><a href="#117-装饰设计模式">11.7 装饰设计模式</a></li>
+</ul>
+</li>
+<li><a href="#12-网络编程">12. 网络编程</a>
+<ul>
+<li><a href="#121-基础知识">12.1 基础知识</a></li>
+<li><a href="#122-inetaddress类">12.2 InetAddress类</a></li>
+<li><a href="#123-socketudp">12.3 Socket（UDP）</a></li>
+<li><a href="#124-sockettcp">12.4 Socket(TCP)</a></li>
+</ul>
+</li>
+<li><a href="#13-反射">13. 反射</a>
+<ul>
+<li><a href="#131-概述">13.1 概述</a></li>
+<li><a href="#132-class文件对象">13.2 Class文件对象</a></li>
+<li><a href="#133-constructor构造方法对象">13.3 Constructor<T>构造方法对象</a></li>
+<li><a href="#134-field成员变量域对象">13.4 Field成员变量(域)对象</a></li>
+<li><a href="#135-method成员方法对象">13.5 Method成员方法对象</a></li>
+<li><a href="#136-动态代理">13.6 动态代理</a></li>
+</ul>
+</li>
+<li><a href="#14-注解">14. 注解</a>
+<ul>
+<li><a href="#141-概述">14.1 概述</a></li>
+<li><a href="#142-java内置的注解">14.2 Java内置的注解</a></li>
+<li><a href="#143-自定义注解">14.3 自定义注解</a></li>
+<li><a href="#144-元注解">14.4 元注解</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="8-异常">8. 异常</h2>
+<h3 id="81-异常的概述">8.1 异常的概述</h3>
+<p>异常表示程序出现了不正常的情况。</p>
+<h3 id="82-java异常体系">8.2 Java异常体系</h3>
+<p>顶层类<strong>Throwable</strong>：程序的异常。</p>
+<p>子异常：</p>
+<ul>
+<li>
+<p>类<strong>Error</strong></p>
+<p>说明：</p>
+<p>严重问题，不做处理。</p>
+<p>因为一般是难以/无法处理的问题，例如内存溢出。</p>
+</li>
+<li>
+<p>类<strong>Exception</strong></p>
+<ul>
+<li>类<strong>RuntimeException</strong></li>
+</ul>
+<p>说明：</p>
+<pre><code>运行时异常，不做处理。
+
+此类异常的问题在于代码不够严谨，需要修正代码。
+</code></pre>
+<ul>
+<li>Exception下<strong>除RuntimeException</strong>以外Exception</li>
+</ul>
+<p>说明：</p>
+<pre><code>编译时异常，必须进行处理，否则代码不能通过编译。
+</code></pre>
+</li>
+</ul>
+<h3 id="83-异常的处理">8.3 异常的处理</h3>
+<ul>
+<li>
+<p><strong>默认处理：</strong></p>
+<p>如果程序出现问题，并没有做任何处理，Jvm最终会做出默认处理。 默认处理方式： ​	把异常的名称、原因，及出现异常的位置输出在控制台，并<strong>结束程序</strong>。</p>
+</li>
+<li>
+<p><strong>手动处理：</strong></p>
+<p><strong>格式：</strong></p>
+<pre><code class="language-java">try{
+  ...
+}catch(异常类名 变量名){		//可以有多个catch
+  ...(处理)
+}finally{					//可以没有finally
+  ...
+}
+</code></pre>
+<p><strong>注意事项：</strong></p>
+<ol>
+<li>尽量不要用大的异常类名来处理，能明确的尽量明确；</li>
+<li>一旦try中出现了匹配的异常，就会执行处理并结束<code>try...catch</code>语句；</li>
+<li>平级关系的异常谁先catch无所谓，如果出现了父子关系的异常，父异常必须在后面。</li>
+</ol>
+</li>
+<li>
+<p><strong>抛出：</strong></p>
+<p>有些时候我们没有权限处理/处理不了/不想处理，就不处理了。</p>
+<p>为了解决此时的出错问题，提供了抛出解决方案。</p>
+<p><strong>格式：</strong></p>
+<pre><code class="language-java">修饰符 返回值类型 方法名(参数) throws 异常类名1,异常类名2,... {
+  ...
+}
+</code></pre>
+<p><strong>说明：</strong></p>
+<ul>
+<li>方法抛出了异常，将交给调用者处理。</li>
+<li>编译期异常抛出，调用者必须处理（否则报错）；运行期异常抛出，调用者可以不处理。</li>
+<li>尽量不要在main方法上抛出异常。</li>
+</ul>
+</li>
+<li>
+<p><strong>异常处理方式的选择：</strong></p>
+<ol>
+<li>如果该功能内部可以将问题处理，用try；如果处理不了，就交给调用者处理，用throws；</li>
+<li>后续程序如果需要继续运行就用try；不用继续运行就用throws。</li>
+</ol>
+</li>
+</ul>
+<h3 id="84-throwable重要方法">8.4 Throwable重要方法</h3>
+<ul>
+<li>
+<p>public String <strong>getMessage</strong>()</p>
+<p>e.getMessage()，返回异常消息的字符串。</p>
+</li>
+<li>
+<p>public String <strong>toString</strong>()</p>
+<p>e.toString()，返回异常信息的简单描述，按照如下的格式：</p>
+<p>此对象的全路径完整类名	+ &quot;: &quot;(冒号+空格) + 调用此对象getLocalizedMessage()方法的结果（默认返回的是getMessage()的结果）。</p>
+</li>
+<li>
+<p>void <strong>printStackTrace</strong>()</p>
+<p>e.printStackTrace()，获取异常类名和异常信息，以及异常在程序中的位置。</p>
+<p>把结果输出在控制台。</p>
+</li>
+</ul>
+<h3 id="85-自定义异常">8.5 自定义异常</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>Java不可能所有异常都考虑到（比如需要分数在0-100之间），所以在实际开发中，可能需要自己定义异常。 若要让一个类成为异常类，必须继承自Exception类或者RuntimeException类。</p>
+</li>
+<li>
+<p><strong>注意事项：</strong></p>
+<ol>
+<li>
+<p>自定义的异常类不用写任何成员方法；</p>
+</li>
+<li>
+<p>可以通过写一个构造方法传一个字符串参数覆盖Exception类的构造方法，实现错误信息的输出，举例如下：</p>
+<pre><code class="language-java">class MyException extends Exception {
+public MyException () {}
+public MyException (String message) {
+	super(message);
+}
+}		//只需要throw new MyException(&quot;错误信息&quot;)即可
+</code></pre>
+</li>
+<li>
+<p>如果自定义的异常继承自Exception，则为编译期异常；继承自RuntimeException，则为运行期异常。</p>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="86-异常中涉及到继承的注意事项">8.6 异常中涉及到继承的注意事项</h3>
+<ol>
+<li>子类重写父类方法时，子方法不能抛出比父方法级别更大的异常；</li>
+<li>如果父方法抛出了多个异常，子方法不能抛出比父方法更多的异常，也不能抛出父方法没有抛出的异常（<strong>只能抛出父亲所抛出异常的子集</strong>）；</li>
+<li>如果父方法没有抛出异常，子方法不能抛出异常，只能try...catch，不能throws。</li>
+</ol>
+<h2 id="9-io流">9. IO流</h2>
+<h3 id="91-file类">9.1 File类</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>File类是文件和目录的抽象表现形式。</p>
+</li>
+<li>
+<p><strong>重要构造方法：</strong></p>
+<ul>
+<li>File(<strong>String pathName</strong>)</li>
+</ul>
+<p>根据一个路径得到File对象&lt;目录/文件&gt;</p>
+<ul>
+<li>File(<strong>String parent, String child</strong>)</li>
+</ul>
+<p>根据parent&lt;目录&gt;和child&lt;目录/文件&gt;得到File对象</p>
+<ul>
+<li>File(<strong>File parent, String child</strong>)</li>
+</ul>
+<p>根据一个父File对象&lt;目录&gt;和一个子文件/目录得到File对象</p>
+</li>
+<li>
+<p><strong>重要功能：</strong></p>
+<ol>
+<li>
+<p><strong>创建功能：</strong></p>
+<ul>
+<li>public boolean <strong>createNewFile</strong>()</li>
+</ul>
+<p>file1.createNewFile()，创建文件。</p>
+<p>如果存在这样的文件就不创建了，并返回false。</p>
+<ul>
+<li>public boolean <strong>mkdir</strong>()</li>
+</ul>
+<p>file1.mkdir()，创建文件夹。</p>
+<p>如果存在这样的文件夹就不创建了，并返回false。</p>
+<ul>
+<li>public boolean <strong>mkdirs</strong>()</li>
+</ul>
+<p>file1.mkdirs()，创建文件夹。</p>
+<p>如果父文件夹不存在，会自动创建。</p>
+</li>
+<li>
+<p><strong>删除功能：</strong></p>
+<ul>
+<li>public boolean <strong>delete</strong>()</li>
+</ul>
+<p>file1.delete()，删除文件或文件夹，如果没有删除返回false。</p>
+</li>
+<li>
+<p><strong>重命名功能：</strong></p>
+<ul>
+<li>public boolean <strong>renameTo</strong>(File dest)</li>
+</ul>
+<p>file1.renameTo(file2)，如果路径名相同就是改名，如果路径名不同则为改名+剪切粘贴。</p>
+</li>
+<li>
+<p><strong>判断功能：</strong></p>
+<ul>
+<li>public boolean <strong>isDirectory</strong>()</li>
+</ul>
+<p>file1.isDirectory()，判断是否为目录</p>
+<ul>
+<li>public boolean <strong>isFile</strong>()</li>
+</ul>
+<p>file1.isDirectory()，判断是否为文件</p>
+<ul>
+<li>public boolean <strong>exists</strong>()</li>
+</ul>
+<p>file1.exists()，判断是否存在</p>
+<ul>
+<li>public boolean <strong>canRead</strong>()</li>
+</ul>
+<p>file1.canRead()，判断是否可读</p>
+<ul>
+<li>public boolean <strong>canWrite</strong>()</li>
+</ul>
+<p>file1.canWrite()，判断是否可写</p>
+<ul>
+<li>public boolean <strong>isHidden</strong>()</li>
+</ul>
+<p>file1.isHidden()，判断是否隐藏</p>
+</li>
+<li>
+<p><strong>获取功能：</strong></p>
+<ul>
+<li>public String <strong>getAbsolutePath</strong>()</li>
+</ul>
+<p>file1.getAbsolutePath()，获取绝对路径</p>
+<ul>
+<li>public String <strong>getPath</strong>()</li>
+</ul>
+<p>file1.getPath()，获取路径</p>
+<ul>
+<li>public String <strong>getName</strong>()</li>
+</ul>
+<p>file1.getName()，获取名称</p>
+<ul>
+<li>public long <strong>length</strong>()</li>
+</ul>
+<p>file1.length()，获取长度（字节数）</p>
+<ul>
+<li>public long <strong>lastModified</strong>()</li>
+</ul>
+<p>file1.lastModified()，获取最后一次修改时间（毫秒值）</p>
+<ul>
+<li>public String[] <strong>list</strong>()</li>
+</ul>
+<p>file1.list()，获取指定目录下所有文件/文件夹的名称数组</p>
+<ul>
+<li>public String[] <strong>list</strong>(FilenameFilter filter)</li>
+</ul>
+<p>file1.list(filter)，根据一个文件名称过滤器的实现类对象，获取指定目录下满足要求的所有文件/文件夹的名称数组</p>
+<ul>
+<li>public File[] <strong>listFiles</strong>()</li>
+</ul>
+<p>file1.listFiles()，获取指定目录下所有文件/文件夹的File数组</p>
+<ul>
+<li>public File[] <strong>listFiles</strong>(FilenameFilter filter)</li>
+</ul>
+<p>file1.listFiles(filter)，根据一个文件名称过滤器的实现类对象，获取指定目录下满足要求的所有文件/文件夹的File数组</p>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>接口FileNameFilter概述：</strong></p>
+<p>文件名称过滤器，包含一个方法boolean accept(File dir, String name)。 dir为被找到的文件所在目录，name为文件的名称。 文件满足要求时返回true，否则返回false。 通常以匿名内部类的方式实现。</p>
+</li>
+<li>
+<p><strong>注意事项：</strong></p>
+<ol>
+<li>创建文件或者文件夹时，如果没有写盘符路径，会创建在默认路径下；</li>
+<li>删除功能中，如果要删除一个文件夹 ，该文件夹内不能包含文件或文件夹；</li>
+<li>Windows系统下，Java的删除不会走系统回收站；</li>
+<li>如果File的路径以盘符开始，则为绝对路径，否则为相对路径。</li>
+</ol>
+</li>
+</ul>
+<h3 id="92-io流概述">9.2 IO流概述</h3>
+<p>IO流用来处理设备间的数据传输（上传文件和下载文件）。</p>
+<p>Java对数据的操作是通过流的方式，用于操作流的对象都在IO包中。</p>
+<ul>
+<li>
+<p><strong>IO流的分类：</strong></p>
+<p><strong>按流向分：</strong></p>
+<p>输入流（读取数据）</p>
+<p>输出流（写出数据）</p>
+<p><strong>按数据类型分：</strong></p>
+<p>字节流：</p>
+<pre><code>任何文件的传输都可以用字节流。
+</code></pre>
+<p>字符流：</p>
+<pre><code>一般文本性的文件才使用字符流。
+</code></pre>
+</li>
+<li>
+<p><strong>IO流类名的规律：</strong></p>
+<ul>
+<li>字节输入流：<strong>InputStream</strong></li>
+<li>字节输出流：<strong>OutputStream</strong></li>
+<li>字符输入流：<strong>Reader</strong></li>
+<li>字符输出流：<strong>Writer</strong></li>
+</ul>
+<p>大部分IO流的类名都是以上四种结尾。</p>
+</li>
+<li>
+<p><strong>重要方法：</strong></p>
+<ul>
+<li>void <strong>flush</strong>()</li>
+</ul>
+<p>该方法是IO流根类OutputStream和Writer都有的方法。</p>
+<p>作用是刷新该流的缓冲，将流的缓冲中所有write()方法保存的内容写入到文件中。</p>
+<p><strong>flush()和close()的区别：</strong></p>
+<ul>
+<li>close()关闭流对象，在关闭之前会刷新一次缓冲区。关闭之后流对象就不能继续使用了；</li>
+<li>flush()仅仅刷新缓冲区，刷新之后流对象还可以继续使用。</li>
+</ul>
+</li>
+</ul>
+<h3 id="93-fileoutputstream文件字节输出流">9.3 FileOutputStream文件字节输出流</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>用于将数据写入File的文件字节输出流。</p>
+</li>
+<li>
+<p><strong>构造方法：</strong></p>
+<ul>
+<li>FileOutputStream(<strong>File file</strong>)</li>
+</ul>
+<p>创建一个向给定File所表示的文件中写入数据的文件字节输出流，</p>
+<p>从内容开头写入（如果文件存在会先删除所有原有内容）</p>
+<ul>
+<li>FileOutputStream(<strong>File file, boolean append</strong>)</li>
+</ul>
+<p>创建一个向给定File所表示的文件中写入数据的文件字节输出流，</p>
+<p>如果第二参数为true，从内容末尾写入</p>
+<p>FileOutputStream(<strong>String name</strong>)</p>
+<p>会根据给定String造一个File，并创建指向该File的fos对象，</p>
+<p>从内容开头写入（如果文件存在会先删除所有原有内容）</p>
+<ul>
+<li>FileOutputStream(<strong>String name, boolean append</strong>)</li>
+</ul>
+<p>会根据给定String造一个File，并创建指向该File的fos对象，</p>
+<p>如果第二参数为true，从内容末尾写入</p>
+</li>
+<li>
+<p><strong>重要方法：</strong></p>
+<ul>
+<li>public void <strong>write</strong>(int b)</li>
+</ul>
+<p>fos.write(int)，输入一个ASCII数字表示的<strong>字节</strong></p>
+<ul>
+<li>public void <strong>write</strong>(byte[] b)</li>
+</ul>
+<p>fos.write(byte[])，输入一个<strong>字节数组</strong>的所有字节</p>
+<ul>
+<li>public void <strong>write</strong>(byte[] b, int off, int len)</li>
+</ul>
+<p>fos.write(byte[],起始索引,长度)，从一个<strong>字节数组的off开始，输入len个字节</strong></p>
+</li>
+<li>
+<p><strong>重要问题：</strong></p>
+<ol>
+<li>
+<p><strong>创建字节输出流到底做了哪些事情？</strong></p>
+<p>a. 调用系统功能创建文件；</p>
+<p>b. 创建fos对象；</p>
+<p>c. 把fos对象指向这个文件。</p>
+</li>
+<li>
+<p><strong>数据写成功后，为何要close()？</strong></p>
+<ul>
+<li>fos对象变成垃圾，这样就可以被系统回收了</li>
+<li>通知系统回收跟该文件相关的资源</li>
+</ul>
+</li>
+<li>
+<p><strong>如何实现数据的换行？</strong></p>
+<p>写入换行符号即可。 一般来说，换行符号是&quot;\n&quot;，然而不同操作系统对换行符号的识别不同，Windows自带记事本可以识别的换行符号为&quot;\r\n&quot;。 一些常见的高级记事本，是可以识别任意换行符号的。</p>
+</li>
+<li>
+<p><strong>如何实现数据的追加写入？</strong></p>
+<p>使用带有第二参数boolean append的构造方法即可，append为true。</p>
+</li>
+<li>
+<p><strong>不论是字节输出流还是字符输出流，只要使用不带boolean append参数的方式打开流，文件都会立即被清空。</strong></p>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="94-fileinputstream文件字节输入流">9.4 FileInputStream文件字节输入流</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>从文件系统的某个文件中获得输入字节。</p>
+</li>
+<li>
+<p><strong>构造方法：</strong></p>
+<ul>
+<li>FileInputStream(<strong>File file</strong>)</li>
+</ul>
+<p>从File表示的文件创建文件字节输入流</p>
+<ul>
+<li>FileInputStream(<strong>String name</strong>)</li>
+</ul>
+<p>从String表示的文件创建文件字节输入流</p>
+</li>
+<li>
+<p><strong>重要方法：</strong></p>
+<ul>
+<li>int <strong>read</strong>()</li>
+</ul>
+<p>fis.read()，读取下一个字节，返回该字节的int表示。</p>
+<p>读完后指针会移动到已读字节后方，读完了还read()则会返回-1。</p>
+<ul>
+<li>int <strong>read</strong>(byte[] bys)</li>
+</ul>
+<p>fis.read(byte[])，一次读取一个字节数组，返回实际读取到的字节个数。</p>
+</li>
+</ul>
+<h3 id="95-缓冲流bufferedinputstreambufferedoutputstream">9.5 缓冲流BufferedInputStream/BufferedOutputStream</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>测试发现一次读取一个数组的方式比一次读取一个字节的方式要快上很多，所以Java提供了带缓冲区的字节类（为了高效）。</p>
+<p>构造方法需要传一个基本的输入/输出流对象。</p>
+</li>
+<li>
+<p><strong>构造方法：</strong></p>
+<ul>
+<li>BufferedInputStream(<strong>InputStream in</strong>)</li>
+</ul>
+<p>创建具有默认缓冲区大小的缓冲输入流</p>
+<ul>
+<li>BufferedOutputStream(<strong>OutputStream out</strong>)</li>
+</ul>
+<p>创建具有默认缓冲区大小的缓冲输出流</p>
+<ul>
+<li>可加第二参数int size，来指定缓冲区大小。</li>
+</ul>
+<p>一般不用指定缓冲区大小，默认就够用了。</p>
+</li>
+</ul>
+<h3 id="96-字符流outputstreamwriterinputstreamreader">9.6 字符流OutputStreamWriter/InputStreamReader</h3>
+<ul>
+<li>
+<p><strong>重要构造方法：</strong></p>
+<ul>
+<li>OutputStreamWriter(<strong>OutputStream out</strong>)</li>
+</ul>
+<p>根据默认编码把字节流的数据转换为字符流</p>
+<ul>
+<li>OutputStreamWriter(<strong>OutputStream out, String charsetName</strong>)</li>
+</ul>
+<p>根据给定编码把字节流的数据转换为字符流</p>
+<ul>
+<li>InputStreamReader(<strong>InputStream in</strong>)</li>
+</ul>
+<p>根据默认编码读取数据</p>
+<ul>
+<li>InputStreamReader(<strong>InputStream in, String charsetName</strong>)</li>
+</ul>
+<p>根据指定编码读取数据</p>
+</li>
+<li>
+<p><strong>OutputStreamWriter的重要方法：</strong></p>
+<ul>
+<li>public void write(<strong>int c</strong>)</li>
+</ul>
+<p>osw.write(int)，写一个<strong>字符</strong></p>
+<p>public void write(<strong>char[] cbuf</strong>)</p>
+<p>osw.write(char[])，写一个<strong>字符数组</strong></p>
+<ul>
+<li>public void write(<strong>char[] cbuf, int off, int len</strong>)</li>
+</ul>
+<p>osw.write(char[], 开始索引, 长度)，写一个<strong>字符数组的一部分</strong></p>
+<ul>
+<li>public void write(<strong>String str</strong>)</li>
+</ul>
+<p>osw.write(String)，写一个<strong>字符串</strong></p>
+<ul>
+<li>public void write(<strong>String str, int off, int len</strong>)</li>
+</ul>
+<p>osw.write(String, 开始索引, 长度)，写一个<strong>字符串的一部分</strong></p>
+</li>
+<li>
+<p><strong>InputStreamReader的重要方法：</strong></p>
+<ul>
+<li>int <strong>read</strong>()</li>
+</ul>
+<p>isr.read()，一次读取一个<strong>字符</strong></p>
+<ul>
+<li>int <strong>read</strong>(<strong>char[] chs</strong>)</li>
+</ul>
+<p>isr.read(char[])，一次读取一个<strong>字符数组</strong></p>
+</li>
+</ul>
+<h3 id="97-字符缓冲流bufferedwriterbufferedreader">9.7 字符缓冲流BufferedWriter/BufferedReader</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>字符流为了高效读写，也提供了对应的字符缓冲流。</p>
+<ul>
+<li>
+<p><strong>BufferedWriter：字符缓冲输出流</strong></p>
+<p>将文本写入字符输出流，缓冲各个字符，从而提供单个字符，数组和字符串的高效写入。 可以指定缓冲区的大小，然而在大多数情况下，默认值就足够大了。</p>
+</li>
+<li>
+<p><strong>BufferedReader：字符缓冲输入流</strong></p>
+<p>从字符输入流中读取文本，缓冲各个字符，从而实现字符、数组和行的高效读取。</p>
+<p>可以指定缓冲区大小，然而在大多数情况下，默认值就足够大了。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>重要构造方法：</strong></p>
+<ul>
+<li>BufferedWriter(<strong>Writer out</strong>)</li>
+</ul>
+<p>创建一个具有默认大小缓冲区的缓冲字符输出流</p>
+<ul>
+<li>BufferedReader(<strong>Reader in</strong>)</li>
+</ul>
+<p>创建一个具有默认大小缓冲区的缓冲字符输出流</p>
+</li>
+<li>
+<p><strong>重要特殊方法：</strong></p>
+<ul>
+<li>BufferedWriter：</li>
+</ul>
+<p>public void <strong>newLine</strong>()</p>
+<p>bw.newLine()，根据系统来写入换行符</p>
+<ul>
+<li>BufferedReader：</li>
+</ul>
+<p>public String <strong>readLine</strong>()</p>
+<p>br.readLine()，一次读取一行数据。结束依据为任何换行符，返回的字符串不包含任何换行符。如果已达流末尾，返回null。</p>
+</li>
+</ul>
+<h3 id="98-数据输入输出流datainputstreamdataoutputstream">9.8 数据输入/输出流DataInputStream/DataOutputStream</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>操作基本数据类型的流。</p>
+</li>
+<li>
+<p><strong>重要构造方法：</strong></p>
+<ul>
+<li>DataInputStream(<strong>InputStream in</strong>)</li>
+</ul>
+<p>传一个InputStream构造DataInputStream对象</p>
+<ul>
+<li>DataOutputStream(<strong>OutputStream out</strong>)</li>
+</ul>
+<p>传一个OutputStream构造DataOutputStream对象</p>
+</li>
+<li>
+<p><strong>重要方法：</strong></p>
+<ul>
+<li>DataOutputStream：</li>
+</ul>
+<p>public final void write基本数据类型(基本数据类型对象)</p>
+<p>dos.writeInt(0)</p>
+<ul>
+<li>DataInputStream：</li>
+</ul>
+<p>public final 基本数据类型 read基本数据类型()</p>
+<p>dis.readInt()</p>
+</li>
+</ul>
+<h3 id="99-内存操作流">9.9 内存操作流</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>用于临时存储信息，程序结束，临时存储的信息就从内存中消失。</p>
+<p>此种流的close()方法没有意义，因为其源码中没有任何内容，是空实现。</p>
+<p>此处将概述： ​	字节数组内存操作流ByteArrayInputStream和ByteArrayOutputStream； ​	字符数组内存操作流CharArrayReader和CharArrayWriter； ​	字符串内存操作流StringReader和StringWriter。</p>
+</li>
+<li>
+<p><strong>构造方法：</strong></p>
+<p>输入流一般传入一个对应数据类型对象构造输入流对象。</p>
+<p>输出流一般使用空参构造，缓冲区会随着写入数据的增加自动扩充。</p>
+<p>也可以传一个size指定缓冲区大小，不过一般没有必要。</p>
+</li>
+<li>
+<p><strong>使用举例：</strong></p>
+<ul>
+<li>写数据：</li>
+</ul>
+<pre><code class="language-java">ByteArrayOutputStream baos = new ByteArrayOutputStream();
+baos.write(&quot;abc&quot;.getBytes());
+byte[] bys = baos.toByteArray();
+</code></pre>
+<ul>
+<li>读数据：</li>
+</ul>
+<pre><code class="language-java">ByteArrayInputStream bais = new ByteArrayInputStream(bys);
+int len = 0;
+byte[] arr = new byte[1024];
+while((len = bais.read(arr)) != -1) {
+    System.out.println(new String(arr, 0, len));
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="910-打印流">9.10 打印流</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>打印流包括字节打印流PrintStream和字符打印流PrintWriter。</p>
+</li>
+<li>
+<p><strong>打印流的特点：</strong></p>
+<ol>
+<li>只有写数据的，没有读取数据的。只能操作目的地，不能操作数据源；</li>
+<li>可以操作任意类型的数据；</li>
+<li>如果启用了自动刷新，可以自动进行刷新无需手动flush()；</li>
+<li>
+<p>该流可以直接操作文本文件（不像缓冲流需要传一个操作文件的基本流）。</p>
+<p>所以，常用的可以直接操作文本文件的流有： FileInputStream，FileOutputStream，FileReader，FileWriter，PrintStream，PrintWriter</p>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>PrintWriter概述：</strong></p>
+<ul>
+<li><strong>重要构造方法：</strong></li>
+</ul>
+<p>可以传一个File或文件名字符串构造打印输出流，不过这样将不能自动刷新。</p>
+<p>也可以传一个字节输出流OutputStream或字符输出流Writer，这种方式若想要自动刷新，需第二参数boolean autoFlush。</p>
+<p>public PrintWriter(OutputStream out, boolean autoFlush)		//需注意print()方法不能自动刷新，println()才可以 public PrintWriter(Writer out, boolean autoFlush)</p>
+<ul>
+<li><strong>使用举例：</strong></li>
+</ul>
+<pre><code class="language-java">PrintWriter pw = new PrintWriter(new FileWriter(&quot;demo.txt&quot;), true);
+pw.println(&quot;hello&quot;);
+pw.println(&quot;100&quot;);
+//此处println()一个方法相当于BufferedWriter的bw.write()，bw.newLine()，bw.flush()三者的组合。
+</code></pre>
+</li>
+</ul>
+<h3 id="911-标准输入输出流">9.11 标准输入/输出流</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>System类中的字段in和out。</p>
+<p>分别代表了系统标准的输入和输出设备，默认输入设备是键盘，默认输出设备是显示器。</p>
+<p>System.in的类型为<strong>InputStream</strong>，System.out的类型为<strong>PrintStream</strong>（字节打印流，OutputStream的子类FilterOutputStream的子类）。</p>
+</li>
+<li>
+<p><strong>键盘录入的三种方式：</strong></p>
+<ol>
+<li>
+<p>main方法的String[] args接收参数。举例：</p>
+<pre><code>java HelloWorld argStr1 argStr2 ...
+</code></pre>
+</li>
+<li>
+<p>使用Scanner（JDK5以后），举例：</p>
+<pre><code class="language-java">Scanner sc = new Scanner(System.in);
+sc.nextInt();
+</code></pre>
+</li>
+<li>
+<p>通过字符缓冲输入流BufferedReader包装标准输入流实现：</p>
+<pre><code class="language-java">BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+String s = br.readLine();
+</code></pre>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="912-随机访问流randomaccessfile">9.12 随机访问流RandomAccessFile</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<ul>
+<li><strong>可以在文件指定位置进行读写操作</strong></li>
+<li>支持对文件的随机访问和写入。</li>
+<li>RandomAccessFile包含了一个记录指针以标识当前独写的位置。当新创建对象时，指针位于文件开头；读/写了n个字节后，指针也会向后移动n个字节。</li>
+<li>RandomAccessFile在io包下，不过不属于任何一个io流根类，其继承自Object。</li>
+<li>融合了InputStream和OutputStream的功能。</li>
+<li>RandomAccessFile不能向指针位置（除末尾）插入内容（将会覆盖原本存在的内容）。若想插入内容，可以先将指针后的内容存储到临时文件，追加内容，最后追加临时文件中的内容。</li>
+</ul>
+</li>
+<li>
+<p><strong>重要构造方法：</strong></p>
+<p>public RandomAccessFile(String name, String mode)</p>
+<p>// 第一个参数是文件名，第二个参数为操作文件的模式</p>
+<p>// 模式有&quot;r&quot;，&quot;rw&quot;，&quot;rws&quot;，&quot;rwd&quot;可选。常用&quot;rw&quot;进行读写。</p>
+</li>
+<li>
+<p><strong>重要方法：</strong></p>
+<ul>
+<li>public long <strong>getFilePointer</strong>()			//raf.getFilePointer()，返回文件记录指针的当前位置 public long <strong>seek</strong>(long pos)				//raf.seek(偏移量)，将文件记录指针设置到pos位置 InputStream具有的三个read()方法		//单个字节，字节数组，字节数组的一部分 OutputStream具有的三个write()方法	//单个字节，字节数组，字节数组的一部分</li>
+</ul>
+</li>
+</ul>
+<h3 id="913-合并流">9.13 合并流</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<ul>
+<li><strong>将多个字节输入流合并为一个</strong></li>
+<li>表示其他输入流的逻辑串联。将会从第一个（输入流的有序集合第一个）开始，读完了读第二个，直到最后一个读完为止。</li>
+<li>继承自InputStream。</li>
+</ul>
+</li>
+<li>
+<p><strong>重要构造方法：</strong></p>
+<ul>
+<li>public SequenceInputStream(<strong>InputStream s1, InputStream s2</strong>)</li>
+</ul>
+<p>// 创建包含两个InputStream的合并流，先读s1后读s2</p>
+<ul>
+<li>public SequenceInputStream(<strong>Enumeration&lt;? extends InputStream&gt; e</strong>)</li>
+</ul>
+<p>// 可以进行多个流的合并，具体说明如下：</p>
+<p><strong>Enumeration构造方法的具体说明：</strong></p>
+<pre><code>Enumeration是有序集合Vector中public Enumeration&lt;E&gt; elements()方法的返回值，有序包含Vector中所有元素。
+
+使用该种构造方法，需要先创建Vector集合对象，然后将多个InputStream添加到集合，最后调用集合的elements方法得到Enumeration对象，以构造合并流对象。
+</code></pre>
+</li>
+</ul>
+<h3 id="914-序列化流objectinputstreamobjectoutputstream">9.14 序列化流ObjectInputStream/ObjectOutputStream</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<ul>
+<li><strong>把对象存入文件/从文件读出对象</strong></li>
+<li>把对象按照流一样的方式存入文本文件或者在网络中传输/把文本文件或网络中的流对象数据还原成对象。</li>
+<li>注意，写入和读取的对象需要实现Serializable接口，否则在操作的时候会抛出NotSerializableException。</li>
+<li>Serializable为标记接口，内部没有任何方法。</li>
+</ul>
+</li>
+<li>
+<p><strong>重要构造方法：</strong></p>
+<ul>
+<li>public ObjectInputStream(<strong>InputStream in</strong>)</li>
+</ul>
+<p>//创建从指定InputStream读取的ObjectInputStream</p>
+<ul>
+<li>public ObjectOutputStream(<strong>OutputStream out</strong>)</li>
+</ul>
+<p>//创建用指定OutputStream输出的ObjectOutputStream</p>
+</li>
+<li>
+<p><strong>重要方法：</strong></p>
+<ul>
+<li>public final Object <strong>readObject</strong>()</li>
+</ul>
+<p>//ois.readObject()，从ObjectInputStream中读取Object对象</p>
+<ul>
+<li>public final void <strong>writeObject</strong>(Object o)</li>
+</ul>
+<p>//oos.writeObject(Object)，将指定对象写入ObjectOutputStream</p>
+</li>
+<li>
+<p><strong>注意事项：</strong></p>
+<ol>
+<li>
+<p>如果写入一个已序列化类的对象，之后对该类的Java文件进行了改动，再执行读取的时候会报错。</p>
+<p>要解决该问题，可以点击IDE中黄色叹号，自动生成成员变量序列化ID值。</p>
+<p>该方式同时也可以去除黄色警告线。</p>
+</li>
+<li>
+<p>若不想实例化某成员变量，可以用关键字transient修饰。</p>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="915-属性集合类properties">9.15 属性集合类Properties</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<ul>
+<li><strong>可以和IO流相结合使用的Map集合类</strong></li>
+<li>该类的对象可以保存在流中或从流中加载，属性列表中每一个键及其对应值都是一个字符串。</li>
+<li>是Hashtable的子类，是一个map集合。</li>
+</ul>
+</li>
+<li>
+<p><strong>重要构造方法：</strong></p>
+<p>public Properties()		//创建一个无默认值的空属性列表</p>
+</li>
+<li>
+<p><strong>重要特殊方法：</strong></p>
+<ul>
+<li>public Object <strong>setProperty</strong>(String key, String value)</li>
+</ul>
+<p>//p.setProperty(str1, str2)，添加元素（原理为调用父类Hashtable的put()）</p>
+<ul>
+<li>public String <strong>getProperty</strong>(String key)</li>
+</ul>
+<p>//p.getProperty(key)，根据键找值</p>
+<ul>
+<li>public Set<String> <strong>stringPropertyNames</strong>()</li>
+</ul>
+<p>//p.stringPropertyNames()，获取所有键的集合</p>
+<ul>
+<li>public void <strong>load</strong>(Reader reader)</li>
+</ul>
+<p>//p.load(Reader)，把文件中的数据读取到集合中</p>
+<p>public void <strong>store</strong>(Writer writer, String comments)</p>
+<p>//p.store(Writer, 注释)，把集合中的数据和注释存储到文件，注释可以为null</p>
+</li>
+<li>
+<p><strong>存储到文件中的格式：</strong></p>
+<pre><code>#comments
+#时间
+键1=值1
+键2=值2
+...
+</code></pre>
+</li>
+</ul>
+<h3 id="916-nio新io">9.16 NIO（新IO）</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<ul>
+<li>于JDK4出现nio，其和传统io有着相同的目的，都是用于输入和输出。不过新io采用了不同的处理方式，其原理是将文件或文件的一段区域映射到内存，像访问内存一样访问文件，效率更高。</li>
+<li>目前旧io使用较多，此处内容仅需了解。</li>
+</ul>
+</li>
+<li>
+<p><strong>了解内容：</strong></p>
+<ul>
+<li>Path（1.7）：</li>
+</ul>
+<p>为java.nio.file包下一个接口，表示路径。</p>
+<ul>
+<li>Paths（1.7）：</li>
+</ul>
+<p>一个最终类，其中有一个静态方法static Path get(URI uri)，根据给定URI确定文件路径。</p>
+<ul>
+<li>Files（1.7）：</li>
+</ul>
+<p>操作文件的工具类，方法全部为静态。</p>
+<p>需要了解的方法：</p>
+<ul>
+<li>
+<p>public static long <strong>copy</strong>(Path source, OutputStream out)</p>
+<p>//Files.copy(Path, OutputStream)，将一个文件中的全部字节复制到一个OutputStream</p>
+</li>
+<li>
+<p>public static Path <strong>write</strong>(Path path, Iterable&lt;? extends CharSequence&gt; lines, Charset cs, OpenOption... options)</p>
+<p>//把集合的元素写到文件</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>使用举例：</strong></p>
+<pre><code class="language-java">Files.copy(Paths.get(&quot;Demo.java&quot;), new FileOutputStream(&quot;Copy.java&quot;));		//复制文件
+File.write(Paths.get(&quot;List.txt&quot;), new ArrayList&lt;String&gt;(...), Charset.forName(&quot;GBK&quot;));		//将集合的元素写到文件
+</code></pre>
+</li>
+</ul>
+<h2 id="10-多线程">10. 多线程</h2>
+<h3 id="101-多线程的概述">10.1 多线程的概述</h3>
+<p>由于线程是依赖于进程而存在，所以先了解进程。</p>
+<ul>
+<li>
+<p><strong>进程：</strong></p>
+<p>就是正在运行的程序。</p>
+<p>进程是系统进行资源分配和调用的独立单位，没一个进程都有它自己的内存空间和系统资源。</p>
+</li>
+<li>
+<p><strong>多进程的意义：</strong></p>
+<ol>
+<li>可以在一个时间段内执行多个任务；</li>
+<li>可以提高CPU的使用率。</li>
+</ol>
+</li>
+<li>
+<p><strong>线程：</strong></p>
+<p>同一个进程内又可能包含多个任务，这每一个任务就可以看成是一个线程。</p>
+<p>线程是程序的执行单元/执行路径，是程序使用CPU的基本单位。</p>
+<p>如果程序只有一条执行路径即为单线程，如果程序有多条执行路径即为多线程。</p>
+</li>
+<li>
+<p><strong>多线程的意义：</strong></p>
+<ol>
+<li>提高应用程序的使用率。</li>
+<li>如果一个进程有多个线程，将会有更高的几率获得更多系统资源。</li>
+</ol>
+</li>
+<li>
+<p><strong>并发和并行：</strong></p>
+<ul>
+<li>并发：是指逻辑上同时发生，在某一个时间段内同时运行多个程序。</li>
+<li>并行：是指物理上同时发生，在某一个时间点上同时运行多个程序。</li>
+</ul>
+</li>
+<li>
+<p><strong>相关问题：</strong></p>
+<ul>
+<li>Java程序运行时的线程调度：</li>
+</ul>
+<p>java命令会先启动Java虚拟机（JVM），也就是启动了一个程序（启动了一个进程）。该程序会启动一个主线程，然后该线程去调用某个类的main方法。</p>
+<ul>
+<li>多个进程在单CPU上是同时进行的吗？</li>
+</ul>
+<p>不是，因为单CPU在某一个时间点上只能做一件事情。</p>
+<p>我们感觉到的同时进行，是因为CPU在做着进程间的高效切换。</p>
+<ul>
+<li>Java虚拟机的启动是单线程的还是多线程的？</li>
+</ul>
+<p>是多线程的。</p>
+<p>因为至少启动了主线程和垃圾回收器线程。</p>
+</li>
+</ul>
+<h3 id="102-多线程的实现">10.2 多线程的实现</h3>
+<p>由于线程是依赖进程存在的，所以首先应创建一个进程。</p>
+<p>进程是由系统创建的，所以我们需要调用系统功能去创建一个进程。</p>
+<p>Java不能直接调用系统功能，没有办法直接实现多线程程序，不过可以通过调用C/C++写好的程序来实现。</p>
+<p>将C/C++写好的程序功能封装成Java类，就可以实现Java多线程程序了。</p>
+<p>Java提供的线程类是：Thread。</p>
+<ul>
+<li>
+<p><strong>方式一（继承Thread类）：</strong></p>
+<ol>
+<li>自定义类MyThread继承自Thread类；</li>
+<li>MyThread类中重写run()方法；</li>
+<li>创建对象；</li>
+<li>启动线程。</li>
+</ol>
+<p>实例：</p>
+<pre><code class="language-java">public class MyThread extend Thread{
+  public void run(){
+      ...				//线程中要执行的内容
+  }
+}
+public class Demo{
+  public static void main(String[] args){
+      MyThread tr1 = new MyThread();
+      MyThread tr2 = new MyThread();
+
+      tr1.start();	//启动线程
+      tr2.start();
+  }
+}
+</code></pre>
+</li>
+<li>
+<p><strong>方式二（实现Runnable）：</strong></p>
+<ol>
+<li>自定义类MyRunnable实现接口Runnable；</li>
+<li>重写run()方法；</li>
+<li>创建MyRunnable类的对象；</li>
+<li>创建Thread类的对象，把创建的MyRunnable对象当成参数传递；</li>
+<li>启动线程。</li>
+</ol>
+<p>实例：</p>
+<pre><code class="language-java">public class MyRunnable implments Runnable{
+  public void run(){
+      ...		//线程中要执行的内容
+  }
+}
+public class Demo{
+  public static void main(String[] args){
+      MyRunnable mr = new MyRunnable();
+
+      Thread th1 = new Thread(mr, &quot;线程1&quot;);
+      Thread th2 = new Thread(mr);
+
+      th1.start();
+      th2.start();
+  }
+}
+</code></pre>
+</li>
+<li>
+<p><strong>方式三（线程池）：</strong></p>
+<p><strong>（仅了解）</strong></p>
+<p>使用ExecutorService（线程池）、Callable和Future实现有返回值的多线程：</p>
+<ol>
+<li>自定义类实现Callable<V>；</li>
+<li>重写<V> call()方法，返回值为V；</li>
+<li>创建线程池；</li>
+<li>创建Callable<V>实现类对象；</li>
+<li>将对象submit到常量池，用Future<V>对象接收；</li>
+<li>Future<V>对象调用get()方法得到返回值；</li>
+<li>关闭线程池。</li>
+</ol>
+<p>实例：</p>
+<pre><code class="language-java">class MyCallable implements Callable&lt;Integer&gt;{
+  private int number;
+  public MyCallable(int number){
+      this.number = number;
+  }
+  public &lt;Integer&gt; call() throws Exception{
+      int sum = 0;
+      for(int x = 1;x &lt;= number;x ++){
+          sum += x;
+      }
+      return sum;
+  }
+}
+class Demo{
+  public static void main(String[] args) throws Exception{
+      ExecutorService pool = Executors.newFixedThreadPool(2);
+
+      Future&lt;Integer&gt; f1 = pool.submit(new MyCallable(100));
+      Future&lt;Integer&gt; f2 = pool.submit(new MyCallable(200));
+
+      Integer i1 = f1.get();
+      Integer i2 = f2.get();
+
+      System.out.println(i1);
+      System.out.println(i2);
+
+      pool.shutdown();
+  }
+}
+</code></pre>
+</li>
+<li>
+<p><strong>相关重要问题：</strong></p>
+<ol>
+<li>
+<p><strong>为什么要重写run()方法？</strong></p>
+<p>不是类中所有代码都要被线程执行的。</p>
+<p>为了区分哪些代码需要被线程执行，Java提供了Thread中的run()方法来包含被线程执行的代码。</p>
+</li>
+<li>
+<p><strong>调用run()方法为什么是单线程的呢？</strong></p>
+<p>因为直接调用run()方法就是相当于调用了普通的方法，看到的自然是单线程的效果。</p>
+</li>
+<li>
+<p><strong>run()和start()的区别：</strong></p>
+<ul>
+<li>run()：仅仅是封装需要被线程执行的代码，直接调用仅相当于普通方法调用。</li>
+<li>start()：启动线程，然后Java虚拟机调用该线程的run()方法。</li>
+</ul>
+</li>
+<li>
+<p><strong>线程能不能多次启动？</strong></p>
+<p>不能。</p>
+<p>不过可以创建不同的线程对象分别启动。</p>
+</li>
+<li>
+<p><strong>多线程实现方式二的好处？</strong></p>
+<ol>
+<li>若一个类已经继承了其他类就无法使用方式一了，使用接口可以避免Java单继承带来的局限性；</li>
+<li>方式二可以实现多个相同的线程处理同一份资源。</li>
+<li>把线程同程序的代码、数据有效分离，较好地体现了面向对象的设计思想。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="103-thread类">10.3 Thread类</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>Thread是程序中的执行线程。</p>
+</li>
+<li>
+<p><strong>重要构造方法：</strong></p>
+<ul>
+<li>public Thread()</li>
+</ul>
+<p>//分配新的Thread对象，自动生成的名称的形式为&quot;Thread-&quot; + n</p>
+<ul>
+<li>public Thread(<strong>String name</strong>)</li>
+</ul>
+<p>//使用给定的名称构造新的Thread对象</p>
+<ul>
+<li>public Thread(<strong>Runable target</strong>)</li>
+</ul>
+<p>//传一个Runnable实现类，构造Thread对象</p>
+<ul>
+<li>public Thread(<strong>Runable target, String name)</strong></li>
+</ul>
+<p>//传一个Runnable实现类和线程名称，构造Thread对象</p>
+<ul>
+<li>public Thread(<strong>ThreadGroup tg, Runnable target, String name</strong>)</li>
+</ul>
+<p>//根据线程组，Runnable和名称构建Thread对象</p>
+</li>
+<li>
+<p><strong>重要方法：</strong></p>
+<ul>
+<li>public final void <strong>setName</strong>(String name)</li>
+</ul>
+<p>//th.setName(&quot;线程名&quot;)，设置线程名称</p>
+<ul>
+<li>public final String <strong>getName</strong>()</li>
+</ul>
+<p>//th.getName()，返回线程名称</p>
+<ul>
+<li>public void <strong>run</strong>()</li>
+</ul>
+<p>//th.run()，Thread的子类应该重写该方法</p>
+<ul>
+<li>public void <strong>start</strong>()</li>
+</ul>
+<p>//th.start()，使该线程开始执行，Java虚拟机调用该线程的run()方法</p>
+<ul>
+<li>public static Thread <strong>currentThread</strong>()</li>
+</ul>
+<p>//Thread.currentThread()，返回当前正在执行的Thread对象</p>
+<ul>
+<li>public final int <strong>getPriority</strong>()</li>
+</ul>
+<p>//th.getPriority()，返回线程对象的优先级</p>
+<ul>
+<li>public final void <strong>setPriority</strong>(int newPriority)</li>
+</ul>
+<p>//th.setPriority()，更改线程的优先级</p>
+<ul>
+<li>public static void <strong>sleep</strong>(long millis)</li>
+</ul>
+<p>//Thread.sleep(毫秒数)，在指定的毫秒数内让正在执行的线程休眠（暂停执行），此操作受系统计时器、调度精度等因素影响</p>
+<ul>
+<li>public final void <strong>join</strong>()</li>
+</ul>
+<p>//th.join()，等待该线程终止</p>
+<ul>
+<li>public static void <strong>yield</strong>()</li>
+</ul>
+<p>//Thread.yield()，暂停当前正在执行的线程对象，并执行其他线程</p>
+<ul>
+<li>public final void <strong>setDaemon</strong>(boolean on)</li>
+</ul>
+<p>//th.setDaemon()，将该线程标记为守护线程/用户线程/后台线程。当正在运行的线程都是守护线程时，Java虚拟机退出。必须在启动线程前调用</p>
+<ul>
+<li>public void <strong>interrupt</strong>()</li>
+</ul>
+<p>//th.interrupt()，中断线程。把线程的状态终止，并抛出一个InterruptedException</p>
+<ul>
+<li>public final void <strong>stop</strong>()</li>
+</ul>
+<p>//th.stop()，已过时，强迫线程终止执行。</p>
+</li>
+</ul>
+<h3 id="104-线程调度优先级">10.4 线程调度/优先级</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>线程只有得到CPU的使用权，才可以执行指令。</p>
+<p>线程有两种调度模型：</p>
+<ol>
+<li>
+<p>分时调度模型</p>
+<p>所有线程轮流获得CPU的使用权，平均分配每个线程占用CPU的时间片。</p>
+</li>
+<li>
+<p>抢占式调度模型：</p>
+<p>优先让优先级高的线程使用CPU。</p>
+<p>如果线程的优先级相同，会随机选择一个。</p>
+<p>优先级高的线程获得的CPU时间片会多一些。</p>
+</li>
+</ol>
+<p><strong>Java使用的是抢占式调度模型。</strong></p>
+</li>
+<li>
+<p><strong>Java线程优先级：</strong></p>
+<p>线程默认优先级是：5。</p>
+<p>线程优先级的范围是：1~10。</p>
+<p>线程优先级高表示线程获取CPU时间片的几率高，调用次数越多将越能体现这一点，次数少会更多的表现出随机性。</p>
+</li>
+</ul>
+<h3 id="105-线程控制">10.5 线程控制</h3>
+<ul>
+<li>
+<p><strong>线程休眠：</strong></p>
+<p>在线程的run()方法内静态调用sleep(long millis)方法，可将当前实例休眠指定的毫秒数。</p>
+</li>
+<li>
+<p><strong>线程加入：</strong></p>
+<p>th.join()，将等待该线程终止才会去执行其他线程/执行后面的代码。</p>
+</li>
+<li>
+<p><strong>线程礼让：</strong> 在线程的run()方法内静态调用yield()方法，暂停当前正在执行的线程对象，并执行其他线程。</p>
+</li>
+<li>
+<p><strong>后台线程/守护线程：</strong></p>
+<p>在启动线程前调用th.setDaemon(boolean on)方法，可以将该线程标记为守护线程/后台线程。</p>
+<p>当所有正在运行的线程都是守护线程时，Java虚拟机退出。</p>
+</li>
+<li>
+<p><strong>线程终止：</strong></p>
+<p>th.interrupt()，把线程的状态终止，并抛出一个InterruptedException。</p>
+</li>
+</ul>
+<h3 id="106-线程生命周期">10.6 线程生命周期</h3>
+<ol>
+<li>
+<p><strong>新建：</strong></p>
+<p>创建线程对象。</p>
+<p>调用start()方法可进入就绪状态。</p>
+</li>
+<li>
+<p><strong>就绪：</strong></p>
+<p>有执行资格，没有执行权。</p>
+<p>若得到了CPU的执行权即进入运行状态。</p>
+</li>
+<li>
+<p><strong>运行：</strong></p>
+<p>有执行资格，有执行权。</p>
+<p>若被别的线程得到了CPU执行权，则回到就绪状态。</p>
+<p>若运行了sleep()或wait()等方法，则进入阻塞状态。</p>
+<p>若run()方法执行结束或中断了线程，进入死亡状态。</p>
+</li>
+<li>
+<p><strong>阻塞：</strong></p>
+<p>没有执行资格，没有执行权。</p>
+<p>若sleep()时间到或运行了notify()等方法，可恢复到就绪状态。</p>
+</li>
+<li>
+<p><strong>死亡：</strong></p>
+<p>线程对象变成垃圾，等待被回收。</p>
+</li>
+</ol>
+<h3 id="107-线程安全问题线程同步">10.7 线程安全问题/线程同步</h3>
+<ul>
+<li>
+<p><strong>判断是否会出现线程安全问题：</strong></p>
+<ol>
+<li>是否多线程环境；</li>
+<li>是否有共享数据；</li>
+<li>是否有多条语句操作共享数据。</li>
+</ol>
+</li>
+<li>
+<p><strong>解决方案（同步代码块）：</strong></p>
+<p>格式：</p>
+<pre><code class="language-java">synchronized(对象){
+  ...			//需要同步的代码
+}
+</code></pre>
+<p>小括号内所传的对象是重点，该对象相当于“锁”的功能，多个线程对象需要同一把锁（相同的对象）。</p>
+</li>
+<li>
+<p><strong>同步的前提：</strong></p>
+<ol>
+<li>要有多个线程；</li>
+<li>多个线程使用的是同一个锁对象。</li>
+</ol>
+</li>
+<li>
+<p><strong>同步的好处：</strong></p>
+<p>同步的出现解决了多线程的安全问题。</p>
+</li>
+<li>
+<p><strong>同步的弊端：</strong></p>
+<ol>
+<li>
+<p>当线程很多时，每个线程都会去判断同步上的锁。</p>
+<p>这将会耗费更多资源，降低程序运行效率。</p>
+</li>
+<li>
+<p>容易产生死锁。</p>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>相关问题：</strong></p>
+<ol>
+<li>
+<p><strong>同步代码块的锁对象是什么？</strong></p>
+<p>是任意对象。</p>
+</li>
+<li>
+<p><strong>同步方法的格式及锁对象问题：</strong></p>
+<p>同步方法的格式：</p>
+<pre><code class="language-java">public synchronized method(){
+ ...
+}
+</code></pre>
+<p>同步方法的锁对象是this。</p>
+</li>
+<li>
+<p><strong>静态方法的锁对象是什么？</strong></p>
+<p>是类的字节码文件对象。</p>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="108-lock锁jdk5">10.8 Lock锁（JDK5）</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<ul>
+<li>为了更清晰的表达如何加锁和释放锁</li>
+<li>java.util.concurrent.locks下的接口Lock，提供了比使用synchronized方法和语句可获得的更广泛的锁定操作。</li>
+<li>允许更灵活的结构。</li>
+</ul>
+</li>
+<li>
+<p><strong>重要方法：</strong></p>
+<ul>
+<li>void <strong>lock</strong>()			//lock.lock()，获取锁 void <strong>unlock</strong>()			//lock.unlock()，释放锁</li>
+</ul>
+</li>
+<li>
+<p><strong>常用实现类：</strong></p>
+<p>ReentrantLock</p>
+</li>
+</ul>
+<h3 id="109-线程死锁问题">10.9 线程死锁问题</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>两个或两个以上的线程在争夺资源的过程中，发生的一种互相等待的现象。</p>
+</li>
+<li>
+<p><strong>举例：</strong></p>
+<p>如下的程序在创建两个对象并分别传入0和1时，极有可能出现线程死锁现象。</p>
+<pre><code class="language-java">public class DeadlockThread implements Runnable{
+
+  private Object lockA = new Object();
+  private Object lockB = new Object();
+  private int x;
+
+  public DeadlockThread (int x) {
+      this.x = x;
+  }
+
+  public void run () {
+      while (true) {
+          if (x%2 == 0) {
+              synchronized (lockA) {
+                  System.out.println(&quot;已经进入lockA，正在等待lockB&quot;);
+                  synchronized (lockB) {
+                      System.out.println(&quot;成功进入lockB&quot;)
+                  }
+              }
+          } else {
+              synchronized (lockB) {
+                  System.out.println(&quot;已经进入lockB，正在等待lockA&quot;);
+                  synchronized (lockA) {
+                      System.out.println(&quot;成功进入lockA&quot;)
+                  }
+              }
+          }
+          x ++;
+      }
+  }
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="1010-等待唤醒机制">10.10 等待唤醒机制</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>Object类中提供了多个等待和唤醒方法。</p>
+<p>这些方法定义在Object中的原因是，锁的对象可以是任意对象。</p>
+</li>
+<li>
+<p><strong>方法（位于Object）：</strong></p>
+<ul>
+<li>public final void <strong>wait</strong>()			//lock.wait()，让当前线程等待 public final void <strong>notify</strong>()		        //lock.notify()，唤醒在此对象监视器上等待的单个线程 public final void <strong>notifyAll</strong>()		//lock.notifyAll()，唤醒在此对象监视器上等待的所有线程</li>
+</ul>
+</li>
+<li>
+<p><strong>注意事项：</strong></p>
+<ol>
+<li><strong>wait()和notify()等方法应该由锁对象调用；</strong></li>
+<li><strong>wait()和notify()等方法应该处于锁的包围中（拥有对象监视器）；</strong></li>
+<li><strong>调用wait()方法时将会放开当前锁。</strong></li>
+</ol>
+</li>
+</ul>
+<h3 id="1011-线程组">10.11 线程组</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<ul>
+<li>把多个线程合并到一起</li>
+<li>它可以对一批线程进行分类管理，Java允许程序直接对线程组进行控制。</li>
+<li>默认情况下，所有线程都属于主线程组（main）。</li>
+<li>通过Thread类的构造方法public Thread(ThreadGroup tg, Runnable target, String name)，可将Thread在创建时就加入某一线程组。</li>
+</ul>
+</li>
+<li>
+<p><strong>重要构造方法：</strong></p>
+<p>public ThreadGroup(String name)</p>
+<p>//构建一个新线程组，名字为name</p>
+</li>
+</ul>
+<h3 id="1012-线程池">10.12 线程池</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>程序启动一个新线程的成本是比较高的，因为要涉及到与操作系统的交互。</p>
+<p>使用线程池可以很好地提高性能，尤其是需要创建大量生存期很短地线程时。</p>
+<p>线程池中每一个线程代码结束后，不会死亡，而是回到线程池中成为空闲状态，等待下一个对象来使用。</p>
+<p>此处将使用Executors类。</p>
+</li>
+<li>
+<p><strong>固定大小的线程池newFixedThreadPool：</strong></p>
+<p>public static ExecutorService newFixedThreadPool(<strong>int nThreads</strong>)</p>
+<p>//Executors.newFixedThreadPool(线程数)，创建一个固定大小的线程池</p>
+<p><strong>使用举例：</strong></p>
+<pre><code class="language-java">ExecutorService pool = Executors.newFixedThreadPool(2);
+pool.submit(new MyRunnable());
+pool.submit(new MyRunnable());
+pool.shutdown();
+</code></pre>
+</li>
+<li>
+<p><strong>其他线程池：</strong></p>
+<ul>
+<li>单任务线程池：</li>
+</ul>
+<p>public static ExecutorService <strong>newSingleThreadExecutor</strong>()</p>
+<ul>
+<li>可变尺寸线程池：</li>
+</ul>
+<p>public static ExecutorService <strong>newCachedThreadPool</strong>()</p>
+</li>
+</ul>
+<h3 id="1013-定时器">10.13 定时器</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>可以让我们在指定时间做某件事情，还可以重复做某件事情。</p>
+<p>主要依赖Timer和TimerTask这两个类。</p>
+</li>
+<li>
+<p><strong>Timer定时器类：</strong></p>
+<p><strong>重要构造方法：</strong></p>
+<p>public Timer()</p>
+<p><strong>重要方法：</strong></p>
+<p>public void <strong>schedule</strong>(TimerTask, Date time)</p>
+<p>//t.schedule(TimerTask, Date)，安排在指定时间执行指定任务</p>
+<p>public void <strong>schedule</strong>(TimerTask, Date firstTime, long period)</p>
+<p>//t.schedule(TimerTask, Date, period)，安排任务在指定时间开始固定延迟地执行</p>
+<p>public void <strong>schedule</strong>(TimerTask task, long delay)</p>
+<p>//t.schedule(TimerTask, delay)，安排在指定延迟后执行指定任务</p>
+<p>public void <strong>schedule</strong>(TimerTask task, long delay, long period)</p>
+<p>//t.schedule(TimerTask, delay, period)，安排任务在指定延迟后开始固定延迟地执行 public void <strong>cancel</strong>()</p>
+<p>//t.cancel()，终止此计时器，并丢弃所有已安排的任务</p>
+</li>
+<li>
+<p><strong>TimerTask任务类：</strong></p>
+<p>抽象类，实现了Runnable。</p>
+<p>需要创建子类，并重写run()方法，run()方法中的内容就是要执行的任务。</p>
+</li>
+</ul>
+<h2 id="11-设计模式">11. 设计模式</h2>
+<h3 id="111-概述">11.1 概述</h3>
+<p>设计模式是经验的总结。</p>
+<p>设计模式是一种思想，和具体的语言无关。</p>
+<p>学习设计模式，可以和面向对象思想的理解相辅相成。</p>
+<p><strong>学习设计模式的目的</strong>在于建立面向对象的思想，尽可能地面向接口编程，高内聚，低耦合，使设计的程序可复用。</p>
+<p><strong>设计模式总体分为三种类型：</strong></p>
+<ol>
+<li>创建型		//创建对象 . 结构型		//对象的组成 . 行为型		//对象的功能</li>
+</ol>
+<h3 id="112-简单工厂模式">11.2 简单工厂模式</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>又叫静态工厂模式，特点是定义一些具体的工厂类负责创建一些类的实例（例如提供工厂类，专门造猫和狗，这样就不用手动new了）。</p>
+</li>
+<li>
+<p><strong>优点：</strong></p>
+<p>明确了各个类的职责，客户端不再需要负责对象的创建。</p>
+</li>
+<li>
+<p><strong>缺点：</strong></p>
+<p>若有新的对象增加，或某些对象创建方法不同，需要后期不断修改工厂类，不利于后期维护。</p>
+</li>
+</ul>
+<h3 id="113-工厂方法模式">11.3 工厂方法模式</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>工厂方法模式会有抽象工厂类，负责定义创建对象的接口。</p>
+<p>当增加一个需要创建的类的时候，就需要造一个小工厂继承抽象工厂，专门负责造这种类的对象。</p>
+</li>
+<li>
+<p><strong>优点：</strong></p>
+<ul>
+<li>解决了简单工厂模式的一些缺陷，后期维护不再需要修改工厂类。</li>
+<li>当增加了需要创建的对象的时候，只需要增加一个具体的工厂即可。</li>
+<li>增加了可维护性和系统的扩展性。</li>
+</ul>
+</li>
+<li>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>需要编写额外的代码，增加了工作量。</li>
+</ul>
+</li>
+</ul>
+<h3 id="114-单例模式">11.4 单例模式</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>单例模式就是确保类在内存中只有一个对象，该实例必须自动创建，并对外提供。</p>
+<p>单例模式分为<strong>饿汉式</strong>和<strong>懒汉式</strong>。</p>
+</li>
+<li>
+<p><strong>实现过程：</strong></p>
+<ol>
+<li>
+<p>私有类的构造方法；</p>
+</li>
+<li>
+<p>设置一个类型为本类的成员变量，使用以下修饰：</p>
+<p>private：防止外界访问和修改</p>
+<p>static：随着类的加载而加载，同时也是由于 提供对象的方法也是静态修饰</p>
+<p>synchronized：用于懒汉式，因为懒汉式存在线程安全问题（多条语句操作同一变量）</p>
+</li>
+<li>
+<p>提供公共访问的方式（静态方法）。</p>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>饿汉式与懒汉式的区别：</strong></p>
+<ul>
+<li><strong>饿汉式：</strong></li>
+</ul>
+<p>开始时就造好对象，举例：</p>
+<pre><code class="language-java">private static Student s = new Sdudent();
+</code></pre>
+<p>这种方式一般不存在线程安全问题。</p>
+<ul>
+<li><strong>懒汉式：</strong></li>
+</ul>
+<p>在需要时再造对象，举例：</p>
+<pre><code class="language-java">private static Student s = null;
+public synchronized static Student getStudent() {
+    if(s == null){
+        s = new Student();
+    }
+    return s;
+}
+</code></pre>
+</li>
+<li>
+<p><strong>优点：</strong></p>
+<p>由于在系统中只存在一个对象，所以可以节约系统资源。</p>
+<p>对于需要频繁创建和销毁对象的操作，单例模式可以提高系统性能。</p>
+</li>
+<li>
+<p><strong>缺点：</strong></p>
+<p>没有抽象层，扩展很难。</p>
+<p>职责过重，一定程度上违背了单一职责。</p>
+</li>
+<li>
+<p><strong>实例类：RunTime</strong></p>
+<p>该类属于单例模式饿汉式。</p>
+<p>每个Java程序都有一个Runtime类实例，使应用程序能够与其运行的环境相连接，可以通过getRuntime()获取当前的运行时。</p>
+<p>重要方法：</p>
+<p>public Process <strong>exec</strong>(String command)			//rt.exec(DOS命令)</p>
+</li>
+</ul>
+<h3 id="115-适配器设计模式">11.5 适配器设计模式</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>适配器(Adapter)模式，可以在需要实现一个有众多方法的接口（或难以实现的接口）时，做到只实现需要的方法，不用实现全部。</p>
+</li>
+<li>
+<p><strong>使用方法：</strong></p>
+<p>写一个抽象的适配器类实现需要实现的接口，将所有方法空实现。</p>
+<p>然后提供具体类重写需要实现的方法即可。</p>
+</li>
+</ul>
+<h3 id="116-模板设计模式">11.6 模板设计模式</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>定义一个算法的框架，而将具体算法推迟到具体子类中实现。</p>
+<p>例如计算一段代码的执行时间，将两个System.currentTimeMillis()之间的代码定义为一个抽象方法，方法中的内容在具体子类中实现。</p>
+</li>
+<li>
+<p><strong>优点：</strong></p>
+<p>在定义骨架算法的同时，可以灵活地实现具体算法，满足不同的需求。</p>
+</li>
+<li>
+<p><strong>缺点：</strong></p>
+<p>如果算法骨架有修改的话，则需要修改抽象类。</p>
+</li>
+</ul>
+<h3 id="117-装饰设计模式">11.7 装饰设计模式</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>使用被装饰类的子类的一个实例，在客户端将这个实例交给装饰类，以扩展类的功能。</p>
+<p>是继承的一个替代方案。</p>
+</li>
+<li>
+<p><strong>举例：</strong></p>
+<pre><code class="language-java">BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+</code></pre>
+</li>
+<li>
+<p><strong>优点：</strong></p>
+<p>相比于继承，装饰模式可以更为灵活地扩展对象的功能。</p>
+<p>装饰模式甚至可以动态添加、随意组合添加的功能。</p>
+</li>
+<li>
+<p><strong>缺点：</strong></p>
+<p>随意组合中可能会出现一些不合理的逻辑。</p>
+</li>
+</ul>
+<h2 id="12-网络编程">12. 网络编程</h2>
+<h3 id="121-基础知识">12.1 基础知识</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>网络编程就是用来实现网络互联的不同计算机上运行的程序之间可以进行数据交换。</p>
+<p>计算机网络之间以何种规则进行通信，就是网络模型研究的问题。</p>
+</li>
+<li>
+<p><strong>网络模型：</strong></p>
+<ul>
+<li>OSI(Open System Interconnection 开放系统互连)参考模型</li>
+<li>TCP/IP参考模型</li>
+</ul>
+</li>
+<li>
+<p><strong>网络编程三要素：</strong></p>
+<ol>
+<li>
+<p><strong>IP地址 ：</strong></p>
+<p>网络中计算机的唯一标识。</p>
+<p>IP地址的组成为网络号段+主机号段</p>
+<ul>
+<li>A类IP地址：第一号段为网络号段 + 后三号段为主机号段</li>
+</ul>
+<p>1.0.0.1 - 127.255.255.254 (10.x.x.x是私有地址)</p>
+<ul>
+<li>B类IP地址：前二号段为网络号段 + 后二号段为主机号段</li>
+</ul>
+<p>128.0.0.1 - 191.255.255.254(172.16.0.0 - 172.31.255.255是私</p>
+<p>有地址，169.254.x.x是保留地址)</p>
+<ul>
+<li>C类IP地址：前三号段为网络号段 + 后一号段为主机号段</li>
+</ul>
+<p>192.0.0.1 - 223.255.255.254(192.168.x.x是私有地址)</p>
+<ul>
+<li>D类...</li>
+<li>E类...</li>
+<li>特殊IP地址：</li>
+</ul>
+<p>127.0.0.1 (回环地址，表示本机)</p>
+<pre><code>x.x.x.255 (广播地址)
+
+x.x.x.0 (网络地址)
+</code></pre>
+</li>
+<li>
+<p><strong>端口：</strong></p>
+<p>计算机中程序的标识。</p>
+<p>端口分为物理端口、网卡口和逻辑端口，这里指的是逻辑端口。</p>
+<p>说明：</p>
+<ol>
+<li>每个程序都至少会有一个逻辑端口；</li>
+<li>有效端口：0 - 65535，其中0 - 1024为系统使用或保留端口。</li>
+</ol>
+</li>
+<li>
+<p><strong>协议：</strong></p>
+<p>通信的规则。</p>
+<p>分为UDP协议和TCP协议：</p>
+<ol>
+<li>
+<p><strong>UDP特点：</strong></p>
+<p>把数据打包</p>
+<p>数据有限制(64K)</p>
+<p>不建立连接</p>
+<p>速度快</p>
+<p>不可靠</p>
+</li>
+<li>
+<p><strong>TCP特点：</strong></p>
+<p>建立连接通道</p>
+<p>数据无限制</p>
+<p>速度慢</p>
+<p>可靠</p>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="122-inetaddress类">12.2 InetAddress类</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>为了方便我们对IP地址的获取和操作，Java提供了InetAddress类供使用。</p>
+</li>
+<li>
+<p><strong>获取对象：</strong></p>
+<p>public static InetAddress <strong>getByName</strong>(String host)</p>
+<p>//根据主机名或ip地址的字符串表示得到InetAddress对象</p>
+</li>
+<li>
+<p><strong>重要方法：</strong></p>
+<p>public String <strong>getHostName</strong>()</p>
+<p>//address.getHostName()，获取主机名</p>
+<p>public String <strong>getHostAddress</strong>()</p>
+<p>//address.getHostAddress()，获取主机IP地址</p>
+</li>
+</ul>
+<h3 id="123-socketudp">12.3 Socket（UDP）</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>网络套接字。</p>
+<p>Socket编程，就是套接字编程/网络编程。</p>
+<p>Socket包含了IP地址+端口。</p>
+<p>这里使用类DatagramSocket。</p>
+</li>
+<li>
+<p><strong>Socket原理：</strong></p>
+<p>通信的两端都有Socket，网络通信其实就是Socket间的通信，数据在两个Socket间通过IO传输。</p>
+</li>
+<li>
+<p><strong>使用摘要：</strong></p>
+<ul>
+<li><strong>Socket发送数据：</strong></li>
+</ul>
+<pre><code class="language-java">// 1.创建发送端Socket对象：
+DatagramSocket ds = new DatagramSocket();
+// 2.创建数据，并把数据打包
+byte[] bys = &quot;Hello, Socket, UDP&quot;.getBytes();
+int length = bys.length();
+InetAddress address = InetAddress.getByName(&quot;192.168.1.102&quot;);
+int port = 10086;
+DatagramPacket dp = new DatagramPacket(bys, length, address, port);		//使用数据（字节数组）、长度、目标IP地址和端口构建DatagramPacket数据包
+// 3.发送数据
+ds.send(dp);
+// 4.释放资源
+ds.close();
+</code></pre>
+<ul>
+<li><strong>Socket接收数据：</strong></li>
+</ul>
+<pre><code class="language-java">// 1.创建接收端Socket对象：
+DatagramSocket ds = new DatagramSocket(10086);
+	//因为不用发送数据包，所以在构造里指定接收端口
+// 2.创建一个数据包（接收容器）
+byte[] bys = new byte[1024];
+int length = bys.length;
+DatagramPacket dp = new DatagramPacket(bys, length);
+// 3.调用Socket的接收方法接收数据包
+ds.receive(dp);						//该方法在接收到数据包之前一直阻塞
+// 4.解析数据包，并显示数据在控制台
+InetAddress address = dp.getAddress();
+String ip = address.getHostAddress();	//获取发送方的ip地址
+byte[] bys2 = dp.getData();
+int len = dp.getLength();
+String s = new String(bys2, 0, len);	//将获取到的数据转成字符串
+System.out.println(s);
+// 5.释放资源
+ds.close();
+</code></pre>
+</li>
+</ul>
+<h3 id="124-sockettcp">12.4 Socket(TCP)</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>这里使用类Socket和类ServerSocket。</p>
+</li>
+<li>
+<p><strong>Socket类的特殊功能：</strong></p>
+<ul>
+<li>public void shutdownInput()</li>
+</ul>
+<p>//s.shutdownInput()，将此套接字的流置于&quot;流的末尾&quot;。调用此方法后若继续从输入流读取数据，则将返回EOF（文件结束符）</p>
+<ul>
+<li>public void shutdownOutput()</li>
+</ul>
+<p>//s.shutdownOutput()，禁用此套接字的输出流，任何之前写入的数据都将被发送，并后跟TCP正常连接终止序列。</p>
+</li>
+<li>
+<p><strong>使用概要：</strong></p>
+<ol>
+<li>
+<p>Socket发动数据：</p>
+<pre><code class="language-java">// 1.Socket发送数据：
+Socket s = new Socket(&quot;192.168.1.114&quot;, 12306);
+// 2.获取输出流，写数据
+OutputStream os = s.getOutputStream();
+os.write(&quot;Hello,TCP&quot;.getBytes());
+// 3.释放资源
+s.close();
+</code></pre>
+</li>
+<li>
+<p>Socket接收数据：</p>
+<pre><code class="language-java">// 1.创建接收端Socket对象
+ServerSocket ss = new ServerSocket(12306);
+// 2.监听客户端连接，返回一个对应的Socket对象
+Socket s = ss.accept();
+//监听并接收此套接字的连接，此方法在连接传入之前一直阻塞
+// 3.获取输入流，读取数据显示在控制台
+InputStream is = s.getInputStream();	//得到套接字连接的InputStream
+byte[] bys = new byte[1024];
+int len = is.read(bys);						//收到数据之前一直阻塞
+String str = new String(bys, 0, len);		//得到数据
+String ip = s.getInetAddress().getHostAddress();//获取发送端的ip地址
+System.out.println(ip + &quot;：&quot; + str);	//输出发送端的ip地址和发送的数据
+// 4.释放资源
+s.close();
+//注意ServerSocket（连接监听器）不应关闭，只需关闭Socket（本次连接）
+</code></pre>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="13-反射">13. 反射</h2>
+<h3 id="131-概述">13.1 概述</h3>
+<p>反射就是通过class文件对象，去使用该文件中的成员变量、构造方法和成员方法。</p>
+<h3 id="132-class文件对象">13.2 Class文件对象</h3>
+<ul>
+<li>
+<p><strong>获取Class文件对象的方式：</strong></p>
+<ol>
+<li>
+<p>Object类的getClass()方法；</p>
+</li>
+<li>
+<p>数据类型的静态属性class；</p>
+</li>
+<li>
+<p>Class类中的静态方法</p>
+<p>public static Class <strong>forName</strong>(String className)</p>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>重要方法：</strong></p>
+<ol>
+<li>
+<p><strong>获取构造方法：</strong></p>
+<ul>
+<li>
+<p><strong>获取单个</strong></p>
+</li>
+<li>
+<p>public Constructor<T> <strong>getDeclaredConstructor</strong>(Class&lt;?&gt;... parameterTypes)</p>
+<p>//c.getDeclaredConstructor(要获取的构造方法的参数个数及数据类型的class字节码文件对象)</p>
+</li>
+<li>
+<p>public Constructor<T> <strong>getConstructor</strong>(Class&lt;?&gt;... parameterTypes)</p>
+<p>//c.getConstructor(要获取的构造方法的参数个数及数据类型的class字节码文件对象)，根据参数获取指定构造方法</p>
+</li>
+<li>
+<p><strong>获取所有</strong></p>
+</li>
+<li>
+<p>public Constructor[] <strong>getConstructors</strong>()</p>
+<p>//c.getConstructors()，获取该类所有公共（public修饰）构造方法</p>
+</li>
+<li>
+<p>public Constructor[] <strong>getDeclaredConstructors</strong>()</p>
+<p>//c.getDeclaredConstructors()，获取该类所有声明的构造方法</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>获取成员变量：</strong></p>
+<ul>
+<li>
+<p><strong>获取单个</strong></p>
+</li>
+<li>
+<p>public Field <strong>getField</strong>(String name)</p>
+<p>//c.getField(成员变量名)，获取指定的公共字段</p>
+</li>
+<li>
+<p>public Field <strong>getDeclaredField</strong>(String name)</p>
+<p>//c.getDeclaredField(字段名)，获取指定的声明的字段</p>
+</li>
+<li>
+<p><strong>获取所有</strong></p>
+</li>
+<li>
+<p>public Field[] <strong>getFields</strong>()</p>
+<p>//c.getFields()，返回所有公共字段的数组</p>
+</li>
+<li>
+<p>public Field[] <strong>getDeclaredFields</strong>()</p>
+<p>//c.getDeclaredFields()，获取所有声明的字段的数组</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>获取成员方法：</strong></p>
+<ul>
+<li>
+<p><strong>获取单个</strong></p>
+</li>
+<li>
+<p>pubilc Method <strong>getMethod</strong>(String name, class&lt;?&gt;... parameterTypes)</p>
+<p>//c.getMethod(方法名, 参数.class数组)，获取指定公共成员方法</p>
+</li>
+<li>
+<p>public Method <strong>getDeclaredMethod</strong>(String name, class&lt;?&gt;... parameterTypes)</p>
+<p>//c.getDeclaredMethod(方法名, 参数.class数组)，获取指定本类声明的成员方法</p>
+</li>
+<li>
+<p><strong>获取所有</strong></p>
+</li>
+<li>
+<p>public Method[] <strong>getMethods</strong>()</p>
+<p>//c.getMethods()，获取本类包括父亲的公共方法</p>
+</li>
+<li>
+<p>public Method[] <strong>getDeclaredMethods</strong>()</p>
+<p>//c.getDeclaredMethods()，获取本类声明的所有方法</p>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="133-constructor构造方法对象">13.3 Constructor<T>构造方法对象</h3>
+<ul>
+<li>
+<p><strong>重要方法：</strong></p>
+<ul>
+<li>public T <strong>newInstance</strong>(Object... initargs)</li>
+</ul>
+<p>//cons.newInstance(参数)，使用该构造方法构造一个新对象</p>
+<ul>
+<li>public void <strong>setAccessible</strong>(boolean flag)</li>
+</ul>
+<p>//cons.setAccessible(true)，设置为true则对象在使用时取消Java的访问检查（无视权限修饰符）</p>
+</li>
+</ul>
+<h3 id="134-field成员变量域对象">13.4 Field成员变量(域)对象</h3>
+<ul>
+<li>
+<p><strong>重要方法：</strong></p>
+<ul>
+<li>public void <strong>set</strong>(Object obj, Object value)</li>
+</ul>
+<p>//nameField.set(s1, &quot;周树人&quot;)，将obj的该变量设置值为value</p>
+<ul>
+<li>public void <strong>setAccessible</strong>(boolean flag)</li>
+</ul>
+<p>//nameField.setAccessible(true)，设置为true则对象在使用时取消Java的访问检查（无视权限修饰符）</p>
+</li>
+</ul>
+<h3 id="135-method成员方法对象">13.5 Method成员方法对象</h3>
+<ul>
+<li>
+<p><strong>重要方法：</strong></p>
+<ul>
+<li>pubilc Object <strong>invoke</strong>(Object obj, Object... args)</li>
+</ul>
+<p>//method1.invoke(s1, 参数...)，用obj调用方法</p>
+<ul>
+<li>public void <strong>setAccessible</strong>(boolean flag)</li>
+</ul>
+<p>//method1.setAccessible(true)，设置为true则对象在使用时取消Java的访问检查（无视权限修饰符）</p>
+</li>
+</ul>
+<h3 id="136-动态代理">13.6 动态代理</h3>
+<ul>
+<li>
+<p><strong>概述：</strong></p>
+<p>利用反射机制实现方法的增强，在不修改源码仅仅扩展的情况下，在方法执行前后做你想做的事情（例如权限校验、日志记录等）。</p>
+<p>这里指Java提供的，使用接口辅助的动态代理，使用Proxy类和InvocationHandler接口。</p>
+<p><strong>要求被代理的类至少要实现一个接口</strong>。</p>
+</li>
+<li>
+<p><strong>使用步骤：</strong></p>
+<ol>
+<li>
+<p>创建接口和实现类；</p>
+</li>
+<li>
+<p>新建类实现InvocationHandler接口，重写其中的方法：</p>
+<p>Object invoke(Object proxy, Method method, Object[] args)</p>
+<p>//在方法中写Object result = method.invoke(target, args[])，并在前后加上需要做的事情（例如权限校验、日志记录等），返回值为invoke产生的Object</p>
+<p>举例：</p>
+<pre><code class="language-java">public class MyInvocationHandler implments InvocationHandler {
+ private Object target;
+ public MyInvocationHandler (Object target) {
+     this.target = target;
+ }
+ public Object invoke (Object proxy, Method method, Object[] args) throws Throwable {
+     System.out.println(&quot;日志记录&quot;);
+     Object result = method.invoke(target, args);
+     System.out.println(&quot;权限校验&quot;);
+     return result;
+ }
+}
+</code></pre>
+</li>
+<li>
+<p>创建上述类的对象；</p>
+</li>
+<li>
+<p>通过Proxy类的静态方法newProxyInstance得到代理对象：</p>
+<p>public static Object <strong>newProxyInstance</strong>(ClassLoader loader, Class&lt;?&gt;[] interfaces, InvocationHandler handler)</p>
+<p>//loader：接口实现类.getClass().getClassLoader()即可；</p>
+<p>//interfaces：接口实现类.getClass().getInterfaces()即可；</p>
+<p>//handler：刚才创建的MyInvocationHandler。</p>
+<p>//返回值类型为Object，强转为接口实现类接收</p>
+</li>
+<li>
+<p>使用得到的代理对象来调用方法，即可实现在方法前后添加功能。</p>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="14-注解">14. 注解</h2>
+<h3 id="141-概述">14.1 概述</h3>
+<p>注解（Annotation），也叫元数据，是一种代码级别的说明。</p>
+<p>可以声明在包、类、字段、方法、局部变量、方法参数等的前面，用来对这些元素进行说明。</p>
+<p>注解与注释不同，可以通过反射等方式被机器识别。</p>
+<h3 id="142-java内置的注解">14.2 Java内置的注解</h3>
+<ul>
+<li>
+<p><strong>@Override</strong></p>
+<p>表示当前方法是覆盖的超类方法。若被注解的方法不构成重写，编译器就会报错。</p>
+</li>
+<li>
+<p><strong>@Deprecated</strong></p>
+<p>表示当前方法已过时，调用时编译器会发出警告。</p>
+</li>
+<li>
+<p><strong>@SuppressWarnings</strong></p>
+<p>关闭当前方法、类的警告信息。</p>
+</li>
+</ul>
+<h3 id="143-自定义注解">14.3 自定义注解</h3>
+<ul>
+<li>
+<p><strong>格式：</strong></p>
+<pre><code class="language-java">@Retention(RetentionPolicy.RUNTIME)
+...
+public @interface MyAnno{
+  String value();
+  ...
+}
+</code></pre>
+</li>
+<li>
+<p><strong>注意事项：</strong></p>
+<ol>
+<li>注解的属性可以是<strong>八种基本类型、String、Class(ClassName.class)、enum以及上述类型的数组</strong></li>
+<li>若注解内只有一个属性且名为value或除value外其他属性均有默认值时，赋值时可以省略value</li>
+</ol>
+</li>
+</ul>
+<h3 id="144-元注解">14.4 元注解</h3>
+<ul>
+<li>
+<p><strong>@Target</strong></p>
+<p>表示该注解可以用在什么地方，可用的ElementType参数：</p>
+<ul>
+<li>CONSTRUCTOR		构造器</li>
+<li>FIELD                              字段</li>
+<li>LOCAL_VARIABLE         局部变量</li>
+<li>METHOD                       方法</li>
+<li>PACKAGE                       包</li>
+<li>PARAMETER                  参数</li>
+<li>TYPE                               类、接口、枚举</li>
+</ul>
+</li>
+<li>
+<p><strong>@Retention</strong></p>
+<p>表示注解的存留时期。</p>
+<ul>
+<li>SOURCE                         仅存在于源代码</li>
+<li>CLASS                             最多存在于字节码时期，会被VM抛弃</li>
+<li>RUNTIME                       保存到VM运行时期</li>
+</ul>
+</li>
+<li>
+<p><strong>@Documented</strong></p>
+<p>表示该注解会被包含在javadoc中。</p>
+</li>
+<li>
+<p><strong>@Inherited</strong></p>
+<p>表示该注解会被继承。</p>
+</li>
+</ul>
+
+
+</body>
+</html>

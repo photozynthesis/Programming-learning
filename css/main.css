@@ -1,0 +1,249 @@
+html, body {
+	margin: 0px;
+	border: 0px;
+	height: 100%;
+}
+body {
+	background: url("../img/5-min.jpg") center no-repeat;
+	background-size: cover;
+	background-attachment: fixed;
+	transition: background 1.2s;
+}
+/*p#Title{
+	font-size: 80px;
+	color: #dddddd;
+	line-height: 0%;
+	padding-top: 15px;
+	font-family: "Comic Sans MS", "Microsoft YaHei UI", sans-serif;
+}*/
+div#container {
+	height: 100%;
+	width: 1080px;
+	margin: 0 auto;
+	border: 0px;
+	padding: 0px;
+	align-items: center;
+	display: -webkit-flex;
+	/*overflow: hidden;*/
+	/*border: solid 1px #000000;*/
+}
+/*div#header{
+	height: 200px;
+	width: 1000px;
+	margin-top: 20px;
+	margin-bottom: 15px;
+	text-align: center;
+	overflow: hidden;
+	background-color: #625441;
+	box-shadow: 8px 8px 10px #333333;
+	border-radius: 9px;
+}*/
+
+/* 主窗口 */
+div#main {
+	height: 98%;
+	overflow: hidden;
+	box-shadow: 0px 0px 10px 3px #333333;
+	background-color: #ffffff;
+	/*border-radius: 15px;*/
+}
+
+/* 左侧文章区域 */
+div#content {
+	height: 100%;
+	width: 800px;
+	float: left;
+	background-color: #bbbbbb;
+}
+
+/* 右侧导航区域 */
+div#navigator {
+	height: 100%;
+	width: 280px;
+	float: left;
+	background-color: #dddddd;
+	position: relative;
+}
+/*div#footer{
+	height: 80px;
+	width: 1000px;
+	clear: left;
+	background-color: #666666;
+	overflow: hidden;
+	box-shadow: 8px 8px 10px #333333;
+	margin-top: 15px;
+	margin-bottom: 20px;
+	border-radius: 9px;
+}*/
+
+/* 目录标题 */
+#navTitle {
+	position: absolute;
+	width: 100%;
+	display: block;
+	background-color: #333333;
+	padding: 8px 0px;
+	border-bottom: solid 1px #888888;
+	text-align: center;
+	/*align-items: center;*/
+	user-select: none;
+}
+
+/* 目录标题文字 */
+#navTitle b {
+	font-size: 30px;
+	color: #eeeeee;
+	/*border: 1px solid white;*/
+}
+
+/* 目录列表整体 */
+#navItems {
+	top: 59px;
+	bottom: 77px;
+	position: absolute;
+	height: auto;
+	overflow: auto;
+	user-select: none;
+}
+
+/* 列表条目（文件夹）标题前方箭头 */
+.navItem-title-arrow {
+	display: inline-block;
+	/*text-align: left;*/
+	width: fit-content;
+	/*border: 1px solid black;*/
+	/*float: left;*/
+	/*text-align: left !important;*/
+	transition: all 0.5s;
+}
+
+/* 列表条目（文件夹）标题文本 */
+.navItem-title-content {
+	display: inline-block;
+	padding-left: 8px;
+	text-align: left;
+	width: 244px;
+	font-weight: 700;
+	/*margin-left: : 30px;*/
+	/*border: 1px solid black;*/
+	/*float: left;*/
+}
+
+/* 目录列表下方的所有 ul */
+#navItems ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	width: 280px;
+	/*width: 100%;*/
+}
+/* 列表单个条目 */
+#navItems li {
+	cursor: pointer;
+}
+/*#navItems > ul > li > ul {
+	display: none;
+	transition: display 2s;
+}
+#navItems > ul > li > a:hover + ul {
+	display: block;
+}*/
+
+/* 子列表整体 */
+.navItem-subList {
+	height: 0px;
+	overflow: hidden;
+	transition: all 0.5s;
+}
+
+/* 根目录下的文章列表 */
+#navItems > ul > .navItem-subList {
+	height: auto !important;
+}
+
+/* 条目前缀 */
+.navItem-subList-item > a:before {
+	content: '- ';
+}
+
+/* 根目录下的条目前缀 */
+#navItems > ul > .navItem-subList > .navItem-subList-item > a:before {
+	content: '' !important;
+}
+
+/* 父级条目 */
+.navItem-title {
+	font-size: 23px;
+	text-decoration: none;
+	display: block;
+	/*color:#333333;*/
+	color: #544c06;
+	padding: 8px 5px;
+	text-align: left;
+}
+
+/* 二级条目 */
+.navItem-subList-item {
+	padding: 5px 4px 5px 30px;
+	font-size: 22px;
+	text-decoration: none;
+	display: block;
+	color:#333333;
+	text-align: left;
+}
+
+/* 所有条目 hover */
+.navItem-title:hover, .navItem-subList-item:hover {
+	color: #cccccc;
+	background-color: #444444;
+	box-shadow: 0px 0px 8px #cccccc inset;
+}
+
+/* 所有条目 active */
+.navItem-title:active, .navItem-subList-item:active {
+	color: #ffffff;
+	background-color: #000000;
+}
+
+/* 右侧下方按钮整体 */
+#navButtons {
+	position: absolute;
+	width: 100%;
+	bottom: 0px;
+	user-select: none;
+}
+
+/* 右侧下方按钮之间横线 */
+#navButton-changeImage:after {
+	position: absolute;
+	left: 5%;
+	top: 37px;
+	content: '';
+	width: 90%;
+	height:0px;
+	border-bottom: 1px solid #666;
+	box-shadow: 0px 2px 2px #888;
+}
+div.navButton {
+	cursor: pointer;
+}
+div.navButton a {
+	font-size: 22px;
+	text-decoration: none;
+	padding: 4px;
+	/*width: 184px;*/
+	display: block;
+	background-color: #aaaaaa;
+	text-align: center;
+}
+div.navButton a:hover {
+	color: #dddddd;
+	background-color: #333333;
+}
+/*p#end{
+	color: #dddddd;
+	font-size: 20px;
+	line-height: 0%;
+	padding-top: 22px;
+	text-align: center;
+}*/

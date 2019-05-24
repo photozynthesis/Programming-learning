@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>Servlet&Tomcat</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="tomcat--servlet--jsp">Tomcat &amp; Servlet &amp; JSP</h1>
+<ul>
+<li><a href="#1-web服务器软件概述">1. web服务器软件概述</a></li>
+<li><a href="#2-tomcat的安装与访问">2. Tomcat的安装与访问</a>
+<ul>
+<li><a href="#21-windows下安装启动步骤">2.1 Windows下安装/启动步骤</a></li>
+<li><a href="#22-访问">2.2 访问</a></li>
+<li><a href="#23-常见问题">2.3 常见问题</a></li>
+</ul>
+</li>
+<li><a href="#3-tomcat项目的部署">3. Tomcat项目的部署</a></li>
+<li><a href="#4-intellij-idea中使用tomcat">4. IntelliJ IDEA中使用Tomcat</a>
+<ul>
+<li><a href="#41-新建tomcat项目">4.1 新建Tomcat项目</a></li>
+<li><a href="#42-常见问题">4.2 常见问题</a></li>
+</ul>
+</li>
+<li><a href="#5-servlet概述入门配置">5. Servlet概述/入门/配置</a>
+<ul>
+<li><a href="#51-概述">5.1 概述</a></li>
+<li><a href="#52-servlet体系结构">5.2 Servlet体系结构</a></li>
+<li><a href="#53-入门配置">5.3 入门&amp;配置</a></li>
+</ul>
+</li>
+<li><a href="#6-servlet生命周期">6. Servlet生命周期</a></li>
+<li><a href="#7-servletrequest--response">7. Servlet：Request &amp; Response</a>
+<ul>
+<li><a href="#70-http协议入门">7.0 HTTP协议入门</a></li>
+<li><a href="#71-请求request">7.1 请求：Request</a></li>
+<li><a href="#72-响应response">7.2 响应：Response</a></li>
+</ul>
+</li>
+<li><a href="#8-servletservletcontext">8. Servlet：ServletContext</a></li>
+<li><a href="#9-servletcookie--session">9. Servlet：Cookie &amp; Session</a>
+<ul>
+<li><a href="#91-会话技术概述">9.1 会话技术概述</a></li>
+<li><a href="#92-cookie">9.2 Cookie</a></li>
+<li><a href="#93-session">9.3 Session</a></li>
+</ul>
+</li>
+<li><a href="#10-servletfilter">10. Servlet：Filter</a>
+<ul>
+<li><a href="#101-概述">10.1 概述</a></li>
+<li><a href="#102-使用">10.2 使用</a></li>
+</ul>
+</li>
+<li><a href="#11-servletlistener">11. Servlet：Listener</a>
+<ul>
+<li><a href="#111-概述">11.1 概述</a></li>
+</ul>
+</li>
+<li><a href="#12-jsp入门">12. JSP入门</a>
+<ul>
+<li><a href="#121-jsp标签">12.1 JSP标签</a></li>
+<li><a href="#122-jsp内置对象">12.2 JSP内置对象</a></li>
+</ul>
+</li>
+<li><a href="#13-jspel表达式">13. JSP：EL表达式</a>
+<ul>
+<li><a href="#131-运算符">13.1 运算符</a></li>
+<li><a href="#132-el访问数据">13.2 EL访问数据</a></li>
+</ul>
+</li>
+<li><a href="#14-jspjstl标准标签库">14. JSP：JSTL标准标签库</a>
+<ul>
+<li><a href="#141-下载引入">14.1 下载&amp;引入</a></li>
+<li><a href="#142-常用标签">14.2 常用标签</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="1-web服务器软件概述">1. web服务器软件概述</h2>
+<ul>
+<li><strong>服务器与服务器软件的区别</strong>：
+<ul>
+<li>服务器：安装了服务器软件的计算机。</li>
+<li>服务器软件：接收用户的请求，处理请求并做出响应。</li>
+</ul>
+</li>
+<li><strong>常见的Java相关的web服务器软件</strong>：
+<ul>
+<li>WebLogic：Oracle公司的大型JavaEE服务器，支持所有JavaEE规范，收费。</li>
+<li>WebSphere：IBM公司的大型JavaEE服务器，支持所有JavaEE规范，收费。</li>
+<li>JBOSS：JBOSS公司的大型JavaEE服务器，支持所有JavaEE规范，收费。</li>
+<li>Tomcat：Apache基金组织的中小型JavaEE服务器，支持部分JavaEE规范，如Servlet、JSP，开源、免费。</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-tomcat的安装与访问">2. Tomcat的安装与访问</h2>
+<h3 id="21-windows下安装启动步骤">2.1 Windows下安装/启动步骤</h3>
+<ol>
+<li>官方网站下载，地址：<a href="http://tomcat.apache.org/">http://tomcat.apache.org/</a></li>
+<li>安装与卸载：
+<ul>
+<li>安装：解压下载得到的压缩包即可。</li>
+<li>卸载：删除目录即可卸载。</li>
+</ul>
+</li>
+<li>启动与关闭：
+<ul>
+<li>启动：运行<code>bin</code>下的startup.bat或startup.sh</li>
+<li>关闭：
+<ul>
+<li>运行shutdown.bat或shutdown.sh</li>
+<li>ctrl + c</li>
+<li>点击<code>x</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="22-访问">2.2 访问</h3>
+<p>在浏览器输入：</p>
+<pre><code>// 默认端口号
+http://localhost:8080
+
+// 使用80端口号（可以省略端口号）
+http://localhost
+
+// 访问webapps目录下的项目
+http://localhost/demoProject
+</code></pre>
+<h3 id="23-常见问题">2.3 常见问题</h3>
+<ul>
+<li>启动时窗口直接闪退
+<ul>
+<li>检查JAVA_HOME环境变量</li>
+</ul>
+</li>
+<li>启动报错：端口号被占用
+<ul>
+<li>关闭占用端口号的Process：</li>
+<li><code>netstat -ano</code>查看占用端口号的Process ID</li>
+<li>任务管理器找到Process并关闭</li>
+<li>修改自身端口号：</li>
+<li>找到conf/server.xml</li>
+<li>打开并找到<code>Connector</code>标签，修改端口（推荐修改为80，这样可以省略端口号）。</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-tomcat项目的部署">3. Tomcat项目的部署</h2>
+<ul>
+<li>
+<p><strong>Tomcat目录下</strong>：</p>
+<p>直接将项目文件夹放在webapps目录下即可。</p>
+<p>说明：</p>
+<ol>
+<li>虚拟路径名为<strong>项目文件夹</strong>的名称。</li>
+<li>可以将项目文件夹压缩为<strong>war</strong>包（zip）并放置在webapps目录下，会<strong>自动</strong>解压/删除。</li>
+</ol>
+</li>
+<li>
+<p><strong>其他路径</strong>：</p>
+<ul>
+<li>修改<code>conf/server.xml</code>文件</li>
+</ul>
+<p>在<code>Host</code>标签体中新增：</p>
+<pre><code class="language-xml">&lt;Context docBase=&quot;&lt;项目文件夹目录...&gt;&quot; path=&quot;/&lt;虚拟路径...&gt;&quot; /&gt;
+</code></pre>
+<ul>
+<li>在<code>conf/Catalina/localhost</code>新增任意名称xml文件</li>
+</ul>
+<p>内容：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;Context docBase=&quot;&lt;项目文件夹目录...&gt;&quot; /&gt;
+</code></pre>
+<ul>
+<li>xml文件名即为虚拟目录。</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-intellij-idea中使用tomcat">4. IntelliJ IDEA中使用Tomcat</h2>
+<h3 id="41-新建tomcat项目">4.1 新建Tomcat项目</h3>
+<p>遵循以下步骤：</p>
+<ol>
+<li>
+<p>新建<code>Java Enterprise</code>项目，并在右侧勾选<code>Web Application</code>，同时设置Tomcat为Application Server；</p>
+</li>
+<li>
+<p>进入后，项目目录应如下所示：</p>
+<blockquote>
+<p>-&gt; src</p>
+<p>-&gt; web</p>
+<p>​	-&gt; WEB-INF</p>
+<p>​		-&gt; classes</p>
+<p>​		-&gt; lib</p>
+<p>​		-&gt; web.xml</p>
+<p>​	-&gt; index.jsp</p>
+</blockquote>
+<p>需要在<code>WEB-INF</code>下新建<code>classes</code>和<code>lib</code>文件夹，分别用于存放生成的字节码文件和库。</p>
+</li>
+<li>
+<p>将classes文件夹设置为字节码文件输出地址，将lib文件夹设置为jar库，按照如下方式：</p>
+<blockquote>
+<p>File -&gt; Project Structure -&gt; Modules -&gt; Paths/Dependencies</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="42-常见问题">4.2 常见问题</h3>
+<ul>
+<li>
+<p>没有Tomcat类库</p>
+<blockquote>
+<p>File -&gt; Project Structure -&gt; Modules -&gt; Dependencies</p>
+<p>在右侧+号添加即可</p>
+</blockquote>
+</li>
+<li>
+<p>没有Tomcat运行环境</p>
+<blockquote>
+<p>Run -&gt; Edit Configurations</p>
+<p>添加Tomcat即可，注意设置好端口号等项目</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="5-servlet概述入门配置">5. Servlet概述/入门/配置</h2>
+<h3 id="51-概述">5.1 概述</h3>
+<ul>
+<li>Servlet是两个单词<code>server</code>和<code>applet</code>的缩写。</li>
+<li>Servlet是运行在服务器端的小程序。</li>
+<li>Servlet是JavaEE中的一个接口，定义了Java类被浏览器访问的规则。</li>
+</ul>
+<h3 id="52-servlet体系结构">5.2 Servlet体系结构</h3>
+<ul>
+<li>
+<p><strong>Servlet</strong>：接口</p>
+<ul>
+<li><strong>GenericServlet</strong>：抽象类</li>
+</ul>
+<p>只抽象Servlet中的service()方法，对其他方法都做了默认空实现。</p>
+<ul>
+<li>
+<p><strong>HttpServlet</strong>：抽象类</p>
+<p>包含doGet()/doPost()等方法。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="53-入门配置">5.3 入门&amp;配置</h3>
+<p>按照以下流程创建Servlet：</p>
+<ol>
+<li>
+<p>使用IDE新建<strong>JavaEE项目</strong>。</p>
+</li>
+<li>
+<p>自定义类实现Servlet接口。</p>
+</li>
+<li>
+<p>实现接口中的方法。</p>
+</li>
+<li>
+<p>配置Servlet，有如下几种方式：</p>
+<ul>
+<li>
+<p>修改<code>WEB-INF</code>目录下的<code>web.xml</code>文件：</p>
+<pre><code class="language-xml">&lt;!-- 在根标签中增加如下内容 --&gt;
+&lt;servlet&gt;
+ &lt;!-- 自定义的名称 --&gt;
+&lt;servlet-name&gt;demoName&lt;/servlet-name&gt;
+ &lt;!-- Servlet主类完整类名 --&gt;
+ &lt;servlet-class&gt;io.github.photozynthesis.DemoMainClass&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+
+&lt;servlet-mapping&gt;
+ &lt;!-- 与上方一致 --&gt;
+&lt;servlet-name&gt;demoName&lt;/servlet-name&gt;
+ &lt;!-- 虚拟路径 --&gt;
+ &lt;url-pattern&gt;/demo&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+</code></pre>
+<p>说明：</p>
+<p>​	系统在收到请求后，会解析请求URL，获取访问Servlet的虚拟路径。之后到web.xml</p>
+<p>文件中查找是否有对应的&lt; url-pattern &gt;标签体内容，若有，则找到对应类执行对应方法。</p>
+</li>
+<li>
+<p>使用注释配置，<strong>需要Servlet 3.0及以上</strong>：</p>
+<p>在主类上加上<code>@WebServlet</code>注解：</p>
+<pre><code class="language-java">// urlPatterns是必选属性，所以只定义该属性的时候可以只写一个双引号及中间的内容
+@WebServlet(name=&quot;AnnotationServlet&quot; urlPatterns=&quot;/demoUrl&quot;)
+public class MyServlet implements Servlet{
+ ...
+}
+</code></pre>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="6-servlet生命周期">6. Servlet生命周期</h2>
+<p>Servlet的生命周期方法如下：</p>
+<ul>
+<li>
+<p>被创建：init()</p>
+<ul>
+<li>
+<p>只执行一次</p>
+</li>
+<li>
+<p>默认情况下，第一次访问时，Servlet被创建</p>
+</li>
+<li>
+<p>可以在<code>web.xml</code>中指定创建时机：</p>
+</li>
+</ul>
+<pre><code class="language-xml">&lt;servlet&gt;
+	...
+    &lt;!-- 为负数时将在第一次访问时创建，为0或正整数时服务器启动即创建 --&gt;
+    &lt;load-on-startup&gt;5&lt;/load-on-startup&gt;
+&lt;/servlet&gt;
+</code></pre>
+</li>
+<li>
+<p>提供服务：service()</p>
+<ul>
+<li>每次访问Servlet时，该方法都会被调用</li>
+</ul>
+</li>
+<li>
+<p>被销毁：destroy()</p>
+<ul>
+<li><strong>服务器正常关闭</strong>时，会销毁Servlet</li>
+<li>在Servlet销毁前执行，一般用于释放资源</li>
+</ul>
+</li>
+</ul>
+<h2 id="7-servletrequest--response">7. Servlet：Request &amp; Response</h2>
+<h3 id="70-http协议入门">7.0 HTTP协议入门</h3>
+<ul>
+<li><strong>HttpRequest格式</strong>：</li>
+</ul>
+<p><img src="httpProtocol.jpg" alt="" /></p>
+<ul>
+<li>
+<p><strong>HttpResponse格式</strong>：</p>
+<blockquote>
+<p>&lt;协议版本...&gt; &lt;响应状态码...&gt; &lt;状态码描述...&gt;</p>
+<p>&lt;头部字段名称...&gt;:&lt;值...&gt;</p>
+<p>&lt;头部字段名称...&gt;:&lt;值...&gt;</p>
+<p>...</p>
+<p>响应体...</p>
+</blockquote>
+</li>
+<li>
+<p><strong>Http响应状态码概述</strong>：</p>
+<table>
+<thead>
+<tr><th align="center">分类</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">1xx</td><td align="center">信息，服务器收到请求，需要请求者继续执行操作</td></tr>
+<tr><td align="center">2xx</td><td align="center">成功，操作被成功接收并处理</td></tr>
+<tr><td align="center">3xx</td><td align="center">重定向，需要进一步的操作以完成请求</td></tr>
+<tr><td align="center">4xx</td><td align="center">客户端错误，请求包含语法错误或无法完成请求</td></tr>
+<tr><td align="center">5xx</td><td align="center">服务器错误，服务器在处理请求的过程中发生了错误</td></tr>
+</tbody>
+</table>
+<p>常用：</p>
+<ul>
+<li>200：OK，请求成功。一般用于GET与POST请求</li>
+<li>302：Found，临时移动（重定向）。与301类似。但资源只是临时被移动。客户端应继续使用原有URI</li>
+<li>304：Not Modified，未修改（访问缓存）。所请求的资源未修改，服务器返回此状态码时，不会返回任何资源。客户端通常会缓存访问过的资源，通过提供一个头信息指出客户端希望只返回在指定日期之后修改的资源</li>
+<li>404：Not Found，服务器无法根据客户端的请求找到资源（网页）。通过此代码，网站设计人员可设置&quot;您所请求的资源无法找到&quot;的个性页面</li>
+<li>405：Method Not Allowed，（没有doGet/doPost方法）客户端请求中的方法被禁止</li>
+<li>500：Internal Server Error，服务器内部错误，无法完成请求</li>
+</ul>
+</li>
+<li>
+<p><strong>示例文本</strong>：</p>
+<pre><code class="language-http">POST /sample.Jsp HTTP/1.1
+Accept:image/gif.image/jpeg,*/*
+Accept-Language:zh-cn
+Connection:Keep-Alive
+Host:localhost
+User-Agent:Mozila/4.0(compatible;MSIE5.01;Window NT5.0)
+Accept-Encoding:gzip,deflate
+
+username=jinqiao&amp;password=1234
+</code></pre>
+<pre><code class="language-http">HTTP/1.1 200 OK
+Server: bfe/1.0.8.18
+Date: Thu, 03 Nov 2016 08:30:43 GMT
+Content-Type: text/html
+Content-Length: 277
+Last-Modified: Mon, 13 Jun 2016 02:50:03 GMT
+Connection: Keep-Alive
+ETag: &quot;575e1f5b-115&quot;
+Cache-Control: private, no-cache, no-store, proxy-revalidate, no-transform
+Pragma: no-cache
+Accept-Ranges: bytes
+
+&lt;html&gt;
+...
+&lt;/html&gt;
+</code></pre>
+</li>
+</ul>
+<h3 id="71-请求request">7.1 请求：Request</h3>
+<p>Servlet中的service()、doGet()、doPost()等方法会自动传递参数Request和Response。</p>
+<p>注意事项：</p>
+<blockquote>
+<p>获取请求参数时可能会出现乱码，具体如下：</p>
+<ul>
+<li>
+<p>GET：Tomcat 8 已经解决乱码问题。</p>
+</li>
+<li>
+<p>POST：内容为中文时可能会出现乱码，因为Tomcat的默认编码方式为ISO-8859-1，解决方法如下：</p>
+<p>获取参数前：request.setCharacterEncoding(&quot;UTF-8&quot;)</p>
+</li>
+</ul>
+</blockquote>
+<ul>
+<li>
+<p><strong>Request对象体系结构</strong>：</p>
+<p>interface <strong>ServletRequest</strong></p>
+<p>​	| &gt; interface <strong>HttpServletRequest</strong></p>
+<p>​		| &gt; class(Tomcat) org.apache.catalina.connector.RequestFacade</p>
+</li>
+<li>
+<p><strong>Request功能</strong>：</p>
+<h4 id="711-获取请求行数据">7.1.1 获取请求行数据</h4>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">String <strong>getMethod</strong>()</td><td align="center">获取请求方式：GET</td></tr>
+<tr><td align="center">String <strong>getContextPath</strong>()</td><td align="center">获取虚拟目录：/demoWork</td></tr>
+<tr><td align="center">String <strong>getServletPath</strong>()</td><td align="center">获取Servlet路径：/demoServlet</td></tr>
+<tr><td align="center">String <strong>getQueryString</strong>()</td><td align="center">获取GET方式的请求参数：id=demo&amp;psw=123</td></tr>
+<tr><td align="center">String <strong>getRequestURI</strong>()</td><td align="center">获取请求URI：/demoWork/demoServlet</td></tr>
+<tr><td align="center">StringBuffer <strong>getRequestURL</strong>()</td><td align="center">获取请求URL：http://localhost/demoWork/demoServlet</td></tr>
+<tr><td align="center">String <strong>getProtocol</strong>()</td><td align="center">获取协议版本：HTTP/1.1</td></tr>
+<tr><td align="center">String <strong>getRemoteAddr</strong>()</td><td align="center">获取客户机IP地址</td></tr>
+</tbody>
+</table>
+<h4 id="712-获取请求头数据">7.1.2 获取请求头数据</h4>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">String <strong>getHeader</strong>(String name)</td><td align="center">通过请求头字段的名称获取对应值</td></tr>
+<tr><td align="center">Enumeration&lt;<strong>String</strong>&gt; <strong>getHeaderNames</strong>()</td><td align="center">获取请求头中所有字段的名称</td></tr>
+</tbody>
+</table>
+<h4 id="713-获取请求体数据">7.1.3 获取请求体数据</h4>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">BufferedReader <strong>getReader</strong>()</td><td align="center">获取字符输入流</td></tr>
+<tr><td align="center">ServletInputStream <strong>getInputStream</strong>()</td><td align="center">获取字节输入流</td></tr>
+</tbody>
+</table>
+<p><strong>说明</strong>：</p>
+<ol>
+<li>只有POST方式的请求才会有请求体。</li>
+<li>需要先获取流对象后再从流对象中获取数据。</li>
+</ol>
+<h4 id="714-获取请求参数getpost通用">7.1.4 获取请求参数（GET/POST通用）</h4>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">String <strong>getParameter</strong>(String name)</td><td align="center">根据参数名称获取值</td></tr>
+<tr><td align="center">String[] <strong>getParameterValues</strong>(String name)</td><td align="center">根据参数名称获取值的数组，一般用于有<strong>多个值</strong>的参数</td></tr>
+<tr><td align="center">Enumeration&lt;<strong>String</strong>&gt; <strong>getParameterNames</strong>()</td><td align="center">获取所有请求的参数名称</td></tr>
+<tr><td align="center">Map&lt;String, String[]&gt; <strong>getParameterMap</strong>()</td><td align="center">获取所有参数的Map集合</td></tr>
+</tbody>
+</table>
+<h4 id="715-请求转发">7.1.5 请求转发</h4>
+<p>一种服务器内部的资源跳转方式，使用同一个Request和Response，客户端地址栏不发生改变。</p>
+<p>使用步骤：</p>
+<ol>
+<li>
+<p>通过Request对象获取转发器对象，方法：RequestDispatcher getRequestDispatcher(String path)</p>
+</li>
+<li>
+<p>使用得到的RequestDispatcher进行转发，方法：forward(ServletRequest request, ServletResponse, response)</p>
+<pre><code class="language-java">RequestDicpatcher dispatcher = request.getRequestDispatcher(&quot;/demoServlet2&quot;);
+dispatcher.forward(request, response);
+</code></pre>
+</li>
+</ol>
+<h4 id="716-共享数据">7.1.6 共享数据</h4>
+<p>Request可以设置共享数据，可在多个Servlet的一次请求中共享数据。</p>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">void <strong>setAttribute</strong>(String name, Object obj)</td><td align="center">存储共享数据</td></tr>
+<tr><td align="center">Object <strong>getAttribute</strong>(String name)</td><td align="center">通过键获取值</td></tr>
+<tr><td align="center">void <strong>removeAttribute</strong>(String name)</td><td align="center">通过键移除键值对</td></tr>
+</tbody>
+</table>
+<h4 id="717-获取servletcontext">7.1.7 获取ServletContext</h4>
+<ul>
+<li>ServletContext <strong>getServletContext</strong>()</li>
+</ul>
+<p>也可以在Servlet内部用<code>this.getServletContext()</code>，获得的ServletContext是同一个。</p>
+<p>关于ServletContext的说明，见下文。</p>
+</li>
+</ul>
+<h3 id="72-响应response">7.2 响应：Response</h3>
+<p>Servlet中的service()、doGet()、doPost()等方法会自动传递参数Request和Response。</p>
+<ul>
+<li>
+<p><strong>重要功能</strong>：</p>
+<h4 id="721-设置响应行">7.2.1 设置响应行</h4>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">void <strong>setStatus</strong>(int sc)</td><td align="center">设置状态码（HttpServletResponse）</td></tr>
+</tbody>
+</table>
+<h4 id="722-设置响应头">7.2.2 设置响应头</h4>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">void <strong>setHeader</strong>(String name, String value)</td><td align="center">设置响应头（HttpServletResponse）</td></tr>
+</tbody>
+</table>
+<p><strong>常用</strong>：</p>
+<ul>
+<li>文件下载响应头：</li>
+</ul>
+<pre><code class="language-http">HTTP/1.1 200 OK
+content-disposition:attachment;filename=xxx
+</code></pre>
+<p>发送文件下载响应的步骤：</p>
+<ol>
+<li>页面中编辑超链接的href属性，指向Servlet，传递资源名称；</li>
+<li>Servlet中获取文件真实名称；</li>
+<li>使用字节流加载文件进内存；</li>
+<li>设置Response响应头：<code>content-disposition:attachment;filename=xxx</code></li>
+<li>将文件数据写出到Response输出流。</li>
+</ol>
+<h4 id="723-设置响应体">7.2.3 设置响应体</h4>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">PrintWriter <strong>getWriter</strong>()</td><td align="center">获取字符输出流（ServletResponse）</td></tr>
+<tr><td align="center">ServletOutputStream <strong>getOutputStream</strong>()</td><td align="center">获取字节输出流（ServletResponse）</td></tr>
+</tbody>
+</table>
+<h4 id="724-发送重定向">7.2.4 发送重定向</h4>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">void <strong>sendRedirect</strong>(String location)</td><td align="center">用给定地址向客户端发送重定向响应，并清除缓存（HttpServletResponse）</td></tr>
+</tbody>
+</table>
+<ul>
+<li><strong>重定向概述</strong>：</li>
+</ul>
+<p>重定向是一种资源跳转方式。</p>
+<p>不同于请求转发，重定向具有如下特点：</p>
+<ul>
+<li>地址栏发生变化（请求转发不发生变化）</li>
+<li>可以访问其他站点的资源（请求转发只能跳转到服务器内部资源）</li>
+<li>
+<p>重定向一共是两次请求（请求转发是一次）</p>
+</li>
+<li>
+<p><strong>使用示例</strong>：</p>
+</li>
+</ul>
+<pre><code class="language-java">// 设置状态码后设置响应头
+response.setStatus(302);
+response.setHeader(&quot;location&quot;, &quot;/demoLocation/demoServlet&quot;);
+
+// 简略写法，效果完全相同
+response.sendRedirect(&quot;/demoLocation/demoServlet&quot;);
+</code></pre>
+</li>
+</ul>
+<h2 id="8-servletservletcontext">8. Servlet：ServletContext</h2>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<p>代表整个Web应用，可以和Servlet容器进行通信。</p>
+<p>ServletContext是一个全局的储存信息的空间，服务器开始，其就存在，服务器关闭，其才释放。</p>
+</li>
+<li>
+<p><strong>获取方式</strong>：</p>
+<ul>
+<li>通过Request对象：</li>
+</ul>
+<pre><code class="language-java">request.getServletContext();
+</code></pre>
+<ul>
+<li>通过HttpServlet：</li>
+</ul>
+<pre><code class="language-java">this.getServletContext();
+</code></pre>
+<p>说明：</p>
+<p>​	两种方式获得的ServletContext是同一个。</p>
+</li>
+<li>
+<p><strong>功能</strong>：</p>
+<ul>
+<li><strong>获取MIME类型</strong>：</li>
+</ul>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">String <strong>getMimeType</strong>(String file)</td><td align="center">获取MIME的类型</td></tr>
+</tbody>
+</table>
+<p>MIME类型是在互联网通信过程中定义的一种文件数据类型。</p>
+<p>获取的String具有如下格式：</p>
+<p>​	&lt;大类型...&gt;/&lt;小类型...&gt;，举例：</p>
+<p>​	text/html、image/jpeg</p>
+<ul>
+<li><strong>共享数据</strong>：</li>
+</ul>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">void <strong>setAttribute</strong>(String name, Object value)</td><td align="center">设置共享数据</td></tr>
+<tr><td align="center">Object <strong>getAttribute</strong>(String name)</td><td align="center">根据键获取共享数据值</td></tr>
+<tr><td align="center">void <strong>removeAttribute</strong>(String name)</td><td align="center">根据键移除共享数据</td></tr>
+</tbody>
+</table>
+<p>ServletContext的共享数据作用于整个服务器。</p>
+<ul>
+<li><strong>获取真实路径</strong>：</li>
+</ul>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">String <strong>getRealPath</strong>(String path)</td><td align="center">通过文件的虚拟路径获取其在硬盘上的完整路径</td></tr>
+</tbody>
+</table>
+</li>
+</ul>
+<h2 id="9-servletcookie--session">9. Servlet：Cookie &amp; Session</h2>
+<h3 id="91-会话技术概述">9.1 会话技术概述</h3>
+<p>会话，即是指包含多次请求和响应的“会话”。浏览器第一次给服务器资源发送请求，会话建立，直到有一方断开为止，会话结束。</p>
+<p>由于HTTP协议是面向无连接的，所以主要使用会话技术来共享数据。</p>
+<p>这里记下两种会话技术：</p>
+<ul>
+<li>客户端会话技术：Cookie（饼干）</li>
+<li>服务器端会话技术：Session（主菜）</li>
+</ul>
+<h3 id="92-cookie">9.2 Cookie</h3>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<p>Cookie是客户端会话技术，数据保存在客户端。</p>
+<p>与服务器通信过程中，服务器会将Cookie通过响应发送到客户端，客户端在本地存储Cookie；之后再次进行通信时，客户端会带着Cookie发送请求。依此达到了数据共享的目的。</p>
+<p>常用于完成服务端对客户端身份的识别。</p>
+<p><strong>Cookie具有以下主要特性</strong>：</p>
+<ul>
+<li>存储数据在<strong>客户端</strong>浏览器</li>
+<li>单个Cookie大小有限制：<strong>4kb</strong>；同一域名下总Cookie数量也有限制：<strong>20个</strong></li>
+<li>Cookie一般用于存储<strong>少量</strong>的<strong>不太敏感</strong>的数据</li>
+</ul>
+</li>
+<li>
+<p><strong>常用内容</strong>：</p>
+<h4 id="921-创建发送获取">9.2.1 创建/发送/获取</h4>
+<ul>
+<li>创建：</li>
+</ul>
+<pre><code class="language-java">// Cookie的构造方法
+new Cookie(String name, String value);
+</code></pre>
+<ul>
+<li>发送：</li>
+</ul>
+<pre><code class="language-java">// 添加到Response
+response.addCookie(Cookie cookie);
+</code></pre>
+<ul>
+<li>
+<p>实际上是写入了响应头的<code>set-cookie</code>中。</p>
+</li>
+<li>
+<p>获取：</p>
+</li>
+</ul>
+<pre><code class="language-java">// 通过请求获取全部Cookie
+Cookie[] cks = request.getCookies();
+</code></pre>
+<ul>
+<li>
+<p>实际上是读取了请求头中的<code>cookie</code>。</p>
+</li>
+<li>
+<p>获取内容：</p>
+</li>
+</ul>
+<pre><code class="language-java">// 获取名称和内容
+String name = cookie.getName();
+String value = cookie.getValue();
+</code></pre>
+<h4 id="922-持久化存储">9.2.2 持久化存储</h4>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">void setMaxAge(int seconds)</td><td align="center">使用秒数来设置多久后到期</td></tr>
+</tbody>
+</table>
+<ul>
+<li>注意：默认情况下，Cookie将在浏览器关闭后被销毁。</li>
+<li>若此处设置：</li>
+<li>正值：设置Cookie寿命</li>
+<li>负值：设置Cookie将在浏览器关闭后销毁</li>
+<li>0：删除Cookie</li>
+</ul>
+<h4 id="923-中文存储">9.2.3 中文存储</h4>
+<ul>
+<li>Tomcat 8 以前，cookie中不能直接存储中文数据，一般使用URL编码转码后进行存储。</li>
+<li>Tomcat 8 以后资瓷中文数据。</li>
+</ul>
+<p>附：使用URL编码存储中文数据：</p>
+<pre><code class="language-java">URLEncoder.encode(String chnString, &quot;UTF-8&quot;);
+
+cookie.setValue(chnString);
+response.addCookie(cookie);
+</code></pre>
+<h4 id="924-共享">9.2.4 共享</h4>
+<ul>
+<li>
+<p>同一Tomcat服务器下不同Web项目之间的共享：</p>
+</li>
+<li>
+<p>默认情况下不同Web项目之间的Cookie不能共享。</p>
+</li>
+<li>
+<p>使用<code>setPath(String path)</code>可以设置Cookie的获取范围。</p>
+<p>不设置时其默认值为当前的虚拟目录。</p>
+<p>设置为&quot;/&quot;可以在所有项目间共享。</p>
+</li>
+<li>
+<p>不同Tomcat服务器之间的共享：</p>
+</li>
+<li>
+<p>使用<code>setDomain(String path)</code>可以设置一级域名相同的多个服务器间共享Cookie。</p>
+</li>
+<li>
+<p>示例：</p>
+<pre><code>// 经过以下设置，tieba.baidu.com和news.baidu.com可以共享cookie
+cookie.setDomain(&quot;.baidu.com&quot;);
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="93-session">9.3 Session</h3>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<p>Session是服务器端会话技术，在一次会话的多次请求间共享数据，数据保存在服务器端的对象（内存）中。</p>
+<p>Session技术依赖于Cookie，具体可见下文。</p>
+<p><strong>Session的主要特点如下</strong>：</p>
+<ul>
+<li>存储在<strong>服务端</strong>，相对Cookie更<strong>安全</strong></li>
+<li>可以存储<strong>任意类型、任意大小</strong>的数据</li>
+<li><strong>依赖于Cookie</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>常用内容</strong>：</p>
+<h4 id="931-获取">9.3.1 获取</h4>
+<pre><code class="language-java">// 通过Request获取
+HttpSession session = request.getSession();
+</code></pre>
+<p><strong>说明</strong>：</p>
+<ul>
+<li>服务器创建session出来后，会把session的id号，以cookie的形式回写给客户机，这样，只要客户机的浏览器不关，再去访问服务器时，都会带着session的id号去，服务器发现客户机浏览器带session id过来了，就会使用内存中与之对应的session为之服务。</li>
+<li>Cookie中ID号的name为：<code>JSESSIONID</code>。</li>
+</ul>
+<h4 id="932-销毁">9.3.2 销毁</h4>
+<p>Session对象的销毁时机如下：</p>
+<ul>
+<li>
+<p>服务器关闭*（不明确）</p>
+</li>
+<li>
+<p>session对象调用<code>invalidate()</code></p>
+</li>
+<li>
+<p>在默认失效事件过后销毁。默认失效时间可以在<code>web.xml</code>文件中如下位置修改：</p>
+</li>
+</ul>
+<pre><code class="language-xml">&lt;!-- 默认：30min --&gt;
+&lt;session-config&gt;
+    &lt;session-timeout&gt;30&lt;/session-timeout&gt;
+&lt;/session-config&gt;
+</code></pre>
+<h4 id="933-共享数据">9.3.3 共享数据</h4>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">Object <strong>getAttribute</strong>(String name)</td><td align="center">获取</td></tr>
+<tr><td align="center">void <strong>setAttribute</strong>(String name, Object value)</td><td align="center">设置</td></tr>
+<tr><td align="center">void <strong>removeAttribute</strong>(String name)</td><td align="center">移除</td></tr>
+</tbody>
+</table>
+<h4 id="934-一方断开后的存续问题">9.3.4 一方断开后的存续问题</h4>
+<ul>
+<li>
+<p><strong>服务端不关闭+客户端关闭后，两次获取的Session是否为同一个</strong>：</p>
+</li>
+<li>
+<p>默认情况下<strong>不是</strong>同一个，Session默认标识一次浏览器会话。</p>
+</li>
+<li>
+<p>可以使用以下方式使第二次会话使用相同Session：</p>
+<pre><code class="language-java">Cookie ck = new Cookie(&quot;JSESSIONID&quot;, session.getId());
+response.addCookie(ck);
+</code></pre>
+</li>
+<li>
+<p><strong>客户端不关闭+服务器关闭后，两次获取的Session是否为同一个</strong>：</p>
+</li>
+<li>
+<p>为了确保数据不丢失，Tomcat会自动完成以下工作：</p>
+<ul>
+<li>Session的钝化：服务器<strong>正常关闭</strong>（shutdown.sh）之前，将Session对象序列化到硬盘上，保存为<code>.ser</code>文件。</li>
+<li>Session的活化：在服务器再次开启后，将Session文件转化为内存中的Session对象。</li>
+</ul>
+</li>
+<li>Intellij IDEA中此功能工作不正常。</li>
+</ul>
+</li>
+</ul>
+<h2 id="10-servletfilter">10. Servlet：Filter</h2>
+<h3 id="101-概述">10.1 概述</h3>
+<p>Filter（过滤器）是一个程序，它先于与之相关的servlet或JSP页面运行在服务器上。</p>
+<p>过滤器可附加到一个或多个servlet或JSP页面上，并且可以检查进入这些资源的请求信息。</p>
+<p>一个Web容器中可以有多个过滤器，多个过滤器组成过滤器链（Filter Chain），一个过滤器在执行完后，会交给下一个过滤器执行，最后请求会被发送到目标资源。目标资源发送响应后，响应又会沿过滤器链返回，依次经过每一个过滤器。</p>
+<p>过滤器可以做如下事情：</p>
+<ul>
+<li>以常规的方式调用资源（即，调用servlet或JSP页面）</li>
+<li>利用修改过的请求信息调用资源</li>
+<li>调用资源，但在发送响应到客户机前对其进行修改</li>
+<li>阻止该资源调用，代之以转到其他的资源，返回一个特定的状态代码或生成替换输出</li>
+</ul>
+<p>（most from http://blog.51cto.com/zhangjunhd/20629）</p>
+<h3 id="102-使用">10.2 使用</h3>
+<ul>
+<li>
+<p><strong>配置</strong>：</p>
+<ul>
+<li><strong>web.xml</strong>：</li>
+</ul>
+<pre><code class="language-xml">&lt;filter&gt;
+	&lt;filter-name&gt;demoFilter&lt;/filter-name&gt;
+    &lt;filter-class&gt;***.filter.demoFilter&lt;/filter-class&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+	&lt;filter-name&gt;demoFilter&lt;/filter-name&gt;
+    &lt;!-- 拦截路径 --&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;
+</code></pre>
+<p>同时可以使用<code>&lt;dispatcher&gt;</code>标签设置拦截的请求类型。</p>
+<p>可以设置为<code>REQUEST（默认）</code>、<code>FORWARD</code>、<code>INCLUDE</code>和<code>ERROR</code>，具体说明见下文。</p>
+<ul>
+<li><strong>注解（Servlet 3.0）</strong>：</li>
+</ul>
+<pre><code class="language-java">@WebFilter(urlPatterns={&quot;/*&quot;})
+public class DemoFilter implements Filter{
+    ...
+}
+</code></pre>
+<p>注解配置同时可以设置dispatcherTypes属性，用于指定Filter拦截的请求类型。可以设置为多个值，典型的如下：</p>
+<ul>
+<li>REQUEST：默认，拦截浏览器直接请求的资源。</li>
+<li>FORWARD：拦截转发访问资源。</li>
+<li>INCLUDE：包含访问资源。</li>
+<li>ERROR：错误跳转资源。</li>
+<li>
+<p>ASYNC：异步访问资源。</p>
+</li>
+<li>
+<p><strong>拦截路径详解</strong>：</p>
+</li>
+<li>
+<p>拦截具体资源路径：</p>
+<pre><code>/index.jsp
+/demoServlet
+</code></pre>
+</li>
+<li>
+<p>拦截目录：</p>
+<pre><code>/servlet/*
+</code></pre>
+</li>
+<li>
+<p>后缀名拦截：</p>
+<pre><code>*.jsp
+*.css
+*.js
+</code></pre>
+</li>
+<li>
+<p>拦截所有资源：</p>
+<pre><code>/*
+</code></pre>
+</li>
+<li>
+<p><strong>拦截先后顺序</strong>：</p>
+</li>
+<li>
+<p>web.xml：</p>
+<p>按照<code>&lt;filter-mapping&gt;</code>的顺序依次从上到下执行。</p>
+</li>
+<li>
+<p>注解配置：</p>
+<p>按照Filter类名的字符串比较规则，较小的先执行。</p>
+<p>例如：AFilter将比BFilter先执行。</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>生命周期方法</strong>：</p>
+<ul>
+<li><strong>init(FilterConfig)</strong>：</li>
+</ul>
+<p>服务器启动后会创建Filter对象，并调用<code>init()</code>方法。</p>
+<p>该方法在一次启动中只调用一次，一般用于加载资源。</p>
+<ul>
+<li><strong>doFilter(ServletRequest, ServletResponse, FilterChain)</strong>：</li>
+</ul>
+<p>每一次请求被拦截时，会执行。</p>
+<p>该方法中调用<code>chain.doFilter(request, response)</code>即为将请求传回过滤器链（放行）。该方法之后的代码为对返回的响应的处理。</p>
+<ul>
+<li><strong>distroy()</strong>：</li>
+</ul>
+<p>在服务器正常关闭时，会销毁Filter对象并调用<code>distroy()</code>方法。</p>
+<p>一般用于释放资源。</p>
+</li>
+</ul>
+<h2 id="11-servletlistener">11. Servlet：Listener</h2>
+<h3 id="111-概述">11.1 概述</h3>
+<p>Listener（监听器）是web的三大组件之一。</p>
+<p>事件监听涉及到三个组件：事件源、事件对象、事件监听器。</p>
+<p>当事件源上发生某个动作时，它会调用事件监听器的一个方法，并在调用该方法时把事件对象传递进去。开发人员在监听器中通过事件对象，就可以拿到事件源，从而对事件源进行操作。事件对象封装事件源和动作，而监听器对象通过事件对象对事件源进行处理。</p>
+<p><strong>Servlet API提供了以下监听器接口</strong>：</p>
+<ol>
+<li>javax.servlet.AsyncListener - 如果在添加了侦听器的ServletRequest上启动的异步操作已完成，超时或导致错误，将会通知侦听器。</li>
+<li>javax.servlet.ServletContextListener - 用于接收关于ServletContext生命周期更改的通知事件的接口。</li>
+<li>javax.servlet.ServletContextAttributeListener - 接收关于ServletContext属性更改的通知事件的接口。</li>
+<li>javax.servlet.ServletRequestListener - 用于接收关于进入和超出Web应用程序范围的请求的通知事件的接口。</li>
+<li>javax.servlet.ServletRequestAttributeListener - 接收关于ServletRequest属性更改的通知事件的接口。</li>
+<li>javax.servlet.http.HttpSessionListener - 接收关于HttpSession生命周期更改的通知事件的接口。</li>
+<li>javax.servlet.http.HttpSessionBindingListener - 使对象从会话绑定到绑定或从其绑定时被通知。</li>
+<li>javax.servlet.http.HttpSessionAttributeListener - 用于接收关于HttpSession属性更改的通知事件的接口。</li>
+<li>javax.servlet.http.HttpSessionActivationListener - 绑定到会话的对象可能会侦听容器事件，通知他们会话将被钝化，该会话将被激活。需要在VM或持久化会话之间迁移会话的容器来通知绑定到实现HttpSessionActivationListener的会话的所有属性。</li>
+</ol>
+<h2 id="12-jsp入门">12. JSP入门</h2>
+<p>JSP（Java Server Pages），即Java服务器端页面，是一种动态页面技术。</p>
+<p>JSP的内同类似HTML，可以写HTML代码，同时可以在特定区域写Java代码。</p>
+<p>JSP的本质是Servlet，使用JSP可以简化书写。</p>
+<h3 id="121-jsp标签">12.1 JSP标签</h3>
+<ul>
+<li>
+<p><strong>脚本</strong>：</p>
+<pre><code class="language-jsp">&lt;% 代码 %&gt;
+</code></pre>
+<p>以上标签中定义的代码实际上在Servlet的<code>service()</code>方法中。</p>
+<p>可以写任何能在<code>service()</code>方法中写的内容。</p>
+</li>
+<li>
+<p><strong>声明</strong>：</p>
+<pre><code class="language-jsp">&lt;%! 代码 %&gt;
+</code></pre>
+<p>以上标签中定义的代码实际上在Servlet的成员部分（方法外）。</p>
+</li>
+<li>
+<p><strong>表达式</strong>：</p>
+<pre><code>&lt;%= Java中的变量/对象/有返回值的方法 %&gt;
+
+&lt;%= user.getName() %&gt;
+</code></pre>
+<p>以上标签中定义的内容，在将JSP页面转换成Servlet后，使用out.print()将表达式的值输出。</p>
+<p>注意：在方法的后面不能有分号。</p>
+</li>
+<li>
+<p><strong>指令</strong>：</p>
+<pre><code class="language-jsp">&lt;%@ 指令名称 属性名1=属性值1 属性名2=属性值2 ... %&gt;
+</code></pre>
+<p>JSP指令用来配置整个JSP页面的相关属性，引入资源文件等。</p>
+<p><strong>JSP有如下三个指令</strong>：</p>
+<ul>
+<li>
+<p><strong>page</strong>：</p>
+</li>
+<li>
+<p>作用：配置当前页面，提供一些说明。</p>
+</li>
+<li>
+<p>一个JSP可以配置多个。</p>
+</li>
+<li>
+<p>常用属性：</p>
+<table>
+<thead>
+<tr><th>属性</th><th>描述</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>buffer</strong></td><td>指定out对象使用缓冲区的大小</td></tr>
+<tr><td>autoFlush</td><td>控制out对象的 缓存区</td></tr>
+<tr><td><strong>contentType</strong></td><td>指定当前JSP页面的MIME类型和字符编码</td></tr>
+<tr><td><strong>errorPage</strong></td><td>指定当JSP页面发生异常时需要转向的错误处理页面</td></tr>
+<tr><td><strong>isErrorPage</strong></td><td>指定当前页面是否可以作为另一个JSP页面的错误处理页面</td></tr>
+<tr><td>extends</td><td>指定servlet从哪一个类继承</td></tr>
+<tr><td><strong>import</strong></td><td>导入要使用的Java类（一般IDE自动生成）</td></tr>
+<tr><td>info</td><td>定义JSP页面的描述信息</td></tr>
+<tr><td>isThreadSafe</td><td>指定对JSP页面的访问是否为线程安全</td></tr>
+<tr><td><strong>language</strong></td><td>定义JSP页面所用的脚本语言，默认是Java</td></tr>
+<tr><td>session</td><td>指定JSP页面是否使用session</td></tr>
+<tr><td><strong>isELIgnored</strong></td><td>指定是否执行EL表达式</td></tr>
+<tr><td>isScriptingEnabled</td><td>确定脚本元素能否被使用</td></tr>
+</tbody>
+</table>
+</li>
+</ul>
+<pre><code class="language-jsp">&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+// &lt;%@ page contentType=&quot;application/json;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+</code></pre>
+<ul>
+<li>
+<p><strong>include</strong>：</p>
+</li>
+<li>
+<p>作用：包含其他文件。</p>
+</li>
+<li>被包含得文件可以是JSP、HTML或文本文件，被包含得文件类似JSP文件的一部分，<strong>会被同时编译执行</strong>。</li>
+</ul>
+<pre><code class="language-jsp">&lt;%@ include file=&quot;文件相对url地址&quot; %&gt;
+</code></pre>
+<ul>
+<li>
+<p><strong>taglib</strong>：</p>
+</li>
+<li>
+<p>作用：导入外部标签库。</p>
+</li>
+</ul>
+<pre><code class="language-jsp">&lt;%-- 导入jstl --%&gt;
+&lt;%@ taglib prefix=&quot;c&quot; uri=&quot;http://java.sun.com/jsp/jstl/core&quot; %&gt;
+</code></pre>
+</li>
+<li>
+<p><strong>注释</strong>：</p>
+<pre><code class="language-jsp">&lt;%-- 此注释可以注释JSP中任意内容 --%&gt;
+&lt;%-- 传统HTML注释&lt;!--  --&gt;只能注释HTML代码片段 --%&gt;
+</code></pre>
+</li>
+</ul>
+<h3 id="122-jsp内置对象">12.2 JSP内置对象</h3>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<ul>
+<li>内置对象是JSP页面中不需要获取/创建的对象，可以直接使用。</li>
+<li>又被称为隐式对象。</li>
+<li>一共有9个。</li>
+</ul>
+</li>
+<li>
+<p><strong>常用对象</strong>：</p>
+<ul>
+<li>request</li>
+</ul>
+<p>即service方法传递的request。</p>
+<ul>
+<li>response</li>
+</ul>
+<p>即service方法传递的response。</p>
+<ul>
+<li>out</li>
+</ul>
+<p>字符输出流对象，可以将数据输出到页面中。</p>
+<p>类似于<code>response.getWriter()</code>。</p>
+<p>区别：<code>response.getWriter()</code>数据输出永远在<code>out.write()</code>之前。</p>
+</li>
+<li>
+<p><strong>其他对象</strong>：</p>
+<table>
+<thead>
+<tr><th>对象</th><th>类型</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>pageContext</td><td>PageContext</td><td>代表整个JSP页面，可以通过此对象获取其他八个对象。</td></tr>
+<tr><td>session</td><td>HttpSession</td><td>和Servlets中的session对象有一样的行为</td></tr>
+<tr><td>application</td><td>ServletContext</td><td>在JSP页面的整个生命周期中都代表着这个JSP页面，可以共享数据</td></tr>
+<tr><td>page</td><td> </td><td>同义于this关键字，是整个JSP页面的代表</td></tr>
+<tr><td>config</td><td>ServletConfig</td><td>Servlet的配置对象</td></tr>
+<tr><td>exception</td><td>Throwable</td><td>异常对象</td></tr>
+</tbody>
+</table>
+</li>
+</ul>
+<h2 id="13-jspel表达式">13. JSP：EL表达式</h2>
+<p>EL（Expression Language），即JSP表达式语言。</p>
+<p>EL可以简化JSP页面中Java代码的编写，同时也使在JSP页面中访问JavaBean和集合中的数据变得简单。</p>
+<p>在JSP EL表达式内可以使用整型数，浮点数，字符串，常量true、false，还有null。</p>
+<h3 id="131-运算符">13.1 运算符</h3>
+<table>
+<thead>
+<tr><th>运算符</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>+  -  *  /(div)  %(mod)</td><td>算数运算符</td></tr>
+<tr><td>&lt;  &gt;  &lt;  =  &gt;  =</td><td>比较运算符</td></tr>
+<tr><td>&amp;&amp;(and)  ||(or)  !(not)</td><td>逻辑运算符</td></tr>
+<tr><td>empty</td><td>测试是否空值</td></tr>
+</tbody>
+</table>
+<p>示例：</p>
+<pre><code class="language-jsp">${3 &gt; 4}
+&lt;%-- false --%&gt;
+
+${3 + 4}
+&lt;%-- 7 --%&gt;
+</code></pre>
+<h3 id="132-el访问数据">13.2 EL访问数据</h3>
+<ul>
+<li>
+<p><strong>通过Scope访问共享数据</strong>：</p>
+<p>Scope对象从小到大排列一共有四个：</p>
+<ul>
+<li>pageScope，代表pageContext</li>
+<li>requestScope，代表request</li>
+<li>sessionScope，代表session</li>
+<li>applicationScope，代表application（ServletContext）</li>
+</ul>
+<p>可以通过以上Scope获取对应域中的共享数据：</p>
+<pre><code class="language-jsp">${域名称.键}
+
+&lt;%-- 通过键获取 --%&gt;
+${requestScope.key}
+
+&lt;%-- 若不使用Scope，则依次从最小的Scope向上查找 --%&gt;
+${key}
+</code></pre>
+</li>
+<li>
+<p><strong>获取JavaBean成员数据</strong>：</p>
+<pre><code class="language-jsp">&lt;%-- 本质为调用getter --%&gt;
+${域名称.键名.属性名}
+</code></pre>
+</li>
+<li>
+<p><strong>获取Map、List数据</strong>：</p>
+<p>List：</p>
+<pre><code class="language-jsp">${域名称.键名[索引]}
+</code></pre>
+<p>Map：</p>
+<pre><code class="language-jsp">${域名称.键名.key}
+${域名称.键名[&quot;key&quot;]}
+</code></pre>
+</li>
+<li>
+<p><strong>通过隐含对象获取值</strong>：</p>
+<p>EL表达式可以使用以下隐含对象：</p>
+<table>
+<thead>
+<tr><th>隐含对象</th><th>描述</th></tr>
+</thead>
+<tbody>
+<tr><td>pageScope</td><td>page 作用域</td></tr>
+<tr><td>requestScope</td><td>request 作用域</td></tr>
+<tr><td>sessionScope</td><td>session 作用域</td></tr>
+<tr><td>applicationScope</td><td>application 作用域</td></tr>
+<tr><td>param</td><td>Request 对象的参数，字符串</td></tr>
+<tr><td>paramValues</td><td>Request对象的参数，字符串集合</td></tr>
+<tr><td>header</td><td>HTTP 信息头，字符串</td></tr>
+<tr><td>headerValues</td><td>HTTP 信息头，字符串集合</td></tr>
+<tr><td>initParam</td><td>上下文初始化参数</td></tr>
+<tr><td>cookie</td><td>Cookie值</td></tr>
+<tr><td>pageContext</td><td>当前页面的pageContext</td></tr>
+</tbody>
+</table>
+</li>
+</ul>
+<h2 id="14-jspjstl标准标签库">14. JSP：JSTL标准标签库</h2>
+<p>JSTL（Java Server pages Tag Library），即JSP标准标签库。</p>
+<p>JSTL是Apache组织提供的开源、免费的JSP标签库。</p>
+<p>JSTL可以简化JSP页面上的java代码。</p>
+<h3 id="141-下载引入">14.1 下载&amp;引入</h3>
+<ul>
+<li>
+<p>下载：</p>
+<p>http://archive.apache.org/dist/jakarta/taglibs/standard/binaries/</p>
+<p>下载解压并添加为库。</p>
+</li>
+<li>
+<p>引入：</p>
+<pre><code class="language-jsp">&lt;%@ taglib prefix=&quot;c&quot; uri=&quot;http://java.sun.com/jsp/jstl/core&quot; %&gt;
+</code></pre>
+</li>
+</ul>
+<p>以上方式，任选其一。</p>
+<h3 id="142-常用标签">14.2 常用标签</h3>
+<ul>
+<li>
+<p>&lt; c:if &gt;</p>
+<ul>
+<li>相当于java中的if</li>
+<li>必须要有属性<code>test</code>，接受boolean表达式。若表达式为true，则显示标签体内容；若为false，则不显示。</li>
+</ul>
+<pre><code class="language-jsp">&lt;%-- test为必须 --%&gt;
+&lt;c:if test=&quot;&lt;boolean&gt;&quot; var=&quot;&lt;string&gt;&quot; scope=&quot;&lt;string&gt;&quot;&gt;
+ ...
+&lt;/c:if&gt;
+
+&lt;c:if test=&quot;${salary &gt; 2000}&quot;&gt;
+ &lt;p&gt;我的工资为: &lt;c:out value=&quot;${salary}&quot;/&gt;&lt;p&gt;
+&lt;/c:if&gt;
+</code></pre>
+</li>
+<li>
+<p>&lt; c:choose &gt;</p>
+<ul>
+<li>与Java switch语句的功能一样</li>
+</ul>
+<pre><code class="language-jsp">&lt;c:choose&gt;
+  &lt;c:when test=&quot;&lt;boolean&gt;&quot;&gt;
+      ...
+  &lt;/c:when&gt;
+  &lt;c:when test=&quot;&lt;boolean&gt;&quot;&gt;
+      ...
+  &lt;/c:when&gt;
+  ...
+  ...
+  &lt;c:otherwise&gt;
+      ...
+  &lt;/c:otherwise&gt;
+&lt;/c:choose&gt;
+</code></pre>
+</li>
+<li>
+<p>&lt; c:forEach &gt;</p>
+<ul>
+<li>封装了Java中的for，while，do-while循环</li>
+</ul>
+<pre><code class="language-jsp">&lt;c:forEach
+  items=&quot;&lt;object&gt;&quot;
+  begin=&quot;&lt;int&gt;&quot;
+  end=&quot;&lt;int&gt;&quot;
+  step=&quot;&lt;int&gt;&quot;
+  var=&quot;&lt;string&gt;&quot;
+  varStatus=&quot;&lt;string&gt;&quot;&gt;
+...
+&lt;/c:forEach&gt;
+
+
+&lt;c:forEach var=&quot;i&quot; begin=&quot;1&quot; end=&quot;5&quot;&gt;
+ Item &lt;c:out value=&quot;${i}&quot;/&gt;&lt;p&gt;
+&lt;/c:forEach&gt;
+</code></pre>
+<table>
+<thead>
+<tr><th><strong>属性</strong></th><th><strong>描述</strong></th><th><strong>是否必要</strong></th><th><strong>默认值</strong></th></tr>
+</thead>
+<tbody>
+<tr><td>items</td><td>要被循环的信息</td><td>否</td><td>无</td></tr>
+<tr><td>begin</td><td>开始的元素（0=第一个元素，1=第二个元素）</td><td>否</td><td>0</td></tr>
+<tr><td>end</td><td>最后一个元素（0=第一个元素，1=第二个元素）</td><td>否</td><td>Last element</td></tr>
+<tr><td>step</td><td>每一次迭代的步长</td><td>否</td><td>1</td></tr>
+<tr><td>var</td><td>代表当前条目的变量名称</td><td>否</td><td>无</td></tr>
+<tr><td>varStatus</td><td>代表循环状态的变量名称</td><td>否</td><td>无</td></tr>
+</tbody>
+</table>
+</li>
+</ul>
+
+
+</body>
+</html>

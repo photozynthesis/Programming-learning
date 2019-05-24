@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>JQuery</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="jquery">JQuery</h1>
+<ul>
+<li><a href="#1-jquery简介与概述">1. JQuery简介与概述</a>
+<ul>
+<li><a href="#11-jquery简介">1.1 JQuery简介</a></li>
+<li><a href="#12-jquery的安装使用">1.2 JQuery的安装使用</a></li>
+</ul>
+</li>
+<li><a href="#2-jquery对象概述">2. JQuery对象概述</a></li>
+<li><a href="#3-jquery选择器">3. JQuery选择器</a>
+<ul>
+<li><a href="#31-标签idclass并集选择器">3.1 标签/id/class/并集选择器</a></li>
+<li><a href="#32-层级选择器">3.2 层级选择器</a></li>
+<li><a href="#33-属性选择器">3.3 属性选择器</a></li>
+<li><a href="#34-过滤选择器">3.4 过滤选择器</a></li>
+<li><a href="#35-表单过滤选择器">3.5 表单过滤选择器</a></li>
+</ul>
+</li>
+<li><a href="#4-jquery操作属性">4. JQuery操作属性</a>
+<ul>
+<li><a href="#41-操作通用属性">4.1 操作通用属性</a></li>
+<li><a href="#42-操作class">4.2 操作class</a></li>
+<li><a href="#43-操作css">4.3 操作CSS</a></li>
+</ul>
+</li>
+<li><a href="#5-jquery操作内容dom">5. JQuery操作内容/DOM</a>
+<ul>
+<li><a href="#51-操作元素内容">5.1 操作元素内容</a></li>
+<li><a href="#52-操作dom">5.2 操作DOM</a></li>
+</ul>
+</li>
+<li><a href="#6-jquery遍历">6. JQuery遍历</a></li>
+<li><a href="#7-jquery事件绑定">7. JQuery事件绑定</a></li>
+<li><a href="#8-jquery动画显示与隐藏">8. JQuery动画：显示与隐藏</a></li>
+<li><a href="#9-jquery扩展功能">9. JQuery扩展功能</a></li>
+<li><a href="#10-jquery-常用操作">10. JQuery 常用操作</a>
+<ul>
+<li><a href="#101-监听指定按键">10.1 监听指定按键</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="1-jquery简介与概述">1. JQuery简介与概述</h2>
+<h3 id="11-jquery简介">1.1 JQuery简介</h3>
+<ul>
+<li>
+<p><strong>JQuery是什么？</strong></p>
+<ul>
+<li>JQuery是一个JavaScript函数库</li>
+<li>JQuery是当下十分流行的 JS 框架，提供了大量扩展</li>
+</ul>
+</li>
+<li>
+<p><strong>JQuery能做什么？</strong></p>
+<ul>
+<li>HTML元素获取与操作</li>
+<li>HTML事件函数</li>
+<li>HTML DOM 遍历和修改</li>
+<li>CSS操作</li>
+<li>JavaScript特效和动画</li>
+<li>AJAX</li>
+<li>Utilities</li>
+</ul>
+</li>
+<li>
+<p><strong>浏览器兼容性</strong>：</p>
+<p>1.x版本兼容IE6、7、8，而其他版本的JQuery不能兼容。</p>
+</li>
+</ul>
+<h3 id="12-jquery的安装使用">1.2 JQuery的安装使用</h3>
+<p>JQuery可以通过以下方式使用：</p>
+<ul>
+<li>
+<p>下载并引入</p>
+<ul>
+<li>
+<p>下载地址 <a href="http://jquery.com/download/">jquery.com</a></p>
+</li>
+<li>
+<p>引入举例：</p>
+</li>
+</ul>
+<pre><code class="language-html">&lt;head&gt;
+    &lt;script src=&quot;jquery-1.10.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+</code></pre>
+</li>
+<li>
+<p>引用自CDN</p>
+<ul>
+<li>举例：</li>
+</ul>
+<pre><code class="language-html">&lt;head&gt;
+    &lt;script src=&quot;https://cdn.bootcss.com/jquery/1.10.2/jquery.min.js&quot;&gt;
+    &lt;/script&gt;
+&lt;/head&gt;
+</code></pre>
+<ul>
+<li>
+<p>可用的CDN如下：</p>
+</li>
+<li>
+<p>百度：&quot;https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js&quot;</p>
+</li>
+<li>新浪：&quot;http://lib.sinaapp.com/js/jquery/2.0.2/jquery-2.0.2.min.js&quot;</li>
+<li>Google：&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js&quot;</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-jquery对象概述">2. JQuery对象概述</h2>
+<ul>
+<li>
+<p>JQ对象是通过JQuery选择器获得的对象，而DOM对象是通过常规方法获得的对象</p>
+</li>
+<li>
+<p>JQ对象不能使用任何常规DOM对象的方法，DOM对象也不能使用任何JQ对象的方法</p>
+</li>
+<li>
+<p>DOM对象可以通过以下方式转为JQ对象：</p>
+<pre><code class="language-javascript">$(DOM对象)
+</code></pre>
+</li>
+<li>
+<p>JQ对象本质上是数组，所以可以通过下标转为DOM对象：</p>
+<pre><code class="language-javascript">// index from 0 
+$(&quot;selector&quot;)[index];
+$(&quot;selector&quot;).get(index);
+</code></pre>
+</li>
+</ul>
+<h2 id="3-jquery选择器">3. JQuery选择器</h2>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<p>JQuery选择器允许对HTML单个元素或元素组进行操作。</p>
+<p>JQuery选择器基于已存在的CSS选择器，也包含一些自定义的选择器。</p>
+</li>
+<li>
+<p><strong>格式</strong>：</p>
+<pre><code class="language-javascript">// 基本格式
+$(&quot;选择器&quot;)
+</code></pre>
+</li>
+<li>
+<p><strong>常用选择器</strong>：</p>
+<p>以下选择器大部分都是CSS中已存在的选择器：</p>
+</li>
+</ul>
+<h3 id="31-标签idclass并集选择器">3.1 标签/id/class/并集选择器</h3>
+<table>
+<thead>
+<tr><th align="left">示例</th><th align="left">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="left">$(&quot;标签名&quot;)</td><td align="left">获得所有匹配标签名的元素</td></tr>
+<tr><td align="left">$(&quot;#id&quot;)</td><td align="left">根据id获取</td></tr>
+<tr><td align="left">$(&quot;.class&quot;)</td><td align="left">根据class获取</td></tr>
+<tr><td align="left">$(&quot;选择器1, 选择器2, ...&quot;)</td><td align="left">选择多个</td></tr>
+</tbody>
+</table>
+<h3 id="32-层级选择器">3.2 层级选择器</h3>
+<table>
+<thead>
+<tr><th align="left">示例</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="left">$(&quot;A B&quot;)</td><td>选择A元素内部的所有B元素（所有的子+孙元素）</td></tr>
+<tr><td align="left">$(&quot;A &gt; B&quot;)</td><td>选择A元素内部的所有B子元素（所有的直接子元素）</td></tr>
+<tr><td align="left">$(&quot;A + B&quot;)</td><td>选择紧接在A元素之后的所有B元素</td></tr>
+</tbody>
+</table>
+<h3 id="33-属性选择器">3.3 属性选择器</h3>
+<table>
+<thead>
+<tr><th>示例</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>$(&quot;A[属性名]&quot;)</td><td>选择带有指定属性的所有A元素</td></tr>
+<tr><td>$(&quot;A[属性名='值']&quot;)</td><td>选择带有指定属性及属性值的所有A元素</td></tr>
+<tr><td><code>$(&quot;A[属性...][属性...]...&quot;)</code></td><td>选择满足多个属性条件的A元素</td></tr>
+</tbody>
+</table>
+<h3 id="34-过滤选择器">3.4 过滤选择器</h3>
+<table>
+<thead>
+<tr><th>示例</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>$(&quot;A:first&quot;)</td><td>获取第一个A元素</td></tr>
+<tr><td>$(&quot;A:last&quot;)</td><td>获取最后一个A元素</td></tr>
+<tr><td>$(&quot;A:not(选择器)&quot;)</td><td>选取不包括指定选择器的A元素</td></tr>
+<tr><td>$(&quot;A:even&quot;)</td><td>选取索引为偶数的A元素</td></tr>
+<tr><td>$(&quot;A:odd&quot;)</td><td>选取索引为奇数的A元素</td></tr>
+<tr><td>$(&quot;A:eq(index)&quot;)</td><td>选取指定索引的A元素，从0开始</td></tr>
+<tr><td>$(&quot;A:gt(index)&quot;)</td><td>选取大于指定索引的A元素，从0开始</td></tr>
+<tr><td>$(&quot;A:lt(index)&quot;)</td><td>选取小于指定索引的A元素，从0开始</td></tr>
+<tr><td>$(&quot;header&quot;)</td><td>选取所有标题元素（h1 - h6）</td></tr>
+</tbody>
+</table>
+<h3 id="35-表单过滤选择器">3.5 表单过滤选择器</h3>
+<table>
+<thead>
+<tr><th>示例</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>$(&quot;input:enabled&quot;)</td><td>获得可用元素</td></tr>
+<tr><td>$(&quot;input:disabled&quot;)</td><td>获得不可用的元素</td></tr>
+<tr><td>$(&quot;input:checked&quot;)</td><td>获得单选框/复选框选中的元素</td></tr>
+<tr><td>$(&quot;#select &gt; option : selected&quot;)</td><td>获得下拉框选中的元素</td></tr>
+</tbody>
+</table>
+<h2 id="4-jquery操作属性">4. JQuery操作属性</h2>
+<h3 id="41-操作通用属性">4.1 操作通用属性</h3>
+<table>
+<thead>
+<tr><th>方法</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>attr()</td><td>获取/设置元素的属性</td></tr>
+<tr><td>removeAttr()</td><td>删除属性</td></tr>
+<tr><td>prop()</td><td>获取/设置元素的属性</td></tr>
+<tr><td>removeProp()</td><td>删除属性</td></tr>
+</tbody>
+</table>
+<p><code>prop()</code>为JQuery1.6新增的方法。</p>
+<p>表单中的<code>checked</code>、<code>selected</code>、<code>disabled</code>等属性，应尽量使用<code>prop()</code>来获取。</p>
+<pre><code class="language-javascript">$(&quot;input[checked]&quot;).prop(&quot;checked&quot;, &quot;checked/true/false&quot;);
+</code></pre>
+<h3 id="42-操作class">4.2 操作class</h3>
+<table>
+<thead>
+<tr><th>方法</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>addClass()</td><td>添加class属性值</td></tr>
+<tr><td>removeClass()</td><td>移除class属性值</td></tr>
+<tr><td>toggleClass()</td><td>来回移除/添加class属性值</td></tr>
+</tbody>
+</table>
+<pre><code class="language-javascript">$(&quot;#btn[id='xx']&quot;).click(function () {
+    $(&quot;#div_demo&quot;).toggleClass(&quot;pink&quot;);
+});
+</code></pre>
+<h3 id="43-操作css">4.3 操作CSS</h3>
+<table>
+<thead>
+<tr><th>方法</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>css()</td><td>添加css</td></tr>
+</tbody>
+</table>
+<pre><code class="language-javascript">$(&quot;#div_demo&quot;).css(&quot;background-color&quot;, &quot;gold&quot;);
+// or
+$(&quot;#div_demo&quot;).css(&quot;backgroundColor&quot;, &quot;gold&quot;);
+
+// 以下方法可以删除设置的css
+$(&quot;#div_demo&quot;).css(&quot;backgroundColor&quot;, &quot;&quot;);
+</code></pre>
+<h2 id="5-jquery操作内容dom">5. JQuery操作内容/DOM</h2>
+<h3 id="51-操作元素内容">5.1 操作元素内容</h3>
+<table>
+<thead>
+<tr><th>方法</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>html()</td><td>获取元素中的内容，包括html标签</td></tr>
+<tr><td>text()</td><td>获取元素中的文本内容</td></tr>
+</tbody>
+</table>
+<pre><code class="language-html">&lt;p&gt;
+	&lt;b&gt;Hello&lt;/b&gt;&lt;b&gt;World&lt;i&gt;Java&lt;/i&gt;&lt;/b&gt;
+&lt;/p&gt;
+&lt;script&gt;
+    $(&quot;p&quot;).html();		// &lt;b&gt;Hello&lt;/b&gt;&lt;b&gt;World&lt;i&gt;Java&lt;/i&gt;&lt;/b&gt;
+    $(&quot;p&quot;).text();		// HelloWorldJava
+&lt;/script&gt;
+</code></pre>
+<h3 id="52-操作dom">5.2 操作DOM</h3>
+<ul>
+<li>
+<p><strong>在元素内部添加新元素</strong>：</p>
+<table>
+<thead>
+<tr><th>方法</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>append()</td><td>将<strong>指定元素</strong>添加到<strong>元素</strong>的内部+末尾</td></tr>
+<tr><td>prepend()</td><td>将<strong>指定元素</strong>添加到<strong>元素</strong>的内部+开头</td></tr>
+<tr><td>appendTo()</td><td>将<strong>元素</strong>添加到<strong>指定元素</strong>的内部+末尾</td></tr>
+<tr><td>prependTo()</td><td>将<strong>元素</strong>添加到<strong>指定元素</strong>的内部+开头</td></tr>
+</tbody>
+</table>
+<pre><code class="language-html">&lt;p&gt;Hello&lt;/p&gt;
+&lt;b&gt;World&lt;/b&gt;
+&lt;script&gt;
+$(&quot;b&quot;).prependTo($(&quot;p&quot;));		// WorldHello (p的内部)
+&lt;/script&gt;
+</code></pre>
+</li>
+<li>
+<p><strong>在元素外部添加新元素</strong>：</p>
+<table>
+<thead>
+<tr><th>方法</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>after()</td><td>将<strong>指定元素</strong>添加到<strong>元素</strong>的外部+末尾</td></tr>
+<tr><td>before()</td><td>将<strong>指定元素</strong>添加到<strong>元素</strong>的外部+开头</td></tr>
+<tr><td>insertAfter()</td><td>将<strong>元素</strong>添加到<strong>指定元素</strong>的外部+末尾</td></tr>
+<tr><td>insertBefore()</td><td>将<strong>元素</strong>添加到<strong>指定元素</strong>的外部+开头</td></tr>
+</tbody>
+</table>
+<pre><code class="language-html">&lt;p&gt;Hello&lt;/p&gt;
+&lt;b&gt;World&lt;/b&gt;
+&lt;script&gt;
+$(&quot;b&quot;).insertBefore($(&quot;p&quot;));		// WorldHello (p的外部)
+&lt;/script&gt;
+</code></pre>
+</li>
+<li>
+<p><strong>其他常用功能</strong>：</p>
+<table>
+<thead>
+<tr><th>方法</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>remove()</td><td>移除元素</td></tr>
+<tr><td>empty()</td><td>清空元素的所有后代元素，仅保留当前元素及属性节点</td></tr>
+</tbody>
+</table>
+</li>
+</ul>
+<h2 id="6-jquery遍历">6. JQuery遍历</h2>
+<p>JQuery提供了更加方便的遍历数组和JQ对象的方法。</p>
+<ul>
+<li>
+<p><strong>方式一</strong>：</p>
+<pre><code class="language-javascript">// 格式
+jQ对象.each(回调函数);
+
+// 示例
+$(&quot;p&quot;).each(function () {
+alert($(this).text());
+});
+</code></pre>
+</li>
+<li>
+<p><strong>方式二</strong>：</p>
+<pre><code class="language-javascript">// 格式
+$.each(&lt;数组/jQ对象&gt;, [回调函数]);
+
+$.each([1, 2, 3, 5], function (index, element) {
+alert(index + &quot;: &quot; + element);
+})
+</code></pre>
+</li>
+<li>
+<p><strong>重要说明</strong>：</p>
+<ul>
+<li>回调函数的参数<code>index</code>表示本轮循环中内容的索引，从0开始。</li>
+<li>回调函数的参数<code>element</code>表示本轮循环中的内容，方法体中可以使用<code>this</code>代替。</li>
+<li>回调函数的返回值可以控制循环：</li>
+<li>若返回true，则相当于continue，跳过本轮循环</li>
+<li>若返回false，则相当于break，结束循环</li>
+</ul>
+</li>
+</ul>
+<h2 id="7-jquery事件绑定">7. JQuery事件绑定</h2>
+<p>JQuery提供了多种事件绑定的方法。</p>
+<ul>
+<li>
+<p><strong>标准方法</strong>：</p>
+<pre><code class="language-javascript">jQ对象.事件方法(回调函数);
+
+// demo
+$('#btn_demo').click(function () {
+  alert('Hello');
+});
+</code></pre>
+<p>事件方法如<code>click</code>、<code>mouseout</code>、<code>blur</code>等。</p>
+<p>注意：若事件方法不传递回调函数，则会触发浏览器默认行为。</p>
+<p>例如：表单对象.submit();	//直接提交表单</p>
+</li>
+<li>
+<p><strong>submit</strong>：</p>
+<p>只能为表单元素绑定该事件。</p>
+<pre><code class="language-javascript">$('#form_demo').submit(function () {
+  ...
+})
+</code></pre>
+<p>说明：</p>
+<ul>
+<li>该函数规定表单提交时发生的事件</li>
+<li>若传递的函数没有return或return true，则在return后提交表单</li>
+<li>若传递的函数return false，则return后不进行提交</li>
+</ul>
+</li>
+<li>
+<p><strong>on &amp; off</strong>：</p>
+<pre><code class="language-javascript">// 给JQ对象绑定事件
+jq对象.on(&quot;事件名称&quot;, 回调函数);
+
+// 给JQ对象解绑指定事件
+jq对象.off(&quot;事件名称&quot;);
+
+// 给JQ对象解绑全部事件
+jq对象.off();
+
+// demo
+$('#btn_demo').on('dblclick', function () {
+  alert('Hello');
+})
+</code></pre>
+<p>事件方法如<code>click</code>、<code>mouseout</code>、<code>blur</code>等。</p>
+</li>
+<li>
+<p>*<strong>toggle</strong>：</p>
+<p>注意：此方法已于JQ1.9删除，需要jQuery Migrate（迁移）插件来恢复功能。</p>
+<p>新版JQ中toggle用于动画。</p>
+<p>使用方式与on/off类似，可以来回给元素绑定/解绑事件。</p>
+</li>
+</ul>
+<h2 id="8-jquery动画显示与隐藏">8. JQuery动画：显示与隐藏</h2>
+<table>
+<thead>
+<tr><th>方法</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>show</strong>([speed], [easing], [fn])</td><td>默认显示</td></tr>
+<tr><td><strong>hide</strong>([speed], [easing], [fn])</td><td>默认隐藏</td></tr>
+<tr><td><strong>toggle</strong>([speed], [easing], [fn])</td><td>默认切换</td></tr>
+<tr><td><strong>slideDown</strong>([speed], [easing], [fn])</td><td>滑动显示</td></tr>
+<tr><td><strong>slideUp</strong>([speed], [easing], [fn])</td><td>滑动隐藏</td></tr>
+<tr><td><strong>slideToggle</strong>([speed], [easing], [fn])</td><td>滑动切换</td></tr>
+<tr><td><strong>fadeIn</strong>([speed], [easing], [fn])</td><td>淡入显示</td></tr>
+<tr><td><strong>fadeOut</strong>([speed], [easing], [fn])</td><td>淡出隐藏</td></tr>
+<tr><td><strong>fadeToggle</strong>([speed], [easing], [fn])</td><td>淡入/淡出切换</td></tr>
+</tbody>
+</table>
+<p>参数说明：</p>
+<ul>
+<li>speed：动画的速度，可使用<code>'slow'</code>、<code>'normal'</code>、<code>'fast'</code>和毫秒值</li>
+<li>easing：动画速度变化曲线预设，可选<code>'swing'</code>（慢-&gt;快-&gt;慢）、<code>'linear'</code>（线性）</li>
+<li>fn：回调函数，动画结束时执行</li>
+</ul>
+<h2 id="9-jquery扩展功能">9. JQuery扩展功能</h2>
+<ul>
+<li>
+<p><strong>扩展JQ对象的功能</strong>：</p>
+<pre><code class="language-javascript">// 经过以下方式扩展后，JQ对象就有了新功能
+// jQuery等同于$
+jQuery.fn.demoNewFunction = function () {
+  alert('demo');
+}
+
+$.fn.extend({
+  demoNewFunction : function () {
+      alert('demo');
+  }
+})
+</code></pre>
+</li>
+<li>
+<p><strong>扩展JQ自身的功能</strong>：</p>
+<pre><code class="language-javascript">// 经过以下方式扩展后，JQ自身就有了新功能
+$.extend({
+  demoNewFunction : function () {
+      alert('HelloWorld');
+  }
+})
+</code></pre>
+</li>
+</ul>
+<h2 id="10-jquery-常用操作">10. JQuery 常用操作</h2>
+<h3 id="101-监听指定按键">10.1 监听指定按键</h3>
+<p>示例：</p>
+<pre><code class="language-javascript">$(&quot;input[name='input_search']&quot;).keyup(function (e) {
+    var key = e.which;
+    if (key == 13) {
+        queryWithCityName();
+    }
+});
+</code></pre>
+
+
+</body>
+</html>

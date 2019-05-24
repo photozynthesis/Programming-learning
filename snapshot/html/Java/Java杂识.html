@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>Java杂识</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="一些java杂识">一些Java杂识</h1>
+<ul>
+<li><a href="#1-beanutils">1. BeanUtils</a>
+<ul>
+<li><a href="#11-概述">1.1 概述</a></li>
+<li><a href="#12-常用方法">1.2 常用方法</a></li>
+</ul>
+</li>
+<li><a href="#2-项目设计">2. 项目设计</a>
+<ul>
+<li><a href="#21-mvc架构">2.1 MVC架构</a></li>
+<li><a href="#22-软件设计的三层架构">2.2 软件设计的三层架构</a></li>
+</ul>
+</li>
+<li><a href="#3-threadlocal">3. ThreadLocal</a>
+<ul>
+<li><a href="#31-概述">3.1 概述</a></li>
+<li><a href="#32-使用">3.2 使用</a></li>
+</ul>
+</li>
+<li><a href="#4-spring-security-框架">4. spring-security 框架</a>
+<ul>
+<li><a href="#41-概述">4.1 概述</a></li>
+<li><a href="#41-使用准备">4.1 使用准备</a></li>
+<li><a href="#42-已知功能示例">4.2 已知功能示例</a></li>
+</ul>
+</li>
+<li><a href="#5-lombok">5. Lombok</a></li>
+<li><a href="#6-swagger-接口开发">6. Swagger 接口开发</a>
+<ul>
+<li><a href="#61-接口开发与-swagger-概述">6.1 接口开发与 Swagger 概述</a></li>
+<li><a href="#62-整合到-spring-boot-工程">6.2 整合到 spring boot 工程</a></li>
+<li><a href="#63-编写接口类">6.3 编写接口类</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="1-beanutils">1. BeanUtils</h2>
+<h3 id="11-概述">1.1 概述</h3>
+<p>BeanUtils工具由Apache软件基金组织编写，提供给我们使用，主要解决的问题是：把对象的属性数据封装到对象中。</p>
+<p><strong>依赖于commons-loggin.jar，部分操作也会依赖于commons-collections.jar</strong>，建议全部导入。</p>
+<p>谷歌搜索即可下载。</p>
+<p>JavaBean即标准的Java类，使用BeanUtils需要至少Bean满足以下条件：</p>
+<ul>
+<li>类必须被public修饰</li>
+<li>必须提供空参构造器</li>
+<li>成员变量必须使用private修饰</li>
+<li>提供公共的setter和getter方法</li>
+</ul>
+<h3 id="12-常用方法">1.2 常用方法</h3>
+<table>
+<thead>
+<tr><th align="center">方法</th><th align="center">说明</th></tr>
+</thead>
+<tbody>
+<tr><td align="center">populate(Object obj, Map map)</td><td align="center">将Map中的内容填充到传递的JavaBean</td></tr>
+<tr><td align="center"> </td><td align="center"> </td></tr>
+<tr><td align="center"> </td><td align="center"> </td></tr>
+</tbody>
+</table>
+<p>说明：</p>
+<ul>
+<li>populate方法会对bean中存在的相关属性进行封装，若map中的键不存在于bean中，则该键不产生效果。</li>
+</ul>
+<h2 id="2-项目设计">2. 项目设计</h2>
+<h3 id="21-mvc架构">2.1 MVC架构</h3>
+<ul>
+<li>
+<p>M：</p>
+<p>Model，模型。</p>
+<p>完成具体的业务操作，如：查询数据库，封装对象。</p>
+</li>
+<li>
+<p>V：</p>
+<p>View，视图。</p>
+<p>展示数据。</p>
+</li>
+<li>
+<p>C：</p>
+<p>Controller，控制器。</p>
+<p>业务层，获取用户的输入、调用模型、将数据交给试图进行展示等。</p>
+</li>
+<li>
+<p>优缺点：</p>
+<ul>
+<li>
+<p>优点：</p>
+</li>
+<li>
+<p>耦合性低，方便维护于协作开发。</p>
+</li>
+<li>
+<p>重用性高。</p>
+</li>
+<li>
+<p>缺点：</p>
+</li>
+<li>
+<p>使得项目的架构变得复杂，对开发人员的要求较高。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="22-软件设计的三层架构">2.2 软件设计的三层架构</h3>
+<ul>
+<li>界面层（表示层/Web层）
+<ul>
+<li>接收用户参数，封装数据，调用业务逻辑完成处理。</li>
+<li>转发JSP页面完成显示。</li>
+</ul>
+</li>
+<li>业务逻辑层（Service层）
+<ul>
+<li>组合DAO层中简单的方法，形成复杂的业务逻辑。</li>
+</ul>
+</li>
+<li>数据访问层（DAO层）
+<ul>
+<li>Data Access Object</li>
+<li>定义了对数据/数据库基本的操作。</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-threadlocal">3. ThreadLocal</h2>
+<h3 id="31-概述">3.1 概述</h3>
+<ul>
+<li>ThreadLocal是一个关于创建线程局部变量的类。</li>
+<li>通常情况下，我们创建的变量是可以被任何一个线程访问并修改的。而使用ThreadLocal创建的变量只能被当前线程访问，其他线程则无法访问和修改。</li>
+</ul>
+<h3 id="32-使用">3.2 使用</h3>
+<ul>
+<li>
+<p>创建：</p>
+<pre><code class="language-java">ThreadLocal&lt;String&gt; mStringThreadLocal = new ThreadLocal&lt;&gt;();
+</code></pre>
+</li>
+<li>
+<p>set方法：</p>
+<pre><code class="language-java">mStringThreadLocal.set(&quot;droidyue.com&quot;);
+</code></pre>
+</li>
+<li>
+<p>get方法：</p>
+<pre><code class="language-java">mStringThreadLocal.get();
+</code></pre>
+</li>
+</ul>
+<h2 id="4-spring-security-框架">4. spring-security 框架</h2>
+<h3 id="41-概述">4.1 概述</h3>
+<ul>
+<li>spring-security 是 Spring 项目中用于提供安全认证服务的框架。</li>
+<li>为基于J2EE企业应用软件提供了全面安全服务。</li>
+</ul>
+<h3 id="41-使用准备">4.1 使用准备</h3>
+<ul>
+<li>
+<p>导入包</p>
+<p>maven：pom.xml</p>
+<pre><code class="language-xml">&lt;!-- Spring Security --&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework.security&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-security-web&lt;/artifactId&gt;
+  &lt;version&gt;${spring.version}&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework.security&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-security-config&lt;/artifactId&gt;
+  &lt;version&gt;${spring.version}&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+</li>
+<li>
+<p>配置 spring-security 过滤器，指定配置文件，开启监听器（启动服务器时读取配置文件）</p>
+<p>web.xml</p>
+<pre><code class="language-xml">&lt;!-- 指示 spring 和 spring-security 配置文件的路径 --&gt;
+&lt;context-param&gt;
+  &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+  &lt;param-value&gt;
+      classpath:applicationContext.xml,classpath:spring-security.xml
+  &lt;/param-value&gt;
+&lt;/context-param&gt;
+&lt;!-- spring-security 拦截器，注意 id 不能改动 --&gt;
+&lt;filter&gt;
+  &lt;filter-name&gt;springSecurityFilterChain&lt;/filter-name&gt;
+  &lt;filter-class&gt;
+      org.springframework.web.filter.DelegatingFilterProxy
+  &lt;/filter-class&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+  &lt;filter-name&gt;springSecurityFilterChain&lt;/filter-name&gt;
+  &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;
+&lt;!-- 监听器（可能已配置） --&gt;
+&lt;listener&gt;
+  &lt;listener-class&gt;
+      org.springframework.web.context.ContextLoaderListener
+  &lt;/listener-class&gt;
+&lt;/listener&gt;
+</code></pre>
+</li>
+</ul>
+<h3 id="42-已知功能示例">4.2 已知功能示例</h3>
+<h4 id="421-登录与注销">4.2.1 登录与注销</h4>
+<ul>
+<li>
+<p>配置文件：</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+     xmlns:security=&quot;http://www.springframework.org/schema/security&quot;
+     xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+          xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security.xsd&quot;&gt;
+
+  &lt;!-- 配置不过滤的资源，可以是物理路径，也可以是虚拟路径 --&gt;
+  &lt;security:http security=&quot;none&quot; pattern=&quot;/css/**&quot; /&gt;
+  &lt;security:http security=&quot;none&quot; pattern=&quot;/plugins/**&quot; /&gt;
+  &lt;security:http security=&quot;none&quot; pattern=&quot;/img/**&quot; /&gt;
+  &lt;security:http security=&quot;none&quot; pattern=&quot;/admin/login&quot; /&gt;
+  &lt;security:http security=&quot;none&quot; pattern=&quot;/admin/login_failure&quot; /&gt;
+
+  &lt;!-- 是否使用提供的登录页面 - 是否使用 SPEL 表达式 --&gt;
+  &lt;security:http auto-config=&quot;true&quot; use-expressions=&quot;false&quot;&gt;
+      &lt;!-- 对哪些 url 进行权限控制，哪些角色可以访问（可用逗号分隔） --&gt;
+      &lt;security:intercept-url pattern=&quot;/**&quot; access=&quot;ROLE_USER&quot; /&gt;
+      &lt;!-- 指定登录相关信息，如登陆页面，登录检查 url，成功 url，失败 url 等 --&gt;
+      &lt;security:form-login login-page=&quot;/admin/login&quot; 
+                           login-processing-url=&quot;/login&quot; 
+                           default-target-url=&quot;/admin/main&quot; 
+                           authentication-failure-url=&quot;/admin/login_failure&quot; 
+                           username-parameter=&quot;username&quot; 
+                           password-parameter=&quot;password&quot;/&gt;
+      &lt;!-- 指定登出相关信息，如是否销毁 session、登出处理 url、登出成功页面等 --&gt;
+      &lt;security:logout invalidate-session=&quot;true&quot; 
+                       logout-url=&quot;/logout&quot; 
+                       logout-success-url=&quot;/admin/login&quot; /&gt;
+      &lt;!-- 防御 CSRF（跨站请求伪造） --&gt;
+      &lt;security:csrf disabled=&quot;true&quot; /&gt;
+  &lt;/security:http&gt;
+
+  &lt;security:authentication-manager&gt;
+      &lt;!-- 指定 service，具体下文说明 --&gt;
+      &lt;security:authentication-provider user-service-ref=&quot;userService&quot;&gt;
+          &lt;!--&lt;security:user-service&gt;--&gt;
+              &lt;!--&lt;security:user name=&quot;user&quot; password=&quot;{noop}user&quot; authorities=&quot;ROLE_USER&quot; /&gt;--&gt;
+              &lt;!--&lt;security:user name=&quot;admin&quot; password=&quot;{noop}admin&quot; authorities=&quot;ROLE_ADMIN&quot; /&gt;--&gt;
+          &lt;!--&lt;/security:user-service&gt;--&gt;
+      &lt;/security:authentication-provider&gt;
+  &lt;/security:authentication-manager&gt;
+
+&lt;/beans&gt;
+</code></pre>
+<p><strong>说明</strong>：</p>
+<ul>
+<li>对于登录、登出的处理 url（login-processing-url、logout-url），无需创建控制器。只需将前端页面的表单提交地址设置为对应值即可。</li>
+<li>对于登录的 username-parameter 和 password-parameter，其作用是指定表单中对应用户名和密码的表单参数名。</li>
+<li>若用户密码未经过加密，需要在 password 的值前拼上 <code>{noop}</code>。</li>
+</ul>
+</li>
+<li>
+<p>定义上文配置文件中提到的 userService（用户服务）。</p>
+<p><strong>说明</strong>：</p>
+<ul>
+<li>实现提供的 UserDetailsService 接口，重写通过用户名加载 User 的方法。</li>
+<li>上述方法返回 UserDetails，是提供的接口。可以使用提供的实现类 User。</li>
+<li>可以自行通过 dao 从数据库查询出用户的相关信息，定义一个 User，将数据存入。</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<p>UserService.java（附带了角色查询）</p>
+<pre><code class="language-java">@Service(&quot;userService&quot;)
+public class UserService implements UserDetailsService {
+
+  @Autowired
+  UserInfoDao userInfoDao;
+
+  /**
+   * 用于 Spring-Security 处理登录
+   *
+   * @param username
+   * @return Spring 提供的 UserDetails 实现类 User，需要包含用户名、密码、状态信息、权限集合等。
+   * @throws UsernameNotFoundException
+   */
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+      // 通过 username 查询出 UserInfo
+      UserInfo userInfo = new UserInfo();
+      userInfo.setUsername(username);
+      userInfo = userInfoDao.findUserByUsername(userInfo);
+      List&lt;Role&gt; list = userInfo.getRoles();
+
+      // 通过结果获取角色列表
+      List&lt;SimpleGrantedAuthority&gt; authorities = getAuthoritiesByRoles(list);
+
+      // 创建 String-Security 提供的 User，并赋予查询出的参数
+      User user = new User(userInfo.getUsername(), &quot;{noop}&quot; + userInfo.getPassword(), userInfo.getStatus() == 1 ? true : false, true, true, true, authorities);
+      return user;
+  }
+
+  /**
+   * 将用户的角色列表中的角色名存入 authority 列表
+   * @param list
+   * @return
+   */
+  public List&lt;SimpleGrantedAuthority&gt; getAuthoritiesByRoles(List&lt;Role&gt; list) {
+      List&lt;SimpleGrantedAuthority&gt; authorities = new ArrayList&lt;SimpleGrantedAuthority&gt;();
+      for (Role role : list) {
+          authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
+      }
+      return authorities;
+  }
+
+
+}
+</code></pre>
+</li>
+</ul>
+<h4 id="422-使用-bcrypt-对密码进行加密">4.2.2 使用 BCrypt 对密码进行加密</h4>
+<ul>
+<li>
+<p><strong>BCrypt 概述</strong>：</p>
+<p>BCrypt 是一种不可逆的加密算法。</p>
+<p>用户表的密码通常使用 MD5 等不可逆算法加密后存储，为防止彩虹表破解更会先使用 一个特定的字符串（如域名）加密，然后再使用一个随机的 salt（盐值）加密。</p>
+<p>特定字符串是程序代码中固定的，salt 是每个密码单独随机，一般给用户表加一个字段单独存储，比 较麻烦。</p>
+<p>BCrypt 算法将 salt 随机并混入最终加密后的密码，验证时也无需单独提供之前的 salt，从而无需单独处理 salt 问题。</p>
+</li>
+<li>
+<p><strong>对密码进行加密存储</strong>：</p>
+<ul>
+<li>创建 BCryptPasswordEncoder 类对象（spring-security）；</li>
+<li>调用 encode 方法加密一个 CharSequence（String、StringBuffer 等的接口），返回 String；</li>
+<li>存储加密后的字符串。</li>
+</ul>
+<pre><code class="language-java">BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+seller.setPassword(encoder.encode(seller.getPassword()));
+sellerService.add(seller);
+</code></pre>
+</li>
+<li>
+<p><strong>在 spring-security 中配置加密登录</strong>：</p>
+<ul>
+<li>配置 BcryptPasswordEncoder 的 bean；</li>
+<li>在 authentication-manager 的 authentication-provider 中添加 password-encoder，引用刚配置的 bean。</li>
+</ul>
+<pre><code class="language-xml">&lt;!-- 加密类 bean --&gt;
+&lt;bean id=&quot;bCryptPasswordEncoder&quot; class=&quot;org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder&quot; /&gt;
+&lt;!-- 认证管理器 --&gt;
+&lt;authentication-manager&gt;
+  &lt;authentication-provider user-service-ref=&quot;userDetailsService&quot;&gt;
+      &lt;password-encoder ref=&quot;bCryptPasswordEncoder&quot; /&gt;
+  &lt;/authentication-provider&gt;
+&lt;/authentication-manager&gt;
+</code></pre>
+</li>
+</ul>
+<h4 id="423-获取用户的登录名">4.2.3 获取用户的登录名</h4>
+<p>编写控制器，通过以下方法获取。</p>
+<pre><code class="language-java">String loginName = SecurityContextHolder.getContext().getAuthentication().getName();
+</code></pre>
+<h2 id="5-lombok">5. Lombok</h2>
+<ul>
+<li>简化 POJO 类的插件包，可以通过简单的注解来消除 getter/setter、构造方法、toString 等。</li>
+<li>maven 导入依赖后，使用 @Data、@ToString 等注解即完成操作。</li>
+</ul>
+<h2 id="6-swagger-接口开发">6. Swagger 接口开发</h2>
+<h3 id="61-接口开发与-swagger-概述">6.1 接口开发与 Swagger 概述</h3>
+<ul>
+<li>Swagger 是描述和记录 Rest Api 的一个规范，指定了 Rest 服务接口的格式，包含 url、资源、方法等。</li>
+<li>可以将 Swagger2 方便的集成进 Spring 工程中，根据代码方便地生成接口文档，并提供 html 访问。</li>
+</ul>
+<h3 id="62-整合到-spring-boot-工程">6.2 整合到 spring boot 工程</h3>
+<ul>
+<li>
+<p>创建 spring boot 工程。</p>
+<p>略。</p>
+</li>
+<li>
+<p>引入 swagger2 的依赖。</p>
+<p>pom.xml</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+  &lt;groupId&gt;io.springfox&lt;/groupId&gt;
+  &lt;artifactId&gt;springfox-swagger2&lt;/artifactId&gt;
+  &lt;version&gt;2.9.2&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;io.springfox&lt;/groupId&gt;
+  &lt;artifactId&gt;springfox-swagger-ui&lt;/artifactId&gt;
+  &lt;version&gt;2.9.2&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+</li>
+<li>
+<p>创建 swagger 配置类，并进行相关配置。</p>
+<p>SwaggerConfig.java（名称可更改）</p>
+<pre><code class="language-java">// 此处注解不能少
+@Configuration
+@EnableSwagger2
+public class SwaggerConfig {
+
+  /**
+  * 在此指定要扫描的 controller 包，并加载自行编写的 ApiInfo
+  */
+  @Bean
+  public Docket createDocket() {
+      return new Docket(DocumentationType.SWAGGER_2)
+          .apiInfo(getApiInfo())
+          .select()
+          .apis(RequestHandlerSelectors.basePackage(&quot;io.controller&quot;))
+          .paths(PathSelectors.any())
+          .build();
+  }
+
+  // 自行编写的 ApiInfo
+  private ApiInfo getApiInfo() {
+      return new ApiInfoBuilder()
+          .title(&quot;在此设置标题&quot;)
+          .description(&quot;在此设置描述&quot;)
+          .version(&quot;在此设置版本&quot;)
+          .build();
+  }
+}
+</code></pre>
+<p>注意：<strong>要使 spring 扫描当前类</strong>，否则无法获取 Docket。可以在 spring boot 启动类上加上 ComponentScan 注解并使用 basePackageClasses 属性。</p>
+</li>
+<li>
+<p>编写接口类（interface），添加相关注解（下文详细说明）。</p>
+<p>略。</p>
+</li>
+<li>
+<p>编写 controller，实现接口类。</p>
+</li>
+<li>
+<p>启动 spring 工程，访问 http://localhost:port/swagger-ui.html 即可查看接口文档。</p>
+<p>说明：html 文档的端口由 spring web 工程的端口决定。可以更改 server.port 属性来更改。</p>
+</li>
+</ul>
+<h3 id="63-编写接口类">6.3 编写接口类</h3>
+<p>常用注解如下：</p>
+<h4 id="631-类上的注解">6.3.1 类上的注解</h4>
+<ul>
+<li>Api
+<ul>
+<li>在 api 接口声明上，表示是一个接口 interface。</li>
+<li>常用参数：</li>
+<li>description - 接口类的描述</li>
+</ul>
+</li>
+<li>ApiModel
+<ul>
+<li>在后台模型类声明上，表示是一个后端 model。</li>
+</ul>
+</li>
+</ul>
+<h4 id="632-方法上的注解">6.3.2 方法上的注解</h4>
+<ul>
+<li>ApiOperation
+<ul>
+<li>在接口类的方法上，进行接口的描述。</li>
+<li>常用参数：</li>
+<li>value - 描述</li>
+</ul>
+</li>
+<li>ApiImplicitParams
+<ul>
+<li>在接口类的方法上，描述接口的参数集合</li>
+<li>参数：多个 ApiImplicitParam 注解</li>
+</ul>
+</li>
+<li>ApiImplicitParam
+<ul>
+<li>在接口类的方法上或 ApiImplicitParams 注解中，描述单个参数。</li>
+<li>常用参数：</li>
+<li>name - 接收参数名</li>
+<li>value - 接收参数的描述</li>
+<li>required - 是否必填</li>
+<li>defaultValue - 默认值</li>
+<li>dataType - 参数的数据类型</li>
+<li>dataType - 查询参数类型，常用：
+<ul>
+<li>path - 以地址的形式提供参数（参数包含在 url 中）</li>
+<li>query - url 中后跟参数完成自动映射赋值</li>
+<li>body - 以流的形式提交</li>
+<li>header - 请求头中提交</li>
+<li>form - 以 form 表单的形式提交</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>ApiResponses
+<ul>
+<li>在接口类的方法上，描述该接口的各个响应码状态码及对应信息。包含多个 ApiResponse 注解。</li>
+</ul>
+</li>
+<li>ApiResponse
+<ul>
+<li>常用参数：</li>
+<li>code - 状态码</li>
+<li>message - 描述信息</li>
+</ul>
+</li>
+<li>ApiIgnore
+<ul>
+<li>表示忽略此 api，不显示文档。</li>
+</ul>
+</li>
+</ul>
+<h4 id="633-成员变量上的注解">6.3.3 成员变量上的注解</h4>
+<ul>
+<li>ApiModelProperty
+<ul>
+<li>在模型类的成员变量上，对模型属性进行描述。</li>
+</ul>
+</li>
+</ul>
+
+
+</body>
+</html>

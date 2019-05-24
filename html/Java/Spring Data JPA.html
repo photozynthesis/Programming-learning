@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>Spring Data JPA</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="spring-data-jpa">Spring Data JPA</h1>
+<ul>
+<li><a href="#1-orm--jpa-概述">1. ORM &amp; JPA 概述</a>
+<ul>
+<li><a href="#11-orm">1.1 ORM</a></li>
+<li><a href="#12-jpa">1.2 JPA</a></li>
+</ul>
+</li>
+<li><a href="#2-jpa-开发的入门">2. JPA 开发的入门</a>
+<ul>
+<li><a href="#21-导入-jar-包">2.1 导入 jar 包</a></li>
+<li><a href="#22-创建数据库表">2.2 创建数据库表</a></li>
+<li><a href="#23-创建对应实体类并使用注解配置映射关系">2.3 创建对应实体类，并使用注解配置映射关系</a></li>
+<li><a href="#24-创建-persistencexml-配置文件">2.4 创建 persistence.xml 配置文件</a></li>
+<li><a href="#25-编写测试类完成保存操作">2.5 编写测试类完成保存操作</a></li>
+</ul>
+</li>
+<li><a href="#3-jpa-常用注解">3. JPA 常用注解</a>
+<ul>
+<li><a href="#31-类声明上的注解">3.1 类声明上的注解</a></li>
+<li><a href="#32-字段上的注解">3.2 字段上的注解</a></li>
+<li><a href="#33-附设置序列生成主键">3.3 附：设置序列生成主键</a></li>
+<li><a href="#34-附设置特定表生成主键">3.4 附：设置特定表生成主键</a></li>
+</ul>
+</li>
+<li><a href="#4-jpa-api-常用对象">4. JPA API 常用对象</a>
+<ul>
+<li><a href="#41-persistence">4.1 Persistence</a></li>
+<li><a href="#42-entitymanagerfactory">4.2 EntityManagerFactory</a></li>
+<li><a href="#43-entitymanager">4.3 EntityManager</a></li>
+<li><a href="#44-entitytransaction">4.4 EntityTransaction</a></li>
+</ul>
+</li>
+<li><a href="#5-jpa-复杂查询--jpql">5. JPA 复杂查询 &amp; JPQL</a>
+<ul>
+<li><a href="#51-概述">5.1 概述</a></li>
+<li><a href="#52-如何使用-jpql-进行复杂查询">5.2 如何使用 JPQL 进行复杂查询</a></li>
+<li><a href="#53-jpql-规则">5.3 JPQL 规则</a></li>
+</ul>
+</li>
+<li><a href="#6-spring-data-jpa-概述">6. Spring Data JPA 概述</a>
+<ul>
+<li><a href="#61-spring-data-jpa-概述">6.1 Spring Data JPA 概述</a></li>
+<li><a href="#62-spring-data-jpa-与-hibernate-与-jpa-之间的关系">6.2 Spring Data JPA 与 Hibernate 与 JPA 之间的关系</a></li>
+</ul>
+</li>
+<li><a href="#7-spring-data-jpa-入门使用">7. Spring Data JPA 入门使用</a>
+<ul>
+<li><a href="#71-引入依赖">7.1 引入依赖</a></li>
+<li><a href="#72-编写配置文件">7.2 编写配置文件</a></li>
+<li><a href="#73-编写映射实体类">7.3 编写映射实体类</a></li>
+<li><a href="#74-创建-dao-层接口">7.4 创建 DAO 层接口</a></li>
+<li><a href="#74-调用接口完成-crud-操作">7.4 调用接口完成 CRUD 操作</a></li>
+</ul>
+</li>
+<li><a href="#8-spring-data-使用-jpqlsql即方法命名的方式查询">8. Spring Data 使用 JPQL、SQL即方法命名的方式查询</a>
+<ul>
+<li><a href="#81-自定义-jpql-查询">8.1 自定义 JPQL 查询</a></li>
+<li><a href="#82-使用-sql-语句查询">8.2 使用 SQL 语句查询</a></li>
+<li><a href="#83-方法命名规则查询">8.3 方法命名规则查询</a></li>
+</ul>
+</li>
+<li><a href="#9-spring-data-jpa-动态分页查询">9. Spring Data JPA 动态、分页查询</a></li>
+<li><a href="#10-spring-data-jpa-多表查询">10. Spring Data JPA 多表查询</a></li>
+</ul>
+<h2 id="1-orm--jpa-概述">1. ORM &amp; JPA 概述</h2>
+<h3 id="11-orm">1.1 ORM</h3>
+<h4 id="111-orm-概述">1.1.1 ORM 概述</h4>
+<ul>
+<li>ORM（Object-Relational Mapping）表示对象关系映射。</li>
+<li>ORM 建立实体类和数据库表之间的关系，以实现通过操作实体类来操作数据库表。</li>
+</ul>
+<h4 id="112-orm-的好处">1.1.2 ORM 的好处</h4>
+<ul>
+<li>可以大幅减少重复代码。</li>
+</ul>
+<h4 id="113-常见-orm-框架">1.1.3 常见 ORM 框架</h4>
+<ul>
+<li>MyBatis（ibatis）</li>
+<li>Hibernate</li>
+<li>JPA</li>
+</ul>
+<h3 id="12-jpa">1.2 JPA</h3>
+<h4 id="121-jpa-概述">1.2.1 JPA 概述</h4>
+<ul>
+<li>JPA（Java Persistence API），即 Java 持久化 API，是 SUN 公司推出的一套基于 ORM 的规范，由一系列接口和抽象类构成。</li>
+<li>描述对象与关系表之间的映射关系，将运行期的对象持久化到数据库中。</li>
+</ul>
+<h4 id="122-jpa-的好处">1.2.2 JPA 的好处</h4>
+<ul>
+<li>就像 JDBC，任何遵循了 JPA 标准的应用都可以很方便地在 JPA 框架下运行。</li>
+<li>使用简单方便。</li>
+<li>可以使用 SQL、JPQL 查询语言，提供非常强大的查询能力。</li>
+<li>支持高级特性。</li>
+</ul>
+<h4 id="123-常见实现">1.2.3 常见实现</h4>
+<ul>
+<li>Hibernate</li>
+</ul>
+<h2 id="2-jpa-开发的入门">2. JPA 开发的入门</h2>
+<p><strong>以下为 JPA 的保存实体到数据库案例，使用 Hibernate 作为 JPA 实现。</strong></p>
+<h3 id="21-导入-jar-包">2.1 导入 jar 包</h3>
+<ul>
+<li>junit</li>
+<li>log4j</li>
+<li><strong>hibernate-entitymanager</strong></li>
+<li><strong>hibernate-c3p0</strong></li>
+<li><strong>mysql-connector-java</strong></li>
+</ul>
+<pre><code class="language-xml">&lt;properties&gt;
+    &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+  &lt;project.hibernate.version&gt;5.0.7.Final&lt;/project.hibernate.version&gt;
+&lt;/properties&gt;
+
+&lt;dependencies&gt;
+    &lt;!-- junit --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;junit&lt;/groupId&gt;
+        &lt;artifactId&gt;junit&lt;/artifactId&gt;
+        &lt;version&gt;4.12&lt;/version&gt;
+        &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+    &lt;!-- hibernate对jpa的支持包 --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+        &lt;artifactId&gt;hibernate-entitymanager&lt;/artifactId&gt;
+        &lt;version&gt;${project.hibernate.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;!-- c3p0 --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+        &lt;artifactId&gt;hibernate-c3p0&lt;/artifactId&gt;
+        &lt;version&gt;${project.hibernate.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;!-- log日志 --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;log4j&lt;/groupId&gt;
+        &lt;artifactId&gt;log4j&lt;/artifactId&gt;
+        &lt;version&gt;1.2.17&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;!-- Mysql and MariaDB --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;mysql&lt;/groupId&gt;
+        &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+        &lt;version&gt;5.1.6&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+</code></pre>
+<h3 id="22-创建数据库表">2.2 创建数据库表</h3>
+<pre><code class="language-sql">// 创建客户表
+CREATE TABLE tb_customer (
+	customer_id bigint(22) NOT NULL AUTO_INCREMENT,
+    customer_name varchar(32) NOT NULL,
+    customer_phone varchar(64) DEFAULT NULL,
+    PRIMARY KEY ('customer_id')
+) ENGINE-InnoDB AUTO_INCREMENT=1 CHARSET=utf8
+</code></pre>
+<h3 id="23-创建对应实体类并使用注解配置映射关系">2.3 创建对应实体类，并使用注解配置映射关系</h3>
+<pre><code class="language-java">@Entity
+@Table(name = &quot;tb_customer&quot;)
+public class Customer implements Serializable {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &quot;customer_id&quot;)
+    private Long customerId;
+    
+    @Column(name = &quot;customer_name&quot;)
+    private String customerName;
+    
+    @Column(name = &quot;customer_phone&quot;)
+    private String customerPhone;
+    
+    // getter and setter ...
+    ...
+}
+</code></pre>
+<h3 id="24-创建-persistencexml-配置文件">2.4 创建 persistence.xml 配置文件</h3>
+<p>在 classpath 创建 <code>MATA-INF</code> 文件夹，并在其中创建 <code>persistence.xml</code> 文件</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;persistence xmlns=&quot;http://java.sun.com/xml/ns/persistence&quot; 
+xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; 
+xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/persistence  http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd&quot; version=&quot;2.0&quot;&gt;
+    &lt;!--配置持久化单元 
+  name：持久化单元名称 
+  transaction-type：事务类型
+    RESOURCE_LOCAL：本地事务管理 
+    JTA：分布式事务管理 --&gt;
+    &lt;persistence-unit name=&quot;myJpa&quot; transaction-type=&quot;RESOURCE_LOCAL&quot;&gt;
+        &lt;!--配置JPA规范的服务提供商 --&gt;
+ 		&lt;provider&gt;
+     		org.hibernate.jpa.HibernatePersistenceProvider
+        &lt;/provider&gt;
+        &lt;properties&gt;
+            &lt;!-- 数据库驱动 --&gt;
+            &lt;property name=&quot;javax.persistence.jdbc.driver&quot; value=&quot;com.mysql.jdbc.Driver&quot; /&gt;
+            &lt;!-- 数据库地址 --&gt;
+            &lt;property name=&quot;javax.persistence.jdbc.url&quot; value=&quot;jdbc:mysql://localhost:3306/ssh&quot; /&gt;
+            &lt;!-- 数据库用户名 --&gt;
+            &lt;property name=&quot;javax.persistence.jdbc.user&quot; value=&quot;root&quot; /&gt;
+            &lt;!-- 数据库密码 --&gt;
+            &lt;property name=&quot;javax.persistence.jdbc.password&quot; value=&quot;111111&quot; /&gt;
+
+            &lt;!--jpa提供者的可选配置：我们的JPA规范的提供者为hibernate，所以jpa的核心配置中兼容hibernate的配 --&gt;
+            &lt;property name=&quot;hibernate.show_sql&quot; value=&quot;true&quot; /&gt;
+            &lt;property name=&quot;hibernate.format_sql&quot; value=&quot;true&quot; /&gt;
+            &lt;property name=&quot;hibernate.hbm2ddl.auto&quot; value=&quot;create&quot; /&gt;
+        &lt;/properties&gt;
+	&lt;/persistence-unit&gt;
+&lt;/persistence&gt;
+</code></pre>
+<h3 id="25-编写测试类完成保存操作">2.5 编写测试类完成保存操作</h3>
+<pre><code class="language-java">public class Test {
+    @Test
+    public void test() {
+        // 创建 EntityManager 和 EntityTransaction
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory(&quot;myJpa&quot;);
+        EntityManager em = factory.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        
+        // 进行保存操作
+        tx.begin();
+        Customer c = new Customer();
+        c.set...(...);
+        em.persist(c);
+        tx.commit();
+        
+        // 释放资源
+        em.close();
+        factory.close();
+    }
+}
+</code></pre>
+<h2 id="3-jpa-常用注解">3. JPA 常用注解</h2>
+<h3 id="31-类声明上的注解">3.1 类声明上的注解</h3>
+<ul>
+<li><strong>@Entity</strong>
+<ul>
+<li>指定当前类是实体类</li>
+</ul>
+</li>
+<li><strong>@Table</strong>
+<ul>
+<li>指定实体类和表之间的对应关系</li>
+<li>属性：</li>
+<li>name - 数据库表名</li>
+</ul>
+</li>
+</ul>
+<h3 id="32-字段上的注解">3.2 字段上的注解</h3>
+<ul>
+<li>
+<p><strong>@Id</strong></p>
+<ul>
+<li>指定当前为主键字段</li>
+</ul>
+</li>
+<li>
+<p><strong>@GeneratedValue</strong></p>
+<ul>
+<li>
+<p>指定当前主键的生成策略</p>
+</li>
+<li>
+<p>属性：</p>
+</li>
+<li>
+<p>strategy - 主键的生成策略，可选值：</p>
+<ul>
+<li>
+<p>GenerationType.INDENTITY - 主键由数据库自动生成</p>
+</li>
+<li>
+<p>GenerationType.SEQUENCE - 由数据库的序列来生成，使用方法见下方</p>
+</li>
+<li>GenerationType.AUTO - 主键由程序控制，默认使用 TABLE 的方法</li>
+<li>GenerationType.TABLE - 使用一个特定的数据库表格来保存主键，使用方法见下方</li>
+</ul>
+</li>
+<li>
+<p>generator - 指定主键生成器</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>@Column</strong></p>
+<ul>
+<li>指定属性和表中字段的关系</li>
+<li>属性：</li>
+<li>name - 表中的列名</li>
+<li>unique</li>
+<li>nullable</li>
+<li>insertable - 是否可以插入</li>
+<li>updateable - 是否可以更新</li>
+<li>columnDefinition - 创建此表时的 DDL</li>
+<li>secondaryTable - 从表名</li>
+</ul>
+</li>
+</ul>
+<h3 id="33-附设置序列生成主键">3.3 附：设置序列生成主键</h3>
+<pre><code class="language-java">public class Customer {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = &quot;increcing_id&quot;)
+    @SequenceGenerator(name = &quot;increcing_id&quot;, sequenceName = &quot;seq_custom_id&quot;)
+    private Long customerId;
+}
+</code></pre>
+<h3 id="34-附设置特定表生成主键">3.4 附：设置特定表生成主键</h3>
+<pre><code class="language-java">public class Customer {
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = &quot;increcing_id&quot;)
+    @TableGenerator(
+    	name = &quot;increcing_id&quot;,
+        table = &quot;tb_generator&quot;,
+        pkColumnName = &quot;gen_name&quot;,
+        valueColumnName = &quot;gen_value&quot;,
+        pkColumnValue = &quot;INCRECING_PK&quot;,
+        allocationSize = 1
+    )
+    private Long customerId;
+}
+</code></pre>
+<h2 id="4-jpa-api-常用对象">4. JPA API 常用对象</h2>
+<h3 id="41-persistence">4.1 Persistence</h3>
+<ul>
+<li>主要用于通过配置的 persistence-unit 获取 EntityManagerFactory 对象。</li>
+</ul>
+<table>
+<thead>
+<tr><th>方法</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>static <strong>createEntityManagerFactory</strong>(String persistenceUnitName)</td><td>获取 EntityManagerFactory 对象，该方法线程安全，创建较为耗费资源</td></tr>
+</tbody>
+</table>
+<h3 id="42-entitymanagerfactory">4.2 EntityManagerFactory</h3>
+<ul>
+<li>主要用来创建 EntityManager 实例</li>
+</ul>
+<table>
+<thead>
+<tr><th>方法</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>createEntityManager()</td><td>创建 EntityManager 实例</td></tr>
+</tbody>
+</table>
+<h3 id="43-entitymanager">4.3 EntityManager</h3>
+<ul>
+<li>JPA 规范中完成持久化操作的核心对象</li>
+<li>普通实体对象只有在调用 EntityManager 将其持久化后才变成持久化对象</li>
+</ul>
+<table>
+<thead>
+<tr><th>方法</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>getTransaction()</td><td>获取事务对象</td></tr>
+<tr><td>persist()</td><td>保存操作</td></tr>
+<tr><td>merge()</td><td>更新操作</td></tr>
+<tr><td>remote()</td><td>删除操作</td></tr>
+<tr><td>find/getReference()</td><td>根据 id 查询</td></tr>
+</tbody>
+</table>
+<h3 id="44-entitytransaction">4.4 EntityTransaction</h3>
+<ul>
+<li>JPA 中事务操作的核心对象</li>
+</ul>
+<table>
+<thead>
+<tr><th>方法</th><th>说明</th></tr>
+</thead>
+<tbody>
+<tr><td>begin()</td><td>开启事务</td></tr>
+<tr><td>commit()</td><td>提交事务</td></tr>
+<tr><td>rollback()</td><td>回滚事务</td></tr>
+</tbody>
+</table>
+<h2 id="5-jpa-复杂查询--jpql">5. JPA 复杂查询 &amp; JPQL</h2>
+<h3 id="51-概述">5.1 概述</h3>
+<ul>
+<li>JPQL（Java Persistence Query Language），即 Java 持久化查询语言。</li>
+<li>JPQL 是可移植的，可以被编译成所有主流数据库服务器上的 SQL。</li>
+</ul>
+<h3 id="52-如何使用-jpql-进行复杂查询">5.2 如何使用 JPQL 进行复杂查询</h3>
+<p>示例：</p>
+<pre><code class="language-java">String  jpql = &quot;from Customer where customerName like ?&quot;;
+Query query = em.createQuery(jpql);
+query.setParameter(1, &quot;张%&quot;);
+List list = query.getResultList();
+</code></pre>
+<h3 id="53-jpql-规则">5.3 JPQL 规则</h3>
+<p><strong>大致规则如下</strong>：</p>
+<ul>
+<li>去除 SQL 语句前面的 &quot;SELECT x&quot;</li>
+<li>将后面部分中的表名改为实体类名</li>
+<li>将后面部分中的表列名改为实体类属性名</li>
+</ul>
+<h2 id="6-spring-data-jpa-概述">6. Spring Data JPA 概述</h2>
+<h3 id="61-spring-data-jpa-概述">6.1 Spring Data JPA 概述</h3>
+<ul>
+<li>Spring Data JPA 是在 ORM 框架、JPA 规范的基础上封装的一套 JPA 应用框架。</li>
+<li>使得开发者仅需简单的代码就可以实现对数据库的增删改查操作。</li>
+</ul>
+<h3 id="62-spring-data-jpa-与-hibernate-与-jpa-之间的关系">6.2 Spring Data JPA 与 Hibernate 与 JPA 之间的关系</h3>
+<ul>
+<li>如同 JDBC，JPA 也是一套规范，Hibernate 是该规范的一个实现。</li>
+<li>Spring Data JPA 是对 <strong>JPA</strong> 更加高级的封装。</li>
+</ul>
+<h2 id="7-spring-data-jpa-入门使用">7. Spring Data JPA 入门使用</h2>
+<h3 id="71-引入依赖">7.1 引入依赖</h3>
+<ul>
+<li><strong>Spring 相关</strong></li>
+<li><strong>JPA 提供者（Hibernate）</strong></li>
+<li><strong>数据库驱动</strong></li>
+</ul>
+<pre><code class="language-xml">&lt;properties&gt;
+    &lt;spring.version&gt;4.2.4.RELEASE&lt;/spring.version&gt;
+    &lt;hibernate.version&gt;5.0.7.Final&lt;/hibernate.version&gt;
+    &lt;slf4j.version&gt;1.6.6&lt;/slf4j.version&gt;
+    &lt;log4j.version&gt;1.2.12&lt;/log4j.version&gt;
+    &lt;c3p0.version&gt;0.9.1.2&lt;/c3p0.version&gt;
+    &lt;mysql.version&gt;5.1.6&lt;/mysql.version&gt;
+&lt;/properties&gt;
+&lt;dependencies&gt;
+	&lt;!-- junit单元测试 --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;junit&lt;/groupId&gt;
+        &lt;artifactId&gt;junit&lt;/artifactId&gt;
+        &lt;version&gt;4.9&lt;/version&gt;
+        &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+    &lt;!-- Spring --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.aspectj&lt;/groupId&gt;
+        &lt;artifactId&gt;aspectjweaver&lt;/artifactId&gt;
+        &lt;version&gt;1.6.8&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-aop&lt;/artifactId&gt;
+        &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-context&lt;/artifactId&gt;
+        &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;
+        &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-orm&lt;/artifactId&gt;
+        &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-beans&lt;/artifactId&gt;
+        &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-core&lt;/artifactId&gt;
+        &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;!-- hibernate --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+        &lt;artifactId&gt;hibernate-core&lt;/artifactId&gt;
+        &lt;version&gt;${hibernate.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+        &lt;artifactId&gt;hibernate-entitymanager&lt;/artifactId&gt;
+        &lt;version&gt;${hibernate.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+        &lt;artifactId&gt;hibernate-validator&lt;/artifactId&gt;
+        &lt;version&gt;5.2.1.Final&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;!-- c3p0 --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;c3p0&lt;/groupId&gt;
+        &lt;artifactId&gt;c3p0&lt;/artifactId&gt;
+        &lt;version&gt;${c3p0.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;!-- log --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;log4j&lt;/groupId&gt;
+        &lt;artifactId&gt;log4j&lt;/artifactId&gt;
+        &lt;version&gt;${log4j.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+        &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;
+        &lt;version&gt;${slf4j.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+        &lt;artifactId&gt;slf4j-log4j12&lt;/artifactId&gt;
+        &lt;version&gt;${slf4j.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    
+    &lt;!-- mysql-connector --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;mysql&lt;/groupId&gt;
+        &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+        &lt;version&gt;${mysql.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;!-- spring-data-jpa --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.data&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-data-jpa&lt;/artifactId&gt;
+        &lt;version&gt;1.9.0.RELEASE&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;!-- spring-test --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-test&lt;/artifactId&gt;
+        &lt;version&gt;4.2.4.RELEASE&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;!-- el --&gt;
+    &lt;dependency&gt;  
+        &lt;groupId&gt;javax.el&lt;/groupId&gt;  
+        &lt;artifactId&gt;javax.el-api&lt;/artifactId&gt;  
+        &lt;version&gt;2.2.4&lt;/version&gt;  
+    &lt;/dependency&gt;  
+    &lt;dependency&gt;  
+        &lt;groupId&gt;org.glassfish.web&lt;/groupId&gt;  
+        &lt;artifactId&gt;javax.el&lt;/artifactId&gt;  
+        &lt;version&gt;2.2.4&lt;/version&gt;  
+    &lt;/dependency&gt; 
+
+&lt;/dependencies&gt;
+
+</code></pre>
+<h3 id="72-编写配置文件">7.2 编写配置文件</h3>
+<p>applicationContext.xml</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+	xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;
+	xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+	xmlns:jdbc=&quot;http://www.springframework.org/schema/jdbc&quot; xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot;
+	xmlns:jpa=&quot;http://www.springframework.org/schema/data/jpa&quot; xmlns:task=&quot;http://www.springframework.org/schema/task&quot;
+	xsi:schemaLocation=&quot;
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/data/jpa 
+		http://www.springframework.org/schema/data/jpa/spring-jpa.xsd&quot;&gt;
+    
+    &lt;!-- dataSource --&gt;
+    &lt;bean id=&quot;dataSource&quot; class=&quot;com.mchange.v2.c3p0.ComboPooledDataSource&quot;&gt;
+		&lt;property name=&quot;driverClass&quot; value=&quot;com.mysql.jdbc.Driver&quot; /&gt;
+		&lt;property name=&quot;jdbcUrl&quot; value=&quot;jdbc:mysql://localhost:3306/jpa&quot; /&gt;
+		&lt;property name=&quot;user&quot; value=&quot;root&quot; /&gt;
+		&lt;property name=&quot;password&quot; value=&quot;root&quot; /&gt;
+	&lt;/bean&gt;
+	
+    &lt;!-- entityManagerFactory --&gt;
+    &lt;bean id=&quot;entityManagerFactory&quot; class=&quot;org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean&quot;&gt;
+		&lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /&gt;
+		&lt;property name=&quot;packagesToScan&quot; value=&quot;cn.itcast.entity&quot; /&gt;
+		&lt;property name=&quot;persistenceProvider&quot;&gt;
+			&lt;bean class=&quot;org.hibernate.jpa.HibernatePersistenceProvider&quot; /&gt;
+		&lt;/property&gt;
+		&lt;!--JPA的供应商适配器--&gt;
+		&lt;property name=&quot;jpaVendorAdapter&quot;&gt;
+			&lt;bean class=&quot;org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter&quot;&gt;
+				&lt;property name=&quot;generateDdl&quot; value=&quot;false&quot; /&gt;
+				&lt;property name=&quot;database&quot; value=&quot;MYSQL&quot; /&gt;
+				&lt;property name=&quot;databasePlatform&quot; value=&quot;org.hibernate.dialect.MySQLDialect&quot; /&gt;
+				&lt;property name=&quot;showSql&quot; value=&quot;true&quot; /&gt;
+			&lt;/bean&gt;
+		&lt;/property&gt;
+		&lt;property name=&quot;jpaDialect&quot;&gt;
+			&lt;bean class=&quot;org.springframework.orm.jpa.vendor.HibernateJpaDialect&quot; /&gt;
+		&lt;/property&gt;
+	&lt;/bean&gt;
+    
+    &lt;!-- JPA 事务管理器 --&gt;
+	&lt;bean id=&quot;transactionManager&quot; class=&quot;org.springframework.orm.jpa.JpaTransactionManager&quot;&gt;
+		&lt;property name=&quot;entityManagerFactory&quot; ref=&quot;entityManagerFactory&quot; /&gt;
+	&lt;/bean&gt;
+
+    &lt;!-- spring data jpa --&gt;
+    &lt;jpa:repositories base-package=&quot;cn.itcast.dao&quot;
+		transaction-manager-ref=&quot;transactionManager&quot;
+		entity-manager-factory-ref=&quot;entityManagerFactory&quot;&gt;
+    &lt;/jpa:repositories&gt;
+    
+    &lt;!-- 配置事务通知 txAdvice --&gt;
+    &lt;tx:advice id=&quot;txAdvice&quot; transaction-manager=&quot;transactionManager&quot;&gt;
+		&lt;tx:attributes&gt;
+			&lt;tx:method name=&quot;save*&quot; propagation=&quot;REQUIRED&quot;/&gt;
+			&lt;tx:method name=&quot;insert*&quot; propagation=&quot;REQUIRED&quot;/&gt;
+			&lt;tx:method name=&quot;update*&quot; propagation=&quot;REQUIRED&quot;/&gt;
+			&lt;tx:method name=&quot;delete*&quot; propagation=&quot;REQUIRED&quot;/&gt;
+			&lt;tx:method name=&quot;get*&quot; read-only=&quot;true&quot;/&gt;
+			&lt;tx:method name=&quot;find*&quot; read-only=&quot;true&quot;/&gt;
+			&lt;tx:method name=&quot;*&quot; propagation=&quot;REQUIRED&quot;/&gt;
+		&lt;/tx:attributes&gt;
+	&lt;/tx:advice&gt;
+
+    &lt;!-- 配置 AOP 切面 --&gt;
+    &lt;aop:config&gt;
+		&lt;aop:pointcut id=&quot;pointcut&quot; expression=&quot;execution(* cn.itcast.service.*.*(..))&quot; /&gt;
+		&lt;aop:advisor advice-ref=&quot;txAdvice&quot; pointcut-ref=&quot;pointcut&quot; /&gt;
+	&lt;/aop:config&gt;
+    
+    &lt;!-- 包扫描 --&gt;
+    &lt;context:component-scan base-package=&quot;cn.itcast&quot;&gt;&lt;/context:component-scan&gt;
+
+&lt;/beans&gt;
+</code></pre>
+<h3 id="73-编写映射实体类">7.3 编写映射实体类</h3>
+<p>见上方，略。</p>
+<h3 id="74-创建-dao-层接口">7.4 创建 DAO 层接口</h3>
+<ul>
+<li>创建的 DAO 接口仅需实现 <strong>JpaRepository</strong> 和 <strong>JpaSpecificationExecutor</strong> 接口，并提供相应泛型。</li>
+</ul>
+<pre><code class="language-java">/*
+	JpaRepository&lt;实体类类型, 主键类型&gt; - 用于完成基本 CRUD 操作
+	JpaSpecificationExecutor&lt;实体类类型&gt; - 用于复杂查询（分页查询等）
+*/
+public interface CustomerDao extends JpaRepository&lt;Customer, Long&gt;, JpaSpecificationExecutor&lt;Customer&gt; {
+    
+}
+</code></pre>
+<ul>
+<li>实现的两个接口包含 findOne、findAll、save、saveAll、delete、deleteById 等操作，所以可以在不编写任何方法的情况下就实现一些基本的 CRUD 操作。</li>
+</ul>
+<h3 id="74-调用接口完成-crud-操作">7.4 调用接口完成 CRUD 操作</h3>
+<p>查询示例：</p>
+<pre><code class="language-java">@Runwith(...)
+@ContextConfiguration(...)
+public class CustomerDaoTest {
+    
+    @Autowired
+    private CustomerDao customerDao;
+    
+    @Test
+    public void testFindById() {
+        Customer customer = customerDao.findOne(11);
+        sout(customer);
+    }
+}
+</code></pre>
+<h2 id="8-spring-data-使用-jpqlsql即方法命名的方式查询">8. Spring Data 使用 JPQL、SQL即方法命名的方式查询</h2>
+<ul>
+<li>Spring Data JPA 的 DAO 除了可以使用提供的方法进行操作外，还可以通过以下方式构建灵活的查询条件。</li>
+</ul>
+<h3 id="81-自定义-jpql-查询">8.1 自定义 JPQL 查询</h3>
+<ul>
+<li>
+<p>使用方法：在 DAO 中自定义方法，并使用 <strong>@Query</strong> 注解，设置 value 属性为 目标 JPQL 语句。</p>
+</li>
+<li>
+<p>若要进行更新操作，需要同时使用 <strong>@Modifying</strong> 注解。</p>
+</li>
+<li>
+<p>示例：</p>
+<pre><code class="language-java">public interface CustomerDao extends JpaRepository&lt;Customer, Long&gt;, JpaSpecificationExecutor&lt;Customer&gt; {
+
+  // 示例 1
+  @Query(value = &quot;from Customer where customerName = ?&quot;)
+  public Customer findCustomer(String customerName);
+
+  // 示例 2
+ 	@Query(value = &quot;update Customer set customerName = ?1 where customerId = ?2&quot;)
+  @Modifying
+  public void updateCustomer(String name, Long id);
+
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="82-使用-sql-语句查询">8.2 使用 SQL 语句查询</h3>
+<ul>
+<li>
+<p>与 JPQL 查询的唯一区别在于需要在 @Query 注解中添加属性 <strong>nativeQuery = true</strong>。</p>
+</li>
+<li>
+<p>示例：</p>
+<pre><code class="language-java">public interface CustomerDao extends JpaRepository&lt;Customer, Long&gt;, JpaSpecificationExecutor&lt;Customer&gt; {
+
+  @Query(value = &quot;select * from tb_customer&quot;, nativeQuery = true)
+  public List&lt;Customer&gt; findCustomers();
+
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="83-方法命名规则查询">8.3 方法命名规则查询</h3>
+<ul>
+<li>
+<p>根据 Spring Data JPA 提供的方法命名规则定义方法名称，就可以定义相应的复杂查询。</p>
+</li>
+<li>
+<p>方法名应以 findBy 等开头，使用下表列出的关键字连接。</p>
+</li>
+<li>
+<p>可以使用的关键字如下：</p>
+<table>
+<thead>
+<tr><th>序号</th><th>分类</th><th>关键字</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>连接类</td><td>And、Or</td></tr>
+<tr><td>2</td><td>比较类</td><td>Is、Equals、Between、LessThan、LessThanEqual、GreaterThan、GreaterThanEqual、After、Before、Not、In、NotIn</td></tr>
+<tr><td>3</td><td>空值判断</td><td>IsNull、IsNotNull、NotNull</td></tr>
+<tr><td>4</td><td>模糊查询</td><td>Like、NotLike、StartingWith、EndingWith、Containing</td></tr>
+<tr><td>5</td><td>顺序</td><td>OrderBy</td></tr>
+<tr><td>6</td><td>布尔判断</td><td>True、False</td></tr>
+<tr><td>7</td><td>大小写忽略</td><td>IgnoreCase</td></tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>示例：</p>
+<pre><code class="language-java">public interface CustomerDao extends JpaRepository&lt;Customer, Long&gt;, JpaSpecificationExecutor&lt;Customer&gt; {
+
+
+
+}
+</code></pre>
+</li>
+</ul>
+<h2 id="9-spring-data-jpa-动态分页查询">9. Spring Data JPA 动态、分页查询</h2>
+<ul>
+<li>
+<p>使用 Specification 和 JpaSpecificationExecutor 的动态查询</p>
+<p>示例如下：</p>
+<pre><code class="language-java">@Runwith(...)
+@ContextConfiguration(...)
+public class Test {
+
+  @AutoWired
+  private CustomerDao customerDao;
+
+  // 1. 定义 Specification，通过匿名内部类的方式
+  Specification&lt;Customer&gt; spec = new Specification&lt;Customer&gt;() {
+      @Override
+      public Predicate toPredicate(Root&lt;Customer&gt; root, CriteriaQuery&lt;?&gt; query, CriteriaBuilder db) {
+          // 构建查询
+          return cb.like(root.get(&quot;customerName&quot;).as(String.class), &quot;张%&quot;);
+      }
+  }
+
+  // 2. 调用 CustomerDao 进行查询
+  Customer customer = customerDao.findOne(spec);
+
+  // 输出
+  sout(customer);
+
+}
+</code></pre>
+</li>
+<li>
+<p>使用 Specification 和 JpaSpecificationExecutor 的分页查询</p>
+<p>使用方式大体与上方动态查询无异，只是查询前需要传递分页查询对象。</p>
+<pre><code class="language-java">@Runwith(...)
+@ContextConfiguration(...)
+public class Test {
+
+  @AutoWired
+  private CustomerDao customerDao;
+
+  // 1. 定义 Specification，通过匿名内部类的方式
+  Specification&lt;Customer&gt; spec = new Specification&lt;Customer&gt;() {
+      @Override
+      public Predicate toPredicate(Root&lt;Customer&gt; root, CriteriaQuery&lt;?&gt; query, CriteriaBuilder db) {
+          // 构建查询
+          return cb.like(root.get(&quot;customerName&quot;).as(String.class), &quot;张%&quot;);
+      }
+  }
+
+  // 2. 创建分页查询对象
+  // Pageable pageable = new PageRequest(0, 5);
+  Pageable pageable = PageRequest.of(0, 5);
+
+  // 3. 调用 CustomerDao 进行查询
+  Page&lt;Customer&gt; page = customerDao.findAll(spec, pageable);
+
+  // 4. 通过 page 获取结果输出测试
+  sout(page.getTotalPages());
+  sout(page.getTotalElements());
+  sout(page.getContent());
+
+}
+</code></pre>
+</li>
+</ul>
+<h2 id="10-spring-data-jpa-多表查询">10. Spring Data JPA 多表查询</h2>
+<p>待补全</p>
+
+
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<title>XML</title>
+<link rel='stylesheet' type='text/css' href='../../css/markdown.css'>
+
+</head>
+<body>
+<h1 id="xml学习笔记">XML学习笔记</h1>
+<ul>
+<li><a href="#1-概述">1. 概述</a></li>
+<li><a href="#2-语法">2. 语法</a></li>
+<li><a href="#3-约束">3. 约束</a></li>
+<li><a href="#4-解析写入">4. 解析/写入</a>
+<ul>
+<li><a href="#41-概述">4.1 概述</a></li>
+<li><a href="#42-常见解析器及使用">4.2 常见解析器及使用</a></li>
+<li><a href="#421-jaxp">4.2.1 JAXP</a></li>
+<li><a href="#422-dom4j">4.2.2 DOM4J</a></li>
+<li><a href="#423-jsoup">4.2.3 Jsoup</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="1-概述">1. 概述</h2>
+<ul>
+<li>XML（Extensible Markup Language），可扩展标记语言。可扩展指标签都是自定义的。</li>
+<li>XML的功能：
+<ul>
+<li>配置文件</li>
+<li>在网络中传输</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-语法">2. 语法</h2>
+<ul>
+<li>
+<p><strong>文档声明</strong>：</p>
+<pre><code class="language-xml">&lt;!-- 格式 --&gt;
+&lt;?xml 属性='值' ...?&gt;
+
+&lt;!-- 示例 --&gt;
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+</code></pre>
+<p>文档声明是XML的必须部分，而且必须置于文档开头。</p>
+<p>常用属性列表：</p>
+<ul>
+<li>version：版本号，必须的属性</li>
+<li>encoding：编码方式，默认IOS-8859-1</li>
+<li>standalone：是否独立（依赖于其他文件），取值：</li>
+<li>yes：依赖其他文件</li>
+<li>no：不依赖其他文件</li>
+</ul>
+</li>
+<li>
+<p><strong>指令（结合CSS）</strong>：</p>
+<pre><code class="language-xml">&lt;?xml-stylesheet type='text/css' href='demo.css'?&gt;
+</code></pre>
+</li>
+<li>
+<p><strong>标签</strong>：</p>
+<p>自定义名称的标签。</p>
+<p>规则：</p>
+<ul>
+<li>名称可以包含字母、数字等字符</li>
+<li>不能以数字或标点符号开头</li>
+<li>不能以<code>xml</code>开头</li>
+<li>名称不能包含空格</li>
+<li>标签名称区分大小写</li>
+</ul>
+</li>
+<li>
+<p><strong>属性</strong>：</p>
+<p>注意事项：</p>
+<ol>
+<li>ID的属性值需要唯一。</li>
+</ol>
+</li>
+<li>
+<p><strong>文本</strong>：</p>
+<ul>
+<li>CDATA区：</li>
+</ul>
+<p>该区域中的数据会被原样展示，格式如下：</p>
+<pre><code class="language-xml">&lt;![CDATA[
+	...
+]]&gt;
+</code></pre>
+</li>
+</ul>
+<h2 id="3-约束">3. 约束</h2>
+<ul>
+<li>
+<p><strong>分类</strong>：</p>
+<ul>
+<li>DTD</li>
+</ul>
+<p>一种简单的约束技术。</p>
+<p>引入DTD文档到XML文档中：</p>
+<ul>
+<li>
+<p>内部DTD：将约束规则定义在XML文档中</p>
+</li>
+<li>
+<p>外部DTD：将约束规则定义在外部的DTD文件中</p>
+<pre><code class="language-xml">&lt;!-- 本地DTD文件 --&gt;
+&lt;!DOCTYPE 根标签名 SYSTEM 'dtd文件的位置'&gt;
+
+&lt;!-- 网络DTD文件 --&gt;
+&lt;!DOCTYPE 根标签名 PUBLIC 'dtd文件名' 'dtd文件的位置url'&gt;
+</code></pre>
+</li>
+<li>
+<p>Schema</p>
+</li>
+</ul>
+<p>一种复杂的约束技术。</p>
+<p>引入方式：</p>
+<ol>
+<li>填写XML文档的根元素；</li>
+<li>引入xsi前缀；</li>
+<li>引入xsd文件命名空间；</li>
+<li>为每一个xsd约束声明一个前缀，作为标识。</li>
+</ol>
+<pre><code class="language-xml">&lt;Students xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xmlns=&quot;http://www.itcast.cn/xml&quot;
+         xsi:schemaLocation=&quot;http://www.itcast.cn/xml student.xsd&quot;&gt;
+    ...
+&lt;/Students&gt;
+</code></pre>
+</li>
+</ul>
+<h2 id="4-解析写入">4. 解析/写入</h2>
+<h3 id="41-概述">4.1 概述</h3>
+<p>解析XML的方式：</p>
+<ul>
+<li>DOM：一次性将文档加载进内存，形成一棵DOM树
+<ul>
+<li>优点：操作方便，可对文档进行CURD操作</li>
+<li>缺点：内存占用较多</li>
+</ul>
+</li>
+<li>SAX：逐行读取，基于事件驱动的
+<ul>
+<li>优点：几乎不占用内存</li>
+<li>缺点：只能读取，不能增删改</li>
+</ul>
+</li>
+</ul>
+<h3 id="42-常见解析器及使用">4.2 常见解析器及使用</h3>
+<h3 id="421-jaxp">4.2.1 JAXP</h3>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<p>SUN公司提供的解析器，支持DOM和SAX两种思想。</p>
+</li>
+</ul>
+<h3 id="422-dom4j">4.2.2 DOM4J</h3>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<p>常用的解析器。</p>
+</li>
+</ul>
+<h3 id="423-jsoup">4.2.3 Jsoup</h3>
+<ul>
+<li>
+<p><strong>概述</strong>：</p>
+<ul>
+<li>一款Java的超文本解析器，可直接解析某个URL地址或HTML/XML文本内容。</li>
+<li>提供了一套十分省力的API，可通过DOM、CSS以及类似Jquery的操作方法来取出和操作数据。</li>
+</ul>
+</li>
+<li>
+<p><strong>重要信息</strong>：</p>
+<ul>
+<li>下载地址：<a href="https://jsoup.org/download">https://jsoup.org/download</a></li>
+<li>帮助文档：<a href="https://jsoup.org/download">https://jsoup.org/download</a> 下载source后解压</li>
+</ul>
+</li>
+<li>
+<p><strong>典型使用步骤</strong>：</p>
+<ol>
+<li>导入jar包</li>
+<li>获取Document对象</li>
+<li>获取对应标签的Element对象</li>
+<li>获取数据</li>
+</ol>
+</li>
+<li>
+<p><strong>常用对象</strong>：</p>
+<ul>
+<li>Jsoup：解析HTML/XML的工具类。</li>
+</ul>
+<p>常用方法：</p>
+<ul>
+<li>Document parse(File in, String charsetName)，解析HTML/XML</li>
+<li>Document parse(String html)，解析String格式的HTML/XML</li>
+<li>
+<p>Document parse(URL url, int timeoutMillis)，通过网络路径获得HTML/XML</p>
+</li>
+<li>
+<p>Document：文档对象，代表内存中的DOM树。</p>
+</li>
+</ul>
+<p>常用方法：</p>
+<ul>
+<li>getElementById(String id)</li>
+<li>getElementsByTag(String tagName)，获取的是集合</li>
+<li>getElementsByAttribute(String key)，获取的是集合</li>
+<li>
+<p>getElementsByAttributeValue(String key, String value)，获取的是集合</p>
+</li>
+<li>
+<p>Elements：Element的集合，可当作ArrayList&lt; Element &gt;来使用。</p>
+</li>
+<li>
+<p>Element：元素对象。</p>
+</li>
+</ul>
+<p>常用方法：</p>
+<ul>
+<li>
+<p>获取子元素对象（与Document的方法相同）：</p>
+<ul>
+<li>getElementById(String id)</li>
+<li>getElementsByTag(String tagName)，获取的是集合</li>
+<li>getElementsByAttribute(String key)，获取的是集合</li>
+<li>getElementsByAttributeValue(String key, String value)，获取的是集合</li>
+</ul>
+</li>
+<li>
+<p>获取属性值：</p>
+<ul>
+<li>String attr(String key)：根据属性名称获取属性值</li>
+</ul>
+</li>
+<li>
+<p>获取文本内容：</p>
+<ul>
+<li>String text()：获取文本内容</li>
+<li>String html()：获取标签体的所有内容</li>
+</ul>
+</li>
+<li>
+<p>Node：结点对象。</p>
+</li>
+</ul>
+<p>是Document和Element的父类。</p>
+</li>
+</ul>
+
+
+</body>
+</html>
