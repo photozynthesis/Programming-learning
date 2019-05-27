@@ -5,7 +5,6 @@ import io.github.photozynthesis.utils.MarkdownConvertor;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
-import java.net.URISyntaxException;
 
 /**
  * 博客生成器
@@ -25,7 +24,7 @@ public class BlogGenerator {
 
         // 1. 生成 index.html
         // 获取工作空间，并检测 md 文件夹的存在
-        File workspace = new File(System.getProperty("user.dir")).getParentFile();
+        File workspace = new File(System.getProperty("user.dir"));
         File folder_md = new File(workspace, "md");
         if (!folder_md.exists()) {
             System.out.println("[BlogTools] 工程还没有 md 文件夹，请先创建。");

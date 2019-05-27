@@ -2,12 +2,14 @@ html, body {
 	margin: 0px;
 	border: 0px;
 	height: 100%;
+	font-family: 'PingFang SC' ,Helvetica;/* Helvetica */
 }
 body {
 	background: url("../img/5-min.jpg") center no-repeat;
 	background-size: cover;
 	background-attachment: fixed;
 	transition: background 1.2s;
+	-webkit-overflow-scrolling:touch;
 }
 /*p#Title{
 	font-size: 80px;
@@ -186,6 +188,7 @@ div#navigator {
 .navItem-subList-item {
 	padding: 5px 4px 5px 30px;
 	font-size: 22px;
+	/*height: 40px;*/
 	text-decoration: none;
 	display: block;
 	color:#333333;

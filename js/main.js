@@ -37,6 +37,11 @@ function toTop() {
 // 页面加载完毕
 window.onload = function() {
 
+    // 启用 FastClick，降低移动端点击延迟
+    document.addEventListener('DOMContentLoaded', function() {
+        FastClick.attach(document.body);
+    }, false);
+
     // 给所有一级目录项按钮绑定点击弹出菜单事件
     let navItemTitles = document.querySelectorAll('.navItem-title');
     let subLists = document.querySelectorAll('.navItem-subList');
@@ -45,7 +50,9 @@ window.onload = function() {
         navItemTitles[i]['expand'] = 0;
         navItemTitles[i].onclick = function() {
             if (navItemTitles[i]['expand'] === 0) {
-                subLists[i].style.height = subLists[i].getElementsByTagName('li').length * 40 + 'px';
+            	let subListLength = subLists[i].getElementsByTagName('li').length;
+                subLists[i].style.height = (subListLength * 40 - subListLength + 1) + 'px';
+                // subLists[i].style.height = subListLength * 40 + 'px';
                 // navItemTitles[i].style.backgroundColor = '#bbbbbb';
                 arrows[i].style.transform = 'rotate(90deg)';
                 navItemTitles[i]['expand'] = 1;
