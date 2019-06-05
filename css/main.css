@@ -104,31 +104,8 @@ div#navigator {
 	bottom: 77px;
 	position: absolute;
 	height: auto;
-	overflow: auto;
+	overflow: hidden;
 	user-select: none;
-}
-
-/* 列表条目（文件夹）标题前方箭头 */
-.navItem-title-arrow {
-	display: inline-block;
-	/*text-align: left;*/
-	width: fit-content;
-	/*border: 1px solid black;*/
-	/*float: left;*/
-	/*text-align: left !important;*/
-	transition: all 0.5s;
-}
-
-/* 列表条目（文件夹）标题文本 */
-.navItem-title-content {
-	display: inline-block;
-	padding-left: 8px;
-	text-align: left;
-	width: 244px;
-	font-weight: 700;
-	/*margin-left: : 30px;*/
-	/*border: 1px solid black;*/
-	/*float: left;*/
 }
 
 /* 目录列表下方的所有 ul */
@@ -136,8 +113,8 @@ div#navigator {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
-	width: 280px;
-	/*width: 100%;*/
+	/*width: 280px;*/
+	width: 100%;
 }
 /* 列表单个条目 */
 #navItems li {
@@ -175,6 +152,7 @@ div#navigator {
 
 /* 父级条目 */
 .navItem-title {
+	width: 100%;
 	font-size: 23px;
 	text-decoration: none;
 	display: block;
@@ -184,15 +162,47 @@ div#navigator {
 	text-align: left;
 }
 
+/* 列表条目（文件夹）标题前方箭头 */
+.navItem-title-arrow {
+	display: inline-block;
+	/*text-align: left;*/
+	width: fit-content;
+	/*border: 1px solid black;*/
+	/*float: left;*/
+	/*text-align: left !important;*/
+	transition: all 0.5s;
+}
+
+/* 列表条目（文件夹）标题文本 */
+.navItem-title-content {
+	display: inline-block;
+	padding-left: 8px;
+	text-align: left;
+	width: 240px;
+	font-weight: 700;
+	/*margin-left: : 30px;*/
+	/*border: 1px solid black;*/
+	/*float: left;*/
+}
+
 /* 二级条目 */
 .navItem-subList-item {
-	padding: 5px 4px 5px 30px;
-	font-size: 22px;
-	/*height: 40px;*/
+	display: table;
+	/*display: block;*/
+	/*padding: 5px 4px 5px 30px;*/
+	height: 40px;
+	width: 100%;
 	text-decoration: none;
-	display: block;
 	color:#333333;
 	text-align: left;
+}
+
+/* 二级条目中的文本 */
+.navItem-subList-item > a {
+	display: table-cell;
+	vertical-align: middle;
+	padding-left: 30px;
+	font-size: 22px;
 }
 
 /* 所有条目 hover */

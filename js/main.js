@@ -51,8 +51,8 @@ window.onload = function() {
         navItemTitles[i].onclick = function() {
             if (navItemTitles[i]['expand'] === 0) {
             	let subListLength = subLists[i].getElementsByTagName('li').length;
-                subLists[i].style.height = (subListLength * 40 - subListLength + 1) + 'px';
-                // subLists[i].style.height = subListLength * 40 + 'px';
+                // subLists[i].style.height = (subListLength * 40 - subListLength + 1) + 'px';
+                subLists[i].style.height = subListLength * 40 + 'px';
                 // navItemTitles[i].style.backgroundColor = '#bbbbbb';
                 arrows[i].style.transform = 'rotate(90deg)';
                 navItemTitles[i]['expand'] = 1;
