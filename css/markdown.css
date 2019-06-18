@@ -7,10 +7,12 @@ body {
     background-color: #ffffff;
     line-height: 1;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
     body {
         width: 700px;
         margin: 5px auto;
+        background-color: rgba(255,255,255,0.75);
+        text-shadow: 0px 0px 4px #aaaaaa;
     }
 }
 h1, h2, h3, h4, h5, h6 {

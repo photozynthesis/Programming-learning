@@ -82,6 +82,7 @@
 </ul>
 </li>
 <li><a href="#-插件pagehelper">#. 插件：PageHelper</a></li>
+<li><a href="#注意事项">#.注意事项</a></li>
 </ul>
 <h2 id="1-mybatis-概述">1. MyBatis 概述</h2>
 <ul>
@@ -1216,6 +1217,15 @@ PUBLIC &quot;-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN&quot;
 </li>
 </ul>
 <h2 id="-插件pagehelper">#. 插件：PageHelper</h2>
+<h2 id="注意事项">#.注意事项</h2>
+<ul>
+<li>
+<p>模糊查询 like 后面的字符串中若要传递预编译值，不能直接使用 <code>#{value}</code> 来传递值。</p>
+<p>可以使用如下写法：</p>
+<pre><code class="language-sql">like concat('_',#{value},'%')
+</code></pre>
+</li>
+</ul>
 
 
 </body>

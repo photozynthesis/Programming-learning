@@ -2,22 +2,17 @@ html, body {
 	margin: 0px;
 	border: 0px;
 	height: 100%;
-	font-family: 'PingFang SC' ,Helvetica;/* Helvetica */
+	font-family: 'PingFang SC' ,Helvetica;
 }
 body {
-	background: url("../img/5-min.jpg") center no-repeat;
+	/*background: url("../img/5-min.jpg") center no-repeat;*/
+	background: center no-repeat;
 	background-size: cover;
 	background-attachment: fixed;
-	transition: background 1.2s;
-	-webkit-overflow-scrolling:touch;
+	transition: background 0.5s;
+	/*-webkit-overflow-scrolling:touch;*/
 }
-/*p#Title{
-	font-size: 80px;
-	color: #dddddd;
-	line-height: 0%;
-	padding-top: 15px;
-	font-family: "Comic Sans MS", "Microsoft YaHei UI", sans-serif;
-}*/
+
 div#container {
 	height: 100%;
 	width: 1080px;
@@ -29,24 +24,13 @@ div#container {
 	/*overflow: hidden;*/
 	/*border: solid 1px #000000;*/
 }
-/*div#header{
-	height: 200px;
-	width: 1000px;
-	margin-top: 20px;
-	margin-bottom: 15px;
-	text-align: center;
-	overflow: hidden;
-	background-color: #625441;
-	box-shadow: 8px 8px 10px #333333;
-	border-radius: 9px;
-}*/
 
 /* 主窗口 */
 div#main {
 	height: 98%;
-	overflow: hidden;
+	/*overflow: hidden;*/
 	box-shadow: 0px 0px 10px 3px #333333;
-	background-color: #ffffff;
+	background-color: transparent;
 	/*border-radius: 15px;*/
 }
 
@@ -55,28 +39,19 @@ div#content {
 	height: 100%;
 	width: 800px;
 	float: left;
-	background-color: #bbbbbb;
+	/*background-color: #bbbbbb;*/
+	background-color: transparent;
 }
 
 /* 右侧导航区域 */
 div#navigator {
 	height: 100%;
 	width: 280px;
+	/*width: 100%;*/
 	float: left;
-	background-color: #dddddd;
+	background-color: rgba(221,221,221,0.8);
 	position: relative;
 }
-/*div#footer{
-	height: 80px;
-	width: 1000px;
-	clear: left;
-	background-color: #666666;
-	overflow: hidden;
-	box-shadow: 8px 8px 10px #333333;
-	margin-top: 15px;
-	margin-bottom: 20px;
-	border-radius: 9px;
-}*/
 
 /* 目录标题 */
 #navTitle {
@@ -103,9 +78,24 @@ div#navigator {
 	top: 59px;
 	bottom: 77px;
 	position: absolute;
+	/*padding: auto;*/
+	/*margin: auto;*/
+	padding-bottom: 8px;
 	height: auto;
-	overflow: hidden;
+	width: calc(100% - 6px);
+	margin-left: 6px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	/*overflow: -moz-scrollbars-none;*/
 	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	/*border: 1px solid black;*/
+}
+
+#navItems::-webkit-scrollbar {
+	display: none;
 }
 
 /* 目录列表下方的所有 ul */
@@ -116,19 +106,19 @@ div#navigator {
 	/*width: 280px;*/
 	width: 100%;
 }
+
+/* 目录列表包裹的 ul */
+/*#navItems > ul {
+	overflow-x: hidden;
+	overflow-y: auto;
+}*/
+
 /* 列表单个条目 */
 #navItems li {
 	cursor: pointer;
 }
-/*#navItems > ul > li > ul {
-	display: none;
-	transition: display 2s;
-}
-#navItems > ul > li > a:hover + ul {
-	display: block;
-}*/
 
-/* 子列表整体 */
+/* 折叠子列表 */
 .navItem-subList {
 	height: 0px;
 	overflow: hidden;
@@ -138,6 +128,7 @@ div#navigator {
 /* 根目录下的文章列表 */
 #navItems > ul > .navItem-subList {
 	height: auto !important;
+	overflow: visible !important;
 }
 
 /* 条目前缀 */
@@ -152,7 +143,7 @@ div#navigator {
 
 /* 父级条目 */
 .navItem-title {
-	width: 100%;
+	width: calc(100% - 17px);
 	font-size: 23px;
 	text-decoration: none;
 	display: block;
@@ -160,29 +151,35 @@ div#navigator {
 	color: #544c06;
 	padding: 8px 5px;
 	text-align: left;
+	/*border: 1px solid black;*/
 }
 
 /* 列表条目（文件夹）标题前方箭头 */
 .navItem-title-arrow {
-	display: inline-block;
+	display: block;
+	padding-left: 6px;
+	padding-right: 8px;
 	/*text-align: left;*/
 	width: fit-content;
 	/*border: 1px solid black;*/
-	/*float: left;*/
+	float: left;
 	/*text-align: left !important;*/
 	transition: all 0.5s;
+	/*border: 1px solid white;*/
 }
 
 /* 列表条目（文件夹）标题文本 */
 .navItem-title-content {
-	display: inline-block;
-	padding-left: 8px;
+	display: block;
+	/*padding-left: 8px;*/
 	text-align: left;
-	width: 240px;
+	/*width: 240px;*/
+	/*width: 100%;*/
 	font-weight: 700;
 	/*margin-left: : 30px;*/
-	/*border: 1px solid black;*/
 	/*float: left;*/
+	overflow: hidden;
+	/*border: 1px solid white;*/
 }
 
 /* 二级条目 */
@@ -191,7 +188,7 @@ div#navigator {
 	/*display: block;*/
 	/*padding: 5px 4px 5px 30px;*/
 	height: 40px;
-	width: 100%;
+	width: calc(100% - 7px);
 	text-decoration: none;
 	color:#333333;
 	text-align: left;
@@ -209,7 +206,7 @@ div#navigator {
 .navItem-title:hover, .navItem-subList-item:hover {
 	color: #cccccc;
 	background-color: #444444;
-	box-shadow: 0px 0px 8px #cccccc inset;
+	box-shadow: 3px 3px 6px 1px #999999;
 }
 
 /* 所有条目 active */
@@ -246,7 +243,7 @@ div.navButton a {
 	padding: 4px;
 	/*width: 184px;*/
 	display: block;
-	background-color: #aaaaaa;
+	background-color: transparent;
 	text-align: center;
 }
 div.navButton a:hover {

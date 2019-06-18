@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 
 import java.io.*;
-import java.net.URISyntaxException;
 
 /**
  * html 拼接器

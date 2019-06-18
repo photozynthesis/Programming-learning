@@ -1,4 +1,5 @@
-let wallpaperIndex = 5;
+// 起始壁纸索引
+let wallpaperIndex = 3;
 // 更换壁纸
 function changeWallpaper() {
     if (wallpaperIndex === 6) {
@@ -37,6 +38,9 @@ function toTop() {
 // 页面加载完毕
 window.onload = function() {
 
+    // 设置壁纸
+    document.getElementById('bodyE').style.backgroundImage = 'url(img/' + wallpaperIndex + '-min.jpg)';
+
     // 启用 FastClick，降低移动端点击延迟
     document.addEventListener('DOMContentLoaded', function() {
         FastClick.attach(document.body);
@@ -52,12 +56,14 @@ window.onload = function() {
             if (navItemTitles[i]['expand'] === 0) {
             	let subListLength = subLists[i].getElementsByTagName('li').length;
                 // subLists[i].style.height = (subListLength * 40 - subListLength + 1) + 'px';
-                subLists[i].style.height = subListLength * 40 + 'px';
+                subLists[i].style.height = subListLength * 40 + 8 + 'px';
                 // navItemTitles[i].style.backgroundColor = '#bbbbbb';
+                subLists[i].style.overflow = 'visiable';
                 arrows[i].style.transform = 'rotate(90deg)';
                 navItemTitles[i]['expand'] = 1;
             } else {
-                subLists[i].style.height = '0px';
+                subLists[i].style.height = null;
+                subLists[i].style.overflow = null;
                 // navItemTitles[i].style.backgroundColor = null;
                 arrows[i].style.transform = null;
                 navItemTitles[i]['expand'] = 0;
