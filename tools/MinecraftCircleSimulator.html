@@ -1,0 +1,333 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Minecraft Circle Simulator</title>
+        <style type="text/css">
+            div.unit {
+                display: inline-block;
+                width: 7px;
+                height: 7px;
+                border: 1px solid #dddddd;
+            }
+            div.navi {
+                background-color: #aaaaaa;
+            }
+            div.circle1 {
+                background-color: #FF4422 !important;
+            }
+            button.paint {
+                width: 155px;
+            }
+        </style>
+        <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+        <script type="text/javascript">
+            // LOGGER
+            let Logger = function() {
+                let container = "#output";
+                let info = function(msg) {
+                    $(container).css("color", "#55AA55");
+                    $(container).text(msg);
+                };
+                let warn = function(msg) {
+                    $(container).css("color", "orange");
+                    $(container).text(msg);
+                };
+                let err = function(msg) {
+                    $(container).css("color", "#FF0000");
+                    $(container).text(msg);
+                };
+                return {
+                    info: info,
+                    warn: warn,
+                    err: err
+                };
+            }();
+
+            // DATA
+            let Data = function() {
+                let sketchWidth;
+                let radiusList = [null, null, null, null, null];
+                // 设置格子长宽
+                const setSketchWidth = function(width) {
+                    let regex = /^[0-9]+$/;
+                    if(!regex.test(width) || parseInt(width) < 5 || parseInt(width) > 160) {
+                        throw 'ERROR';
+                    }
+                    sketchWidth = parseInt(width);
+                };
+                // 获取格子长宽
+                const getSketchWidth = function() {
+                    return sketchWidth;
+                }
+                // 设置圆半径
+                const setRadius = function(count, radius) {
+                    if(radius === null || radius === '') {
+                        radiusList[count - 1] = null;
+                    } else {
+                        let regex = /^[0-9]+$/;
+                        if(!regex.test(radius) || parseInt(radius) < 1 || parseInt(radius) > Math.floor(sketchWidth / 2)) {
+                            throw 'ERROR';
+                        }
+                        radiusList[count - 1] = parseInt(radius);
+                    }
+                };
+                // 获取圆半径
+                const getRadius = function(count) {
+                    return radiusList[count - 1];
+                };
+                // 获取圆半径列表
+                const getRadiusList = function() {
+                    let newList = [];
+                    for (let i of radiusList) {
+                        if (i !== null) {
+                            newList.push(i);
+                        }
+                    }
+                    return newList;
+                };
+                return {
+                    setSketchWidth: setSketchWidth,
+                    getSketchWidth: getSketchWidth,
+                    setRadius: setRadius,
+                    getRadius: getRadius,
+                    getRadiusList: getRadiusList
+                };
+            }();
+
+            // PAINTER
+            let Painter = function() {
+
+                let sketchContainer = '#container';
+
+                let unitTmpl = '<div class="unit"></div>';
+                let unitNaviTmpl = '<div class="navi"></div>';
+                let brTmpl = '<br />';
+
+                // 导航格工具 
+                // 坐标系统：=> i(横,左>右),j(纵,上>下) 
+                // 原点：=> 第一格子左下角坐标(0,0)
+                // 中心点：
+                // - 奇数格子：中心格左下角
+                // - 偶数格子：格纸正中心
+                const GridTool = {
+                    centerCoor: [null, null],
+                    gridList: null,
+                    /**
+                    * 设置对应坐标格子为导航格
+                    * @param coor 坐标 exm: [i，j]
+                    */
+                    setGridToNavi: function(coor) {
+                        $(GridTool.gridList[Data.getSketchWidth() * coor[1] + coor[0]]).addClass('navi');
+                    },
+                    // 获取中心坐标
+                    getCenterCoor: function(sketchWidth) {
+                        if(sketchWidth % 2 === 0) {
+                            // 偶数格子
+                            // 获取中心坐标(格纸正中心)
+                            let half = sketchWidth / 2;
+                            return [half, half - 1];
+                        } else {
+                            // 奇数格子
+                            // 获取中心坐标(中心格左下角)
+                            let half = Math.floor(sketchWidth / 2);
+                            return [half, half];
+                        }
+                    },
+                    // 绘制辅助导航点
+                    paintNavi: function() {
+                        // 格纸尺寸
+                        let width = Data.getSketchWidth();
+                        // 格子列表
+                        GridTool.gridList = $('.unit');
+                        // 导航格间距
+                        let naviGridSpacing = 5;
+                        if (width % 2 === 0) {
+                            // 偶数格子
+                            // 获取中心坐标(格纸正中心)
+                            GridTool.centerCoor = GridTool.getCenterCoor(width);
+                            // 每个方向点亮数量
+                            let naviCount = Math.floor(width / 2 / naviGridSpacing);
+                            for(let i = 0; i <= naviCount; i ++) {
+                                // i
+                                GridTool.setGridToNavi([GridTool.centerCoor[0] + i * naviGridSpacing - 1, GridTool.centerCoor[1]]);
+                                GridTool.setGridToNavi([GridTool.centerCoor[0] + i * naviGridSpacing - 1, GridTool.centerCoor[1] + 1]);
+                                // -i
+                                GridTool.setGridToNavi([GridTool.centerCoor[0] - i * naviGridSpacing, GridTool.centerCoor[1]]);
+                                GridTool.setGridToNavi([GridTool.centerCoor[0] - i * naviGridSpacing, GridTool.centerCoor[1] + 1]);
+                                // j
+                                GridTool.setGridToNavi([GridTool.centerCoor[0], GridTool.centerCoor[1] + i * naviGridSpacing]);
+                                GridTool.setGridToNavi([GridTool.centerCoor[0] - 1, GridTool.centerCoor[1] + i * naviGridSpacing]);
+                                // -j
+                                GridTool.setGridToNavi([GridTool.centerCoor[0], GridTool.centerCoor[1] - i * naviGridSpacing + 1]);
+                                GridTool.setGridToNavi([GridTool.centerCoor[0] - 1, GridTool.centerCoor[1] - i * naviGridSpacing + 1]);
+                            }
+                        } else {
+                            // 奇数格子
+                            // 获取中心坐标(中心格左下角)
+                            GridTool.centerCoor = GridTool.getCenterCoor(width);
+                            // 每个方向点亮数量
+                            let naviCount = Math.floor(width / 2 / naviGridSpacing);
+                            for(let i = 0; i <= naviCount; i ++) {
+                                // i
+                                GridTool.setGridToNavi([GridTool.centerCoor[0] + i * naviGridSpacing, GridTool.centerCoor[1]]);
+                                // -i
+                                GridTool.setGridToNavi([GridTool.centerCoor[0] - i * naviGridSpacing, GridTool.centerCoor[1]]);
+                                // j
+                                GridTool.setGridToNavi([GridTool.centerCoor[0], GridTool.centerCoor[1] + i * naviGridSpacing]);
+                                // -j
+                                GridTool.setGridToNavi([GridTool.centerCoor[0], GridTool.centerCoor[1] - i * naviGridSpacing]);
+                            }
+                            
+                        }
+                    }
+                };
+
+                // 圆工具
+                // 坐标系统：=> i(横,左>右),j(纵,上>下) 
+                // 原点：=> 第一格子左下角坐标(0,0)
+                // 中心点：格纸正中心
+                const CircleTool = {
+                    centerCoor: [null, null],
+                    gridList: null,
+                    // 获取中心坐标
+                    getCenterCoor: function(sketchWidth) {
+                        // 奇数 & 偶数格子(格纸正中心)
+                        let half = sketchWidth / 2;
+                        return [half, half - 1];
+                    },
+                    /**
+                    * 设置对应坐标格子为圆1格
+                    * @param coor 坐标 exm: [i，j]
+                    */
+                    setGridToCircle1: function(coor) {
+                        $(CircleTool.gridList[Data.getSketchWidth() * coor[1] + coor[0]]).addClass('circle1');
+                    },
+                    /**
+                    * 绘制所有圆
+                    * 取格子方式：角度为45°，偏移量为1的多条直线，取其与圆于第一象限内交点，取第一象限格子
+                    * 圆的方程：(i - ci)^2 + (j - cj)^2 = r^2
+                    * 最上直线方程：j = -i + a1, a1 = w / 2
+                    * 最下直线方程：j = -i + a2, a2 = 3w / 2
+                    * => 辛酸的历程 =>
+                    * i = 1/2 * (Math.sqrt(2*r*r + 2*a*ci + 2*a*cj - ci*ci - cj*cj - a*a - 2*ci*cj) - cj + ci + a)
+                    * j = a - i
+                    * @param raduisList 圆的半径 exm: [r0, r1, r2, r3, r4]
+                    */
+                    paintCircles: function() {
+                        // 格纸尺寸
+                        let w = Data.getSketchWidth();
+                        // 获取中心坐标
+                        CircleTool.centerCoor = CircleTool.getCenterCoor(w);
+                        // 格子列表
+                        CircleTool.gridList = $('.unit');
+                        // 圆中心坐标
+                        let ci = CircleTool.centerCoor[0];
+                        let cj = CircleTool.centerCoor[1];
+                        // 中心格坐标
+                        let c1 = Math.floor(ci);
+                        let c2 = Math.ceil(cj);
+                        // 圆列表
+                        let radiusList = Data.getRadiusList();
+                        // 绘制圆
+                        for(let rTemp of radiusList) {
+                            if(w % 2 === 0) {
+                                // 偶数格子圆
+                                let r = rTemp - 1/2;
+                                for(let a = w - rTemp; a < w + rTemp; a ++) {
+                                    let iTemp = 1/2 * (Math.sqrt(2*r*r + 2*a*ci + 2*a*cj - ci*ci - cj*cj - a*a - 2*ci*cj) - cj + ci + a);
+                                    let jTemp = a - iTemp;
+                                    let i = Math.floor(iTemp);
+                                    let j = Math.ceil(jTemp);
+                                    CircleTool.setGridToCircle1([i, j]);
+                                    CircleTool.setGridToCircle1([2 * c1 - i - 1, j]);
+                                    CircleTool.setGridToCircle1([i, 2 * c2 - j + 1]);
+                                    CircleTool.setGridToCircle1([2 * c1 - i - 1, 2 * c2 - j + 1]);
+                                }
+                            } else {
+                                // 奇数格子圆
+                                let r = rTemp;
+                                for(let a = w - r - 1; a < w + r; a ++) {
+                                    let iTemp = 1/2 * (Math.sqrt(2*r*r + 2*a*ci + 2*a*cj - ci*ci - cj*cj - a*a - 2*ci*cj) - cj + ci + a);
+                                    let jTemp = a - iTemp;
+                                    let i = Math.floor(iTemp);
+                                    let j = Math.ceil(jTemp);
+                                    CircleTool.setGridToCircle1([i, j]);
+                                    CircleTool.setGridToCircle1([2 * c1 - i, j]);
+                                    CircleTool.setGridToCircle1([i, 2 * c2 - j]);
+                                    CircleTool.setGridToCircle1([2 * c1 - i, 2 * c2 - j]);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // 绘制
+                const buildSketch = function() {
+                    // 绘制空白格子纸
+                    let width = Data.getSketchWidth();
+                    let container = $(sketchContainer);
+                    let domStr = '';
+                    for (let i = 0; i < width; i ++) {
+                        for (let j = 0; j < width; j ++) {
+                            domStr += unitTmpl;
+                        }
+                        domStr += brTmpl;
+                    }
+                    // ---- 此处性能瓶颈 ----
+                    container[0].innerHTML = domStr;
+                };
+                return {
+                    buildSketch: buildSketch,
+                    paintNavi: GridTool.paintNavi,
+                    paintCircles: CircleTool.paintCircles
+                };
+            }();
+
+            // 渲染格子纸
+            let buildSketch = function() {
+                try {
+                    // 获取页面参数
+                    Data.setSketchWidth($('input[name="width"]').val());
+                    Data.setRadius(1, $('input[name="circle1R"]').val());
+                    Data.setRadius(2, $('input[name="circle2R"]').val());
+                    Data.setRadius(3, $('input[name="circle3R"]').val());
+                    Data.setRadius(4, $('input[name="circle4R"]').val());
+                    Data.setRadius(5, $('input[name="circle5R"]').val());
+                    // 绘制格子
+                    Painter.buildSketch();
+                    // 绘制导航
+                    Painter.paintNavi();
+                    // 绘制圆
+                    Painter.paintCircles();
+                    Logger.info("OK");
+                } catch(err) {
+                    Logger.err(err);
+                }
+            }
+
+            // 初始化
+            window.onload = function() {
+                buildSketch();
+            }
+        </script>
+    </head>
+    <body>
+        <h1>Minecraft Circle Sketchboard</h1>
+        <span>格纸长宽：</span><input type="text" placeholder="5-160" name="width" value="79">&emsp;
+        <button class="paint" onclick="buildSketch()">绘制</button>
+        <br>
+        <span>圆一半径：</span><input type="text" placeholder="please input" name="circle1R">&emsp;
+        <span>OUTPUT：</span><span id="output"></span>
+        <br>
+        <span>圆二半径：</span><input type="text" placeholder="please input" name="circle2R"><br>
+        <span>圆三半径：</span><input type="text" placeholder="please input" name="circle3R"><br>
+        <span>圆四半径：</span><input type="text" placeholder="please input" name="circle4R">&emsp;
+        <span>Made By Photozynthesis</span>
+        <br>
+        <span>圆五半径：</span><input type="text" placeholder="please input" name="circle5R">&emsp;
+        <span>© 西部联合 版权所有</span>
+        <br>
+        <br>
+        <div id="container"></div>
+    </body>
+</html>
